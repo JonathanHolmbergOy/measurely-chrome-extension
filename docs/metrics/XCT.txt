@@ -1,0 +1,70 @@
+XCT - X-Content-Type-Options
+
+WHAT IT MEASURES
+Whether the X-Content-Type-Options HTTP header with the value "nosniff" is present. This header prevents browsers from MIME-sniffing responses, protecting against content-type confusion attacks where browsers might misinterpret file types.
+
+MIME sniffing:
+- Browsers may guess content type if not specified
+- Can lead to security vulnerabilities
+- X-Content-Type-Options: nosniff prevents this
+- Forces browsers to respect Content-Type header
+
+Security benefits:
+- Prevents MIME-sniffing attacks
+- Protects against content-type confusion
+- Enhances security
+- Industry best practice
+
+HOW IT'S MEASURED
+HTTP header analysis checking for X-Content-Type-Options header with nosniff value. The measurement process:
+
+1. Checks HTTP headers:
+   - Uses fetch API or response headers
+   - Looks for X-Content-Type-Options header
+   - Verifies value is "nosniff"
+
+2. Returns boolean:
+   - true: Header present with correct value
+   - false: Header missing or incorrect value
+
+WHY IT'S IMPORTANT
+Prevents browsers from MIME-sniffing responses, protecting against content-type confusion attacks. This is a security best practice that helps prevent malicious content from being executed.
+
+Security impact:
+- Prevents MIME-sniffing attacks
+- Protects against content-type confusion
+- Enhances overall security
+- Industry security standard
+- Reduces attack surface
+
+THRESHOLDS
+- Good: true (Header present, secure)
+- Poor: false (Header missing, security risk)
+
+Note: This header should always be present for security.
+
+COMMON PITFALLS
+1. Missing X-Content-Type-Options header: Header not configured
+2. Incorrect header value: Value not "nosniff"
+3. No security header: Missing security headers
+
+OPTIMIZATION STRATEGIES
+1. Add X-Content-Type-Options: nosniff header: Configure header on server
+2. Ensure proper content-type headers: Set correct Content-Type headers
+3. Test header presence: Verify header is present
+4. Review security headers: Ensure all security headers are configured
+5. Document security requirements: Ensure team understands header needs
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

@@ -1,0 +1,90 @@
+TPB - Third-Party Budget
+
+WHAT IT MEASURES
+Total size and impact of third-party resources compared to recommended performance budget (typically 500KB-1MB). Third-party resources (analytics, ads, widgets, embeds) often add significant weight to pages, and budgets help control their impact on performance.
+
+Third-party resources include:
+- Analytics scripts (Google Analytics, etc.)
+- Advertising scripts
+- Social media widgets
+- Embedded content (videos, maps)
+- CDN resources from third parties
+- External fonts and libraries
+
+The metric calculates:
+- Total third-party resource size
+- Comparison to recommended budget
+- Impact on page performance
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis identifying third-party origins and summing their resource sizes. The measurement process:
+
+1. Identifies third-party resources:
+   - Uses PerformanceResourceTiming API
+   - Identifies resources from different origins
+   - Filters third-party domains
+
+2. Calculates total size:
+   - Sums decodedBodySize for third-party resources
+   - Calculates total third-party payload
+   - Compares to budget threshold
+
+3. Returns size value:
+   - Total third-party size in kilobytes
+   - Comparison to budget
+
+WHY IT'S IMPORTANT
+Third-party resources often add significant weight. Budgets help control third-party impact on performance, especially on mobile devices and slower connections.
+
+Performance impact:
+- Adds significant page weight
+- Delays page load
+- Affects Time to Interactive
+- Blocks main thread
+- Impacts Core Web Vitals
+
+User experience:
+- Slower page loads
+- Higher data usage
+- Poor mobile experience
+- Increased frustration
+
+THRESHOLDS
+- Good: ≤ 500KB (Reasonable third-party size)
+- Needs Improvement: 500KB-1MB (Large but manageable)
+- Poor: ≥ 1MB (Excessive third-party resources, performance impact)
+
+COMMON PITFALLS
+1. Exceeding third-party budget: Total size over recommended limits
+2. Large third-party resources: Individual third-party resources too large
+3. Too many third parties: Excessive number of third-party services
+4. Unoptimized embeds: Third-party embeds not optimized
+5. No budget enforcement: Missing third-party size limits
+6. Growing third-party usage: Third-party resources increasing over time
+
+OPTIMIZATION STRATEGIES
+1. Set third-party budgets: Establish and enforce size limits
+2. Optimize third-party loading: Load third-party resources efficiently
+3. Defer non-critical third parties: Load third-party resources after page load
+4. Reduce third-party count: Minimize number of third-party services
+5. Use async loading: Load third-party scripts asynchronously
+6. Monitor third-party impact: Track third-party sizes over time
+7. Review third-party necessity: Remove unnecessary third-party services
+8. Consider self-hosting: Self-host critical third-party resources
+
+
+HISTORY
+Resource optimization metrics became critical as web pages grew in complexity. Image optimization techniques evolved from simple compression to modern formats like WebP (2010) and AVIF (2019). Code splitting and tree shaking emerged with modern JavaScript bundlers in the 2010s. Performance budgets became a standard practice as mobile web usage highlighted the importance of resource efficiency.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

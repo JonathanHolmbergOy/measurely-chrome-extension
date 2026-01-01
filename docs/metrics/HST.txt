@@ -1,0 +1,99 @@
+HST - HSTS Configuration Quality
+
+WHAT IT MEASURES
+Score (0-100) based on HSTS (HTTP Strict Transport Security) header quality, evaluating max-age duration, includeSubDomains flag, and preload list inclusion. HSTS forces browsers to use HTTPS connections, preventing downgrade attacks and ensuring secure connections.
+
+HSTS header components:
+- max-age: Duration in seconds that browser should enforce HTTPS (minimum 31536000 = 1 year)
+- includeSubDomains: Applies HSTS to all subdomains
+- preload: Indicates site is in HSTS preload list (hardcoded in browsers)
+
+Quality factors:
+- max-age duration: Longer is better (≥ 1 year recommended)
+- includeSubDomains: Should be included for comprehensive protection
+- Preload list: Being in preload list provides best protection
+- Header presence: Header must be present
+
+HOW IT'S MEASURED
+HTTP header analysis of Strict-Transport-Security header, evaluating max-age, includeSubDomains, and preload flags. The measurement process:
+
+1. Checks for HSTS header:
+   - Looks for Strict-Transport-Security header
+   - Verifies header is present and correctly formatted
+   - Parses header value
+
+2. Evaluates max-age:
+   - Extracts max-age value
+   - Checks if ≥ 31536000 (1 year)
+   - Scores based on duration
+
+3. Checks includeSubDomains:
+   - Verifies includeSubDomains flag is present
+   - Scores based on flag presence
+
+4. Checks preload:
+   - Verifies preload flag is present
+   - May check if site is actually in preload list
+   - Scores based on preload status
+
+5. Calculates quality score:
+   - Combines scores for each factor
+   - Returns score from 0-100
+
+WHY IT'S IMPORTANT
+HSTS forces HTTPS connections, preventing downgrade attacks. Quality configuration ensures long-term protection and prevents man-in-the-middle attacks.
+
+Security benefits:
+- Forces HTTPS connections
+- Prevents protocol downgrade attacks
+- Protects against SSL stripping
+- Ensures secure connections
+- Long-term protection with high max-age
+
+Attack prevention:
+- Prevents man-in-the-middle attacks
+- Blocks protocol downgrade attempts
+- Protects against SSL stripping
+- Ensures all connections use HTTPS
+
+THRESHOLDS
+- Good: ≥ 80 (Strong HSTS configuration)
+- Needs Improvement: 60-79 (Moderate HSTS, improvements needed)
+- Poor: ≤ 60 (Weak HSTS configuration)
+
+Note: A score of 100 requires max-age ≥ 1 year, includeSubDomains, and preload flag.
+
+COMMON PITFALLS
+1. Missing HSTS header: No Strict-Transport-Security header
+2. Short max-age: max-age less than 1 year (31536000 seconds)
+3. Missing includeSubDomains: HSTS not applied to subdomains
+4. Not in preload list: Site not submitted to HSTS preload list
+5. Incorrect header format: Malformed HSTS header
+6. Missing preload flag: Preload flag not included in header
+7. Low max-age: max-age too short for effective protection
+
+OPTIMIZATION STRATEGIES
+1. Implement HSTS with max-age ≥ 31536000: Set max-age to at least 1 year
+2. Include includeSubDomains: Apply HSTS to all subdomains
+3. Submit to HSTS preload list: Submit site to hstspreload.org
+4. Test configuration: Verify HSTS works correctly
+5. Start with shorter max-age: Begin with shorter duration, increase gradually
+6. Monitor HSTS effectiveness: Track HSTS adoption and issues
+7. Update max-age regularly: Renew max-age before expiration
+8. Ensure all subdomains support HTTPS: Required for includeSubDomains
+9. Document HSTS requirements: Ensure team understands HSTS needs
+10. Use HSTS preload checker: Verify preload status
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

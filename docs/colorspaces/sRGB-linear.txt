@@ -1,0 +1,389 @@
+sRGB-linear
+===========
+
+OVERVIEW
+--------
+sRGB-linear is the linearized form of the sRGB color space with gamma correction removed. It represents colors using linear light values, making it suitable for physically accurate color calculations, compositing, and image processing operations.
+
+DESCRIPTION
+-----------
+sRGB-linear uses the same color primaries and white point as standard sRGB, but stores raw linear light intensity values instead of gamma-encoded values. This makes mathematical operations on colors (like blending, averaging, or applying filters) physically correct.
+
+In standard sRGB, values are gamma-encoded for display efficiency. sRGB-linear removes this encoding, representing the actual amount of light emitted rather than a perceptually uniform value.
+
+TECHNICAL SPECIFICATIONS
+-------------------------
+- Gamut: Same as sRGB (~35% of visible colors)
+- White Point: D65 (daylight, 6500K)
+- Gamma: None (linear, gamma = 1.0)
+- Primaries: Same as sRGB
+  * Red: x=0.64, y=0.33
+  * Green: x=0.30, y=0.60
+  * Blue: x=0.15, y=0.06
+- Transfer Function: Linear (y = x)
+
+HISTORY
+-------
+1990s: Linear light calculations recognized as important for CGI
+1996: sRGB standardized with gamma encoding
+2000s: Graphics APIs (OpenGL, DirectX) support linear color spaces
+2010s: Game engines and 3D software adopt linear workflows
+2021: Added to CSS Color Module Level 4
+2023: Browser support achieved
+
+WHY sRGB-LINEAR EXISTS
+----------------------
+Gamma-encoded sRGB is optimized for display but causes problems for:
+- **Blending**: Averaging colors in sRGB gives incorrect results
+- **Lighting calculations**: Physical light doesn't add linearly in gamma space
+- **Compositing**: Alpha blending needs linear values
+- **Filtering**: Blur, scaling, etc. should operate in linear space
+- **3D rendering**: Physically-based rendering requires linear color
+
+Example problem with gamma-encoded blending:
+```
+sRGB average:
+  (128, 128, 128) + (255, 255, 255) / 2 = (191, 191, 191)
+  ↑ Looks too dark! Middle gray should be 186, not 191
+
+Linear average:
+  (0.21, 0.21, 0.21) + (1.0, 1.0, 1.0) / 2 = (0.605, 0.605, 0.605)
+  → Convert to sRGB: (186, 186, 186) ✓ Correct!
+```
+
+CSS SYNTAX
+----------
+Using color() function:
+  color: color(srgb-linear 0.5 0.5 0.5);
+  color: color(srgb-linear 1 0.2 0.2 / 0.8);
+
+Component ranges:
+  Red: 0-1 (linear light intensity)
+  Green: 0-1 (linear light intensity)
+  Blue: 0-1 (linear light intensity)
+  Alpha: 0-1 or 0%-100%
+
+Note: Values are NOT 0-255 like sRGB hex/rgb().
+
+BROWSER SUPPORT
+---------------
+color(srgb-linear ...) syntax:
+- Safari 15.0+ (September 2021) ✓
+- Chrome 111+ (March 2023) ✓
+- Edge 111+ (March 2023) ✓
+- Firefox 113+ (May 2023) ✓
+- Opera 97+ (March 2023) ✓
+
+Not supported:
+- Internet Explorer (all versions)
+- Safari < 15.0
+- Chrome < 111
+- Firefox < 113
+
+ADVANTAGES
+----------
+✓ Physically accurate color math
+✓ Correct blending and compositing
+✓ Better for image processing operations
+✓ Standard in 3D rendering and game development
+✓ Proper light calculations
+✓ No unexpected darkening when blending
+✓ Required for HDR workflows
+
+LIMITATIONS
+-----------
+✗ Less intuitive than gamma-encoded values
+✗ Values don't match perceived brightness
+✗ Not suitable for direct color picking
+✗ Limited browser support (pre-2023)
+✗ Requires conversion for display
+✗ More compute-intensive for rendering
+
+USE CASES
+---------
+Perfect for:
+- Blending and compositing operations
+- Image processing (blur, resize, sharpen)
+- Physically-based rendering (PBR)
+- Game engines and 3D graphics
+- HDR imaging workflows
+- Color grading with physically accurate math
+- WebGL/Canvas operations
+
+Not suitable for:
+- Direct color specification (use sRGB instead)
+- Perceptual color adjustments (use OKLCH/LCH)
+- Print workflows (use Lab/LCH)
+
+COMPARISON WITH OTHER SPACES
+-----------------------------
+vs sRGB:
+  sRGB-linear: Physically accurate, linear light
+  sRGB: Perceptually uniform, gamma-encoded
+
+vs OKLCH:
+  sRGB-linear: For calculations, not intuitive
+  OKLCH: For design and color selection
+
+vs Display P3-linear:
+  sRGB-linear: Narrower gamut
+  Display P3-linear: Wider gamut, same linearity
+
+CONVERSION FORMULAS
+-------------------
+sRGB to sRGB-linear (remove gamma):
+```javascript
+function sRGBToLinear(srgb) {
+  // srgb is 0-1 range
+  if (srgb <= 0.04045) {
+    return srgb / 12.92;
+  } else {
+    return Math.pow((srgb + 0.055) / 1.055, 2.4);
+  }
+}
+```
+
+sRGB-linear to sRGB (apply gamma):
+```javascript
+function linearToSRGB(linear) {
+  // linear is 0-1 range
+  if (linear <= 0.0031308) {
+    return linear * 12.92;
+  } else {
+    return 1.055 * Math.pow(linear, 1/2.4) - 0.055;
+  }
+}
+```
+
+From 8-bit sRGB (0-255):
+```javascript
+// Convert 8-bit RGB to linear
+const linear_r = sRGBToLinear(r / 255);
+const linear_g = sRGBToLinear(g / 255);
+const linear_b = sRGBToLinear(b / 255);
+```
+
+PRACTICAL EXAMPLES
+------------------
+// Middle gray (50% light intensity)
+color: color(srgb-linear 0.5 0.5 0.5);
+// Displays as rgb(186, 186, 186), not rgb(128, 128, 128)!
+
+// Bright red
+color: color(srgb-linear 1 0 0);
+
+// Proper color blending in CSS
+background: linear-gradient(
+  in srgb-linear,
+  color(srgb-linear 0 0 0),      /* Black */
+  color(srgb-linear 1 1 1)       /* White */
+);
+// Results in physically correct gradient
+
+GAMMA AND PERCEPTION
+--------------------
+Human vision is roughly logarithmic - we're more sensitive to changes in dark colors than bright colors.
+
+**sRGB (gamma-encoded)**: Matches human perception
+  - Value 128/255 ≈ 21% light intensity
+  - But looks like ~50% brightness to humans
+
+**sRGB-linear**: Matches physical light
+  - Value 0.5 = 50% light intensity
+  - But looks like ~73% brightness to humans
+
+This is why gamma encoding exists - to distribute bits efficiently for human perception.
+
+BLENDING EXAMPLE
+----------------
+Problem: Blend red and green in sRGB
+```css
+/* WRONG - gamma space blending */
+color: rgb(128, 64, 0);  /* Average of rgb(255,128,0) and rgb(0,0,0) */
+/* Result: Too dark, muddy brown */
+
+/* CORRECT - linear space blending */
+```javascript
+// Red: rgb(255, 128, 0) → linear: (1.0, 0.215, 0)
+// Black: rgb(0, 0, 0) → linear: (0, 0, 0)
+// Average: (0.5, 0.1075, 0)
+// Convert to sRGB: rgb(186, 82, 0)
+```css
+color: rgb(186, 82, 0);  /* Correct! Brighter orange */
+```
+
+IMAGE PROCESSING
+----------------
+Many image operations require linear color:
+
+**Gaussian Blur**: 
+- Apply blur in linear space
+- Convert back to sRGB for display
+
+**Scaling/Resizing**:
+- Interpolate in linear space
+- Prevents darkening around edges
+
+**Composite/Alpha Blending**:
+```javascript
+// Blend two colors with alpha
+function blendLinear(colorA, alphaA, colorB, alphaB) {
+  // Convert both to linear
+  const linA = sRGBToLinear(colorA);
+  const linB = sRGBToLinear(colorB);
+  
+  // Blend in linear space
+  const blended = linA * alphaA + linB * alphaB * (1 - alphaA);
+  
+  // Convert back
+  return linearToSRGB(blended);
+}
+```
+
+3D RENDERING / WEBGL
+--------------------
+Modern rendering pipelines use linear workflows:
+
+1. **Load textures** in sRGB
+2. **Convert to linear** in shader
+3. **Perform all calculations** in linear space
+4. **Apply lighting** (physically accurate)
+5. **Convert to sRGB** for display (gamma correction)
+
+```glsl
+// GLSL fragment shader
+vec3 srgbToLinear(vec3 srgb) {
+  return pow(srgb, vec3(2.2));  // Simplified gamma
+}
+
+vec3 linearToSrgb(vec3 linear) {
+  return pow(linear, vec3(1.0/2.2));
+}
+
+void main() {
+  vec3 texColor = texture2D(tex, uv).rgb;
+  vec3 linear = srgbToLinear(texColor);
+  
+  // ... lighting calculations in linear space ...
+  
+  gl_FragColor = vec4(linearToSrgb(result), 1.0);
+}
+```
+
+CANVAS API USAGE
+----------------
+```javascript
+// Get image data
+const ctx = canvas.getContext('2d');
+const imageData = ctx.getImageData(0, 0, width, height);
+const data = imageData.data;
+
+// Process in linear space
+for (let i = 0; i < data.length; i += 4) {
+  // Convert to linear
+  let r = sRGBToLinear(data[i] / 255);
+  let g = sRGBToLinear(data[i+1] / 255);
+  let b = sRGBToLinear(data[i+2] / 255);
+  
+  // Apply operation (e.g., brighten)
+  r *= 1.5;
+  g *= 1.5;
+  b *= 1.5;
+  
+  // Convert back to sRGB
+  data[i] = Math.round(linearToSRGB(r) * 255);
+  data[i+1] = Math.round(linearToSRGB(g) * 255);
+  data[i+2] = Math.round(linearToSRGB(b) * 255);
+}
+
+ctx.putImageData(imageData, 0, 0);
+```
+
+GRADIENT COMPARISON
+-------------------
+Linear gradients look different in linear vs gamma space:
+
+```css
+/* Gamma space (standard CSS) - too dark in middle */
+background: linear-gradient(rgb(0,0,0), rgb(255,255,255));
+
+/* Linear space - physically correct */
+background: linear-gradient(
+  in srgb-linear,
+  color(srgb-linear 0 0 0),
+  color(srgb-linear 1 1 1)
+);
+```
+
+The linear-space gradient appears brighter in the middle because it represents actual light intensity.
+
+PERFORMANCE CONSIDERATIONS
+---------------------------
+Converting between sRGB and linear has computational cost:
+- CPU: ~10-20 cycles per pixel component
+- GPU: Single pow() instruction per component
+- Modern hardware handles this efficiently
+- Worth the cost for correct results
+
+COMMON MISTAKES
+---------------
+1. **Blending in gamma space**: Results in too-dark colors
+2. **Forgetting to convert back**: Linear values don't display correctly
+3. **Using for color picking**: Not intuitive for humans
+4. **Mixing linear and gamma**: Inconsistent results
+5. **Over-simplifying gamma**: Using 2.2 instead of sRGB formula (small error)
+
+WHEN TO USE
+-----------
+**Use sRGB-linear for:**
+- ✓ Blending colors
+- ✓ Image filters (blur, sharpen, etc.)
+- ✓ 3D rendering calculations
+- ✓ Physically-based lighting
+- ✓ Compositing with alpha
+- ✓ Color averaging
+
+**Use regular sRGB for:**
+- ✗ Displaying colors
+- ✗ Color picking
+- ✗ Storing images
+- ✗ Perceptual adjustments
+
+REAL-WORLD ADOPTION
+-------------------
+3D/Game Development: ~99% (industry standard)
+Web Graphics (Canvas/WebGL): ~70% (growing)
+Image Processing Libraries: ~80%
+CSS usage: <1% (2024) - mostly for gradients
+
+BEST PRACTICES
+--------------
+1. **Always convert back to sRGB for display**
+2. **Use for calculations, not design**
+3. **Document when using linear workflows**
+4. **Test gradients in both spaces**
+5. **Use GPU for conversions when possible**
+
+TOOLS AND LIBRARIES
+-------------------
+- Three.js: Built-in linear workflow support
+- Babylon.js: Linear space by default
+- Canvas API: Manual conversion needed
+- CSS: Native support via color() function
+- Image processing: Many libraries support linear
+
+RELATED COLOR SPACES
+--------------------
+- sRGB: Gamma-encoded version
+- Display P3-linear: Linear version of Display P3
+- Rec. 2020-linear: Linear version of Rec. 2020
+- ACEScg: Linear working space for film/TV
+
+FURTHER READING
+---------------
+- "The Importance of Being Linear" (GPU Gems 3)
+- CSS Color 4: https://www.w3.org/TR/css-color-4/
+- sRGB specification: IEC 61966-2-1
+- "Linear vs Gamma Color Space" (Scratchapixel)
+- Three.js color management docs
+

@@ -1,0 +1,92 @@
+SSC - Security Score (composite)
+
+WHAT IT MEASURES
+Composite score (0-100) based on multiple security factors including HTTPS usage, security headers count, mixed content presence, and CSP violations. This metric provides an overall assessment of site security posture by combining various security indicators.
+
+Security factors included:
+- HTTPS usage: Whether site uses HTTPS
+- Security headers: Number of security headers configured
+- Mixed content: Presence of HTTP resources on HTTPS pages
+- CSP violations: Content Security Policy violations
+- Other security indicators: Additional security checks
+
+The score combines:
+- HTTPS status (required for good score)
+- Security header count
+- Mixed content count (penalizes)
+- CSP violation count (penalizes)
+- Other security factors
+
+HOW IT'S MEASURED
+Weighted calculation combining HTTPS status, security headers count, mixed content count, and CSP violations. The measurement process:
+
+1. Evaluates HTTPS:
+   - Checks if site uses HTTPS
+   - Scores HTTPS usage
+   - HTTPS is typically required for good score
+
+2. Counts security headers:
+   - Counts number of security headers
+   - Scores based on header count
+   - More headers = better score
+
+3. Checks mixed content:
+   - Counts HTTP resources on HTTPS pages
+   - Penalizes for mixed content
+   - Reduces score for each instance
+
+4. Checks CSP violations:
+   - Counts CSP violations
+   - Penalizes for violations
+   - Reduces score for each violation
+
+5. Calculates composite score:
+   - Weighted combination of factors
+   - Returns score 0-100
+
+WHY IT'S IMPORTANT
+Provides overall security assessment. Helps identify sites with multiple security issues that need attention and provides a single metric for security posture.
+
+Security impact:
+- Identifies security gaps
+- Highlights multiple issues
+- Provides security baseline
+- Helps prioritize security improvements
+- Overall security health indicator
+
+THRESHOLDS
+- Good: ≥ 80 (Strong security posture)
+- Needs Improvement: 60-79 (Moderate security, improvements needed)
+- Poor: ≤ 60 (Weak security, significant issues)
+
+COMMON PITFALLS
+1. Multiple security issues: Several security problems present
+2. Missing HTTPS: Site not using HTTPS
+3. Few security headers: Not enough security headers
+4. Mixed content: HTTP resources on HTTPS pages
+5. CSP violations: Content Security Policy violations
+6. Overall weak security: Multiple security gaps
+
+OPTIMIZATION STRATEGIES
+1. Address all security issues: Fix all identified security problems
+2. Enable HTTPS: Ensure site uses HTTPS
+3. Implement security headers: Add multiple security headers
+4. Eliminate mixed content: Convert all HTTP to HTTPS
+5. Fix CSP violations: Resolve Content Security Policy issues
+6. Review security regularly: Regularly assess security posture
+7. Monitor security score: Track security score over time
+8. Prioritize critical issues: Address most critical security issues first
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

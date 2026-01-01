@@ -1,0 +1,89 @@
+COOP - Cross-Origin-Opener-Policy
+
+WHAT IT MEASURES
+Whether the Cross-Origin-Opener-Policy (COOP) HTTP header is configured to prevent cross-origin window access attacks. COOP isolates the browsing context from cross-origin documents, preventing malicious sites from accessing window properties of your site and protecting against attacks like Spectre and cross-origin information leakage.
+
+COOP values:
+- same-origin: Only same-origin documents can access the window
+- same-origin-allow-popups: Same-origin plus popups can access, but cross-origin cannot
+- unsafe-none: Allows cross-origin access (default, not recommended)
+
+Cross-origin isolation requires:
+- COOP header set to same-origin or same-origin-allow-popups
+- COEP (Cross-Origin-Embedder-Policy) header also set
+- Both headers must be present for isolation to be enabled
+
+HOW IT'S MEASURED
+HTTP header analysis checking for Cross-Origin-Opener-Policy header. The measurement process:
+
+1. Checks HTTP response headers:
+   - Looks for Cross-Origin-Opener-Policy header
+   - Reads header value (same-origin, same-origin-allow-popups, or unsafe-none)
+   - Verifies header is present and correctly formatted
+
+2. Validates cross-origin isolation:
+   - Checks if COOP is set (same-origin or same-origin-allow-popups)
+   - Verifies COEP header is also present (required for isolation)
+   - Determines if cross-origin isolation is actually enabled
+
+3. Returns boolean result:
+   - true: COOP header is present and configured correctly
+   - false: COOP header is missing or misconfigured
+
+WHY IT'S IMPORTANT
+Prevents cross-origin window access, protecting against attacks like Spectre and cross-origin information leakage. COOP is essential for security and enables powerful features that require cross-origin isolation.
+
+Security benefits:
+- Prevents cross-origin window access attacks
+- Protects against Spectre-style side-channel attacks
+- Prevents cross-origin information leakage
+- Isolates browsing context from malicious sites
+- Required for cross-origin isolation
+
+Feature enablement:
+- Enables SharedArrayBuffer (with COEP)
+- Enables high-resolution timers
+- Enables WebAssembly threads
+- Required for other isolation-required APIs
+
+THRESHOLDS
+- Good: true (COOP header present and correctly configured)
+- Poor: false (COOP header missing or misconfigured)
+
+Note: COOP alone doesn't enable isolation - COEP must also be set. Both headers are required.
+
+COMMON PITFALLS
+1. Missing COOP header: Header not set on server responses
+2. Incorrect COOP value: Wrong value or syntax error
+3. Cross-origin window access enabled: Using unsafe-none (default, insecure)
+4. Cross-origin isolation not enabled: COOP set but COEP missing
+5. Popup windows broken: same-origin may break cross-origin popups
+6. OAuth flows broken: Cross-origin redirects may not work
+7. Third-party integrations: Some integrations require window access
+8. Development vs production: Different configurations between environments
+
+OPTIMIZATION STRATEGIES
+1. Implement COOP header: Set Cross-Origin-Opener-Policy on all responses
+2. Use same-origin: Maximum security, isolates from cross-origin
+3. Use same-origin-allow-popups: If popups are needed
+4. Ensure cross-origin isolation: Set both COOP and COEP headers
+5. Test OAuth flows: Verify authentication flows work with COOP
+6. Update third-party integrations: Ensure compatibility with COOP
+7. Document COOP requirements: Ensure team understands isolation requirements
+8. Monitor for errors: Watch for COOP-related functionality breaks
+9. Gradual rollout: Test COOP in staging before production
+10. Fallback strategies: Have plan for features that need cross-origin access
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

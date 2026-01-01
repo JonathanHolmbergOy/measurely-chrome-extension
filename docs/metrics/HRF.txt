@@ -1,0 +1,293 @@
+HRF - Hreflang Validation
+
+WHAT IT MEASURES
+Hreflang tags for internationalization, which tell search engines about language and regional variants of a page. Hreflang link elements or HTTP headers specify which language/region versions of a page exist, helping search engines serve the correct version to users based on their language and location.
+
+The hreflang attribute should:
+- Indicate language variants (e.g., English, Spanish, French)
+- Indicate regional variants (e.g., US English, UK English, Canadian French)
+- Be reciprocal (if page A links to page B, B must link to A)
+- Include self-referential link
+- Use correct ISO language and country codes
+
+Hreflang format: language-REGION
+- language: ISO 639-1 two-letter language code (e.g., en, es, fr)
+- REGION: ISO 3166-1 Alpha 2 country code (optional, e.g., US, GB, MX)
+
+HOW IT'S MEASURED
+DOM analysis checking for hreflang link elements. The measurement process:
+
+1. Queries for hreflang link elements:
+   - Checks for <link rel="alternate" hreflang="..." href="...">
+   - May check HTTP Link headers
+   - Looks in sitemap (advanced)
+
+2. Validates hreflang attributes:
+   - Checks if hreflang values use correct format
+   - Verifies href URLs are valid
+   - May check for self-referential link
+   - May validate language/country codes
+
+3. Returns configuration:
+   - May return boolean (true if hreflang present)
+   - May return count of hreflang tags
+   - Identifies potential issues
+
+The measurement uses:
+- document.querySelectorAll('link[rel="alternate"][hreflang]')
+- Validates hreflang attribute format
+- Parses language and region codes
+
+WHY IT'S IMPORTANT
+Hreflang tags are essential for international and multilingual websites. They prevent duplicate content issues across language/regional versions and ensure users see content in their preferred language.
+
+SEO benefits:
+- Prevents duplicate content issues for translated pages
+- Ensures correct language version appears in search results
+- Improves international search rankings
+- Helps target specific geographic markets
+- Reduces bounce rate by serving appropriate language
+
+User experience:
+- Users see content in their language/region
+- Reduces confusion from wrong-language content
+- Improves engagement and conversions
+- Builds trust with local users
+
+Common scenarios:
+- Multiple language versions (English, Spanish, French, etc.)
+- Regional variants (US English vs UK English, Latin American Spanish vs Spain Spanish)
+- Multi-country sites serving different regions
+- International e-commerce with country-specific sites
+- Content localized for different markets
+
+Without hreflang:
+- Search engines may show wrong language version
+- Users in Spain may see English content
+- Duplicate content across language versions
+- Link equity may be split across variants
+- Inconsistent search results by location
+
+THRESHOLDS
+- Good: true (hreflang tags properly configured for international site)
+- Poor: false (missing hreflang on multilingual/multi-regional site)
+
+Not all sites need hreflang (only multilingual or multi-regional sites). The metric checks if configuration is appropriate.
+
+COMMON PITFALLS
+1. Missing reciprocal links: Page A links to B, but B doesn't link back to A
+2. No self-referential link: Page doesn't include hreflang to itself
+3. Wrong language codes: Using incorrect ISO codes
+4. Mixing hreflang methods: Using both HTML and HTTP headers (not recommended)
+5. 404 or redirected hreflang URLs: Pointing to broken URLs
+6. Inconsistent implementation: Some pages have hreflang, others don't
+7. Missing x-default: Not specifying default/fallback language
+8. Too many variants: Listing unnecessary language/region combinations
+9. Conflicting canonical tags: Canonical and hreflang pointing to different pages
+10. Wrong region codes: Using language code for region (e.g., hreflang="en-en" instead of "en-gb")
+
+OPTIMIZATION STRATEGIES
+1. Implement for all language/region variants: Cover all versions of your site
+2. Use reciprocal links: Ensure all pages link to all variants
+3. Include self-referential: Each page should link to itself
+4. Use x-default: Specify default language for unmatched users
+5. Use correct ISO codes: Validate language (ISO 639-1) and country (ISO 3166-1) codes
+6. Be consistent: Apply hreflang to all pages, not just homepage
+7. Validate URLs: Ensure all hreflang URLs return 200 status
+8. One method only: Use either HTML link tags OR HTTP headers, not both
+9. Coordinate with canonical: Ensure hreflang and canonical work together
+10. Test thoroughly: Use Google Search Console to check hreflang errors
+
+Hreflang implementation:
+
+HTML link elements (most common):
+```html
+<head>
+  <!-- Self-referential -->
+  <link rel="alternate" hreflang="en-us" href="https://example.com/page">
+  
+  <!-- Other language variants -->
+  <link rel="alternate" hreflang="en-gb" href="https://example.co.uk/page">
+  <link rel="alternate" hreflang="es" href="https://example.es/pagina">
+  <link rel="alternate" hreflang="fr" href="https://example.fr/page">
+  
+  <!-- Default fallback -->
+  <link rel="alternate" hreflang="x-default" href="https://example.com/page">
+</head>
+```
+
+HTTP headers (for non-HTML resources):
+```
+Link: <https://example.com/page>; rel="alternate"; hreflang="en-us",
+      <https://example.co.uk/page>; rel="alternate"; hreflang="en-gb",
+      <https://example.es/pagina>; rel="alternate"; hreflang="es",
+      <https://example.com/page>; rel="alternate"; hreflang="x-default"
+```
+
+XML sitemap (alternative method):
+```xml
+<url>
+  <loc>https://example.com/page</loc>
+  <xhtml:link rel="alternate" hreflang="en-us" href="https://example.com/page"/>
+  <xhtml:link rel="alternate" hreflang="en-gb" href="https://example.co.uk/page"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://example.es/pagina"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="https://example.com/page"/>
+</url>
+```
+
+Language-only vs language-region:
+- en: English (any region)
+- en-us: US English specifically
+- en-gb: UK English specifically
+- es: Spanish (any region)
+- es-mx: Mexican Spanish
+- es-es: Spain Spanish
+
+X-default usage:
+- hreflang="x-default": Fallback for users whose language/region isn't listed
+- Should point to your primary version or language selector page
+- Highly recommended for international sites
+
+TECHNICAL DETAILS
+Hreflang is implemented via HTML link elements, HTTP headers, or XML sitemaps.
+
+Hreflang attributes:
+- rel="alternate": Indicates this is an alternate version
+- hreflang: Language and optionally region (e.g., "en-us", "fr", "zh-cn")
+- href: URL of the alternate version
+
+Supported formats:
+- Language only: hreflang="en" (any English)
+- Language + region: hreflang="en-us" (US English)
+- Script variant: hreflang="zh-hans" (Simplified Chinese)
+- X-default: hreflang="x-default" (fallback)
+
+ISO code requirements:
+- Language: ISO 639-1 (two letters, lowercase)
+- Region: ISO 3166-1 Alpha 2 (two letters, uppercase)
+- Combined: language-region (e.g., "en-US", though lowercase is also accepted)
+
+Reciprocal linking requirement:
+- If page A has hreflang to page B, page B must have hreflang back to page A
+- All pages must include all variants (including themselves)
+- Creates a full mesh of links across all language versions
+
+Accessing hreflang:
+- JavaScript: document.querySelectorAll('link[rel="alternate"][hreflang]')
+- Can be added dynamically
+- Search engines prefer static implementation
+
+Search engine processing:
+- Google, Bing, Yandex support hreflang
+- Crawlers validate reciprocal relationships
+- May ignore hreflang if errors detected
+- Takes time to process (not immediate)
+
+Hreflang vs canonical:
+- Hreflang: For language/regional variants (similar content in different languages)
+- Canonical: For duplicate content (same content, different URLs)
+- Can be used together when appropriate
+- Canonical should point within the same language version
+
+HISTORY
+Hreflang was introduced to solve international SEO challenges:
+
+2011: Google announced hreflang attribute support. Before this, multilingual sites often faced duplicate content issues, and search engines struggled to show the right language version to users.
+
+2012: Implementation methods formalized. Google recommended HTML link elements in the page <head> as the primary method.
+
+2012-2013: Yandex and Bing adopted hreflang support, making it a multi-engine standard for international SEO.
+
+2013: XML sitemap implementation method added as an alternative to HTML link elements, useful for sites with many pages or dynamic content.
+
+2014: HTTP header method formalized for non-HTML resources like PDFs.
+
+2014-2017: International e-commerce growth increased hreflang importance. Many large sites struggled with complex implementations across multiple languages and regions.
+
+2017: Google Search Console added hreflang error reports, helping webmasters identify and fix implementation issues.
+
+2018-present: Hreflang became essential for international SEO. Major CMSs added hreflang support. However, it remains one of the most complex and error-prone SEO implementations.
+
+Common hreflang problems persist:
+- Reciprocal link errors (still the most common issue)
+- Missing self-referential links
+- Conflicting canonical tags
+- These issues continue to be reported frequently in Search Console
+
+Present: Hreflang is a critical component of international SEO strategy. Proper implementation is complex but essential for multilingual and multi-regional sites. Many sites still have hreflang errors that dilute their international SEO effectiveness.
+
+BROWSER SUPPORT
+Hreflang is for search engines, not browsers:
+
+- Browsers parse but don't act on hreflang
+- Search engine crawlers (Googlebot, Bingbot, Yandex) use hreflang
+- Google, Bing, Yandex fully support hreflang
+- No browser-specific features required
+
+INDUSTRY STANDARDS
+This metric aligns with search engine guidelines for international SEO:
+
+Search engine specifications:
+- Google: Comprehensive hreflang documentation
+- Bing: Supports same hreflang format
+- Yandex: Full hreflang support
+- Jointly supported standard
+
+SEO guidelines:
+- Google Search Central: Detailed hreflang guide
+- ISO 639-1: Language codes standard
+- ISO 3166-1: Country codes standard
+
+Tools that check hreflang:
+- Google Search Console: Hreflang error reports
+- Screaming Frog: Hreflang analysis and validation
+- Sitebulb: Detailed hreflang error checking
+- Ahrefs: International SEO and hreflang audits
+- SEMrush: Hreflang validator
+- Hreflang Tags Testing Tool: Dedicated checker
+
+Common CMS implementations:
+- WordPress (WPML, Polylang): Automatic hreflang
+- Shopify: International domain support with hreflang
+- Contentful: Internationalization with hreflang
+- Most enterprise CMSs support hreflang
+
+RELATED METRICS
+Hreflang is part of comprehensive international SEO:
+
+- CNU (Canonical URL): Works with hreflang for international content
+- DTL (Document Title): Should be translated for each language
+- MD (Meta Description): Should be translated for each language
+- LAA (Language Attributes): HTML lang attribute works with hreflang
+- OG (Open Graph): Should be localized per language
+- All SEO metrics should be implemented per language version
+
+MEASUREMENT LIMITATIONS
+Hreflang measurement limitations:
+
+1. Can't validate reciprocity: Single page scan can't check if linked pages link back
+2. Can't check accessibility: Requires HTTP requests to verify hreflang URLs work
+3. Complex validation: Full validation requires site-wide crawl
+4. Can't determine appropriateness: Tools can't judge if hreflang strategy is correct
+5. Multiple methods: Hreflang can be in HTML, HTTP headers, or sitemap
+6. Dynamic content: JavaScript may inject hreflang after load
+7. Search engine processing: Can't predict exact search engine interpretation
+
+Manual review needed for:
+- Verifying reciprocal links across all language versions
+- Checking all hreflang URLs are accessible (200 status)
+- Ensuring language codes are correct for target markets
+- Testing in Google Search Console for hreflang errors
+- Validating complete implementation across entire site
+- Coordinating with canonical tags
+- Testing search results in different countries/languages
+
+
+SOURCES
+- Google Search Central Hreflang: https://developers.google.com/search/docs/specialty/international/localized-versions
+- ISO 639-1 Language Codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+- ISO 3166-1 Country Codes: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+- Ahrefs Hreflang Guide: https://ahrefs.com/blog/hreflang-tags/
+- Moz International SEO: https://moz.com/learn/seo/hreflang-tag
+- Yandex Hreflang: https://yandex.com/support/webmaster/yandex-indexing/locale-pages.html
+

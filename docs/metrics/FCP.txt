@@ -1,0 +1,93 @@
+FCP - First Contentful Paint
+
+WHAT IT MEASURES
+First Contentful Paint (FCP) measures the time from when a user navigates to a page until the first text or image is rendered on the screen. This metric captures the moment when users first see content, providing initial visual feedback that the page is loading.
+
+HOW IT'S MEASURED
+FCP is measured using the PerformancePaintTiming API, which is part of the Performance Timeline specification. The browser records paint timing entries that mark when the first content appears. Measurement occurs client-side using PerformanceObserver to observe 'paint' entry types, specifically the 'first-contentful-paint' entry. The metric is calculated as the time difference between the navigation start and the first paint event.
+
+The measurement can be accessed via:
+- performance.getEntriesByType('paint') - returns paint timing entries
+- PerformanceObserver with type 'paint' - observes paint events as they occur
+- Navigation Timing API - provides the navigation start time reference point
+
+WHY IT'S IMPORTANT
+FCP is a Core Web Vital and a key user experience metric. It directly correlates with perceived loading speed. Users form their first impression of page speed within the first few seconds, and FCP represents the earliest point at which they receive visual confirmation that content is loading. Poor FCP scores indicate that users experience a blank screen for too long, leading to higher bounce rates and reduced user satisfaction.
+
+FCP is particularly important for:
+- First-time visitors who have no cached resources
+- Users on slower network connections
+- Mobile users who may have limited bandwidth
+- SEO rankings, as search engines consider page speed in their algorithms
+
+THRESHOLDS
+- Good: ≤ 1800ms (1.8 seconds)
+- Needs Improvement: 1800ms - 3000ms
+- Poor: ≥ 3000ms (3 seconds)
+
+COMMON PITFALLS
+1. Blocking render-blocking resources: CSS and JavaScript files that prevent the browser from rendering content until they are downloaded and parsed
+2. Slow server response times: High Time to First Byte (TTFB) delays when the first content can be painted
+3. Render-blocking external fonts: Web fonts that block text rendering until they are loaded
+4. Large HTML documents: Excessive HTML size increases parsing time before first paint
+5. Inefficient CSS: Complex selectors or large stylesheets that delay rendering
+6. Synchronous JavaScript execution: Scripts that block the main thread prevent rendering
+
+OPTIMIZATION STRATEGIES
+- Minimize render-blocking resources by deferring non-critical CSS and JavaScript
+- Use resource hints like preload for critical assets
+- Optimize server response times through CDN usage and server-side optimizations
+- Implement font-display: swap to prevent invisible text during font loading
+- Reduce HTML payload size through minification and removing unused code
+- Inline critical CSS to reduce render-blocking requests
+- Use async or defer attributes for non-critical JavaScript
+
+TECHNICAL DETAILS
+FCP measures only the first paint event, which may be text, an image, or other visual content. It does not measure when the largest content element loads (that is measured by LCP). The metric is measured relative to navigation start, which includes DNS lookup, TCP connection, TLS negotiation, and server response time.
+
+FCP specifically measures the first paint that contains content from the DOM. This excludes background colors and non-content paints. The metric is measured in milliseconds from navigation start to the first contentful paint event.
+
+FCP is one of three Core Web Vitals, alongside LCP and CLS. These metrics are used by Google in search ranking algorithms and are reported in tools like Google Search Console and PageSpeed Insights.
+
+
+HISTORY
+First Contentful Paint (FCP) emerged from the need to measure perceived loading performance rather than just technical load time:
+
+Early 2000s: Page load time (window.onload) was the primary performance metric, but it didn't reflect when users actually saw content. A page could appear blank for seconds before window.onload fired, creating a disconnect between technical metrics and user experience.
+
+2010-2012: Google began researching user-centric performance metrics. Studies showed that users form their first impression of page speed within 1-2 seconds, long before traditional load events fire. The need for "perceived performance" metrics became clear.
+
+2012: W3C published the Performance Timeline specification, providing the foundation for performance measurement APIs. However, paint timing wasn't yet standardized.
+
+2017: The Paint Timing API was proposed to W3C, introducing First Paint (FP) and First Contentful Paint (FCP). Chrome 60 was the first browser to implement the API, allowing developers to measure when content first appears on screen.
+
+2017-2018: W3C formalized the Paint Timing specification. FCP was distinguished from First Paint (FP) by requiring actual content (text, images, canvas) rather than just background colors or frames. This made FCP a more meaningful user experience metric.
+
+2018: Google's Lighthouse audit tool and PageSpeed Insights began reporting FCP scores. The initial threshold was set at 1.0 second for "good" performance, based on research showing that users perceive pages loading within 1 second as "instant."
+
+2020: Google announced Web Vitals and Core Web Vitals. While FCP wasn't designated as a Core Web Vital (LCP took that role for loading), it remained an important supplementary metric. The threshold was adjusted to 1.8 seconds for "good" based on real-world data from the Chrome User Experience Report.
+
+2021: Core Web Vitals became a Google search ranking factor. While FCP itself isn't a ranking signal, it correlates strongly with LCP and provides early feedback about page loading.
+
+Present: FCP is widely used in performance monitoring tools as an early indicator of loading speed. It's particularly useful for detecting render-blocking resources and server response issues. The metric is supported in all modern browsers (Chrome, Firefox, Safari, Edge) and is a standard component of Real User Monitoring (RUM) solutions.
+
+FCP thresholds have remained stable: ≤1.8s is good, 1.8-3.0s needs improvement, ≥3.0s is poor. These thresholds are based on analysis of millions of page loads from the Chrome User Experience Report.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- MDN: https://developer.mozilla.org/en-US/docs/Web/API/PerformancePaintTiming
+- Web.dev: https://web.dev/fcp/
+- W3C: https://www.w3.org/TR/paint-timing/
+

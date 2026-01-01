@@ -1,0 +1,146 @@
+TBT - Total Blocking Time
+
+WHAT IT MEASURES
+Total time the main thread is blocked by long tasks (> 50ms) between First Contentful Paint (FCP) and Time to Interactive (TTI). TBT measures responsiveness by quantifying how much JavaScript execution blocks user interactions.
+
+Long tasks:
+- Tasks > 50ms block the main thread
+- Only the portion > 50ms is counted as blocking
+- Example: 100ms task = 50ms blocking time
+- Multiple long tasks sum to total blocking time
+
+The metric measures:
+- Sum of blocking portions of all long tasks
+- Time between FCP and TTI
+- Impact on interactivity
+- Main thread blocking duration
+
+HOW IT'S MEASURED
+PerformanceObserver API with 'longtask' entry type, calculating sum of blocking portions (duration - 50ms) of all long tasks between FCP and TTI. The measurement process:
+
+1. Observes long tasks:
+   - Uses PerformanceObserver with 'longtask' entry type
+   - Tracks all tasks > 50ms
+   - Records task duration
+
+2. Calculates blocking time:
+   - For each long task: duration - 50ms
+   - Sums blocking portions
+   - Only counts tasks between FCP and TTI
+
+3. Returns TBT:
+   - Total blocking time in milliseconds
+   - Indicates main thread blocking
+
+WHY IT'S IMPORTANT
+Measures how much JavaScript execution blocks user interactions. High TBT causes unresponsive pages and poor user experience, directly affecting First Input Delay (FID) and Interaction to Next Paint (INP).
+
+Performance impact:
+- Blocks user interactions
+- Affects FID and INP
+- Delays Time to Interactive
+- Creates unresponsive feeling
+- Poor perceived performance
+
+User experience:
+- Unresponsive page
+- Delayed interactions
+- Frustration
+- Increased bounce rates
+- Poor user experience
+
+THRESHOLDS
+- Good: ≤ 300ms (Low blocking, responsive)
+- Needs Improvement: 300-600ms (Moderate blocking)
+- Poor: ≥ 600ms (High blocking, unresponsive)
+
+COMMON PITFALLS
+1. Long JavaScript tasks: Tasks > 50ms blocking main thread
+2. Heavy computations on main thread: Expensive operations blocking
+3. Large bundle parsing: Large JavaScript files taking time to parse
+4. Synchronous operations: Blocking operations preventing responsiveness
+5. Inefficient algorithms: Poorly optimized code creating long tasks
+
+OPTIMIZATION STRATEGIES
+1. Break up long tasks: Split tasks > 50ms into smaller chunks
+2. Use web workers: Move heavy computation off main thread
+3. Optimize JavaScript execution: Improve code efficiency
+4. Reduce bundle size: Minimize JavaScript payload
+5. Defer non-critical work: Load non-critical code later
+6. Use requestIdleCallback: Schedule work during idle time
+7. Profile long tasks: Use DevTools to identify long tasks
+8. Monitor TBT: Track TBT over time
+
+
+HISTORY
+Total Blocking Time (TBT) was developed as a lab proxy metric for measuring main thread blocking:
+
+2016-2017: As developers focused on interactivity, the concept of "long tasks" became central to performance optimization. Research showed that tasks taking longer than 50ms block the main thread and prevent the browser from responding to user input. The 50ms threshold comes from the RAIL performance model (Response, Animation, Idle, Load), which recommends responding to user input within 100ms - allowing 50ms for application code and 50ms for browser processing.
+
+2018: Lighthouse introduced Time to Interactive (TTI), which measured when the main thread becomes idle for 5 seconds. However, TTI had limitations:
+- It was an all-or-nothing metric (either interactive or not)
+- It didn't quantify HOW MUCH blocking occurred
+- It could be very late or non-existent on some pages
+- It was difficult to improve incrementally
+
+To address these limitations, Google developed Total Blocking Time (TBT) as a complementary metric.
+
+2019: TBT was added to Lighthouse as a metric that quantifies the severity of main thread blocking during page load. TBT measures the total amount of time the main thread is blocked by long tasks between First Contentful Paint (FCP) and Time to Interactive (TTI).
+
+TBT calculation:
+1. Identify all long tasks (> 50ms) between FCP and TTI
+2. For each long task, calculate blocking time = task duration - 50ms
+3. Sum all blocking times to get TBT
+
+For example:
+- 60ms task → 10ms blocking time
+- 75ms task → 25ms blocking time
+- 200ms task → 150ms blocking time
+- TBT = 10ms + 25ms + 150ms = 185ms
+
+2020: Lighthouse v6 gave TBT significant weight in the performance score calculation. TBT became a key metric for identifying and quantifying JavaScript performance issues during page load. The metric proved valuable because:
+- It's more sensitive than TTI to incremental improvements
+- It quantifies the magnitude of the problem, not just presence/absence
+- It directly correlates with user experience (more blocking = worse UX)
+- It's measurable in lab environments (unlike FID which requires real users)
+
+Lighthouse thresholds:
+- Good: ≤ 200ms
+- Needs Improvement: 200-600ms
+- Poor: ≥ 600ms
+
+2021: TBT was recognized as a good lab proxy for FID (First Input Delay). Since FID requires real user interaction and can't be measured in synthetic testing, TBT provides a lab-based estimate of how responsive the page will be to user input. Studies showed strong correlation between TBT and FID.
+
+2022-2024: As INP (Interaction to Next Paint) replaced FID, TBT remained valuable as a load-time metric. While INP measures all interactions throughout the page lifecycle, TBT specifically measures blocking during the critical load period.
+
+Present: TBT is a standard metric in performance testing:
+- Lighthouse reports TBT and uses it in performance scores
+- WebPageTest displays TBT for all tests
+- Performance budgets often include TBT thresholds
+- CI/CD pipelines gate deployments on TBT regression
+
+Common TBT optimization strategies:
+- Code splitting to reduce JavaScript payload during load
+- Deferring non-critical JavaScript
+- Breaking up long tasks into smaller chunks
+- Using web workers for heavy computation
+- Removing or lazy-loading third-party scripts
+- Optimizing JavaScript parsing and execution
+
+TBT remains one of the most actionable performance metrics because it directly points to the problem (long tasks blocking the main thread) and quantifies the severity, making it easy to track improvement progress.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

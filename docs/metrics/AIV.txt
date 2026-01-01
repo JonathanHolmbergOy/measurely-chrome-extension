@@ -1,0 +1,209 @@
+AIV - ARIA Invalid Combinations
+
+WHAT IT MEASURES
+Count of elements with invalid ARIA role/attribute combinations. This includes redundant roles on native HTML elements (e.g., native button with role="button"), invalid attribute combinations for specific roles, and ARIA usage that conflicts with native element semantics.
+
+The most common invalid combination is adding ARIA roles to native HTML elements that already have that role implicitly. For example, a native `<button>` element already has the button role, so adding `role="button"` is redundant and can cause issues with assistive technologies.
+
+Invalid combinations also include:
+- Using ARIA attributes not allowed for a specific role
+- Missing required parent roles for child roles
+- Missing required child roles for parent roles
+- Conflicting ARIA states and properties
+- Using ARIA when native HTML would suffice
+
+HOW IT'S MEASURED
+DOM analysis checking for invalid ARIA role and attribute combinations based on W3C ARIA specification rules:
+
+1. Redundant role detection: Identifies native HTML elements with explicit ARIA roles that match their implicit roles
+   - `<button role="button">` → Redundant
+   - `<a role="link">` → Redundant
+   - `<input type="text" role="textbox">` → Redundant
+   - `<h1 role="heading">` → Redundant
+
+2. Allowed attributes validation: Checks if ARIA attributes are allowed for the specified role according to ARIA specification
+   - Each role has a defined set of allowed attributes
+   - Attributes like `aria-checked` are only valid for certain roles (checkbox, radio, menuitemcheckbox, etc.)
+
+3. Required parent validation: Verifies that roles requiring specific parent roles are properly nested
+   - `role="menuitem"` requires parent with `role="menu"` or `role="menubar"`
+   - `role="option"` requires parent with `role="listbox"` or `role="combobox"`
+
+4. Required children validation: Checks if roles requiring specific child roles have them
+   - `role="listbox"` should contain elements with `role="option"`
+
+5. Conflicting attributes: Detects conflicting ARIA states or properties
+   - Elements cannot be both `aria-hidden="true"` and have interactive roles
+   - Certain combinations of aria-expanded, aria-selected, and aria-checked may conflict
+
+The measurement follows the W3C ARIA specification's role definitions and allowed attributes tables.
+
+WHY IT'S IMPORTANT
+Invalid ARIA combinations can confuse assistive technologies and create accessibility barriers. The "First Rule of ARIA" states: "If you can use a native HTML element or attribute with the semantics and behavior you require already built in, instead of re-purposing an element and adding an ARIA role, state or property to make it accessible, then do so."
+
+Impact of invalid combinations:
+- Screen readers may announce elements incorrectly or skip them entirely
+- Keyboard navigation may not work as expected
+- Assistive technologies may ignore redundant or conflicting ARIA
+- Native browser behaviors may be overridden incorrectly
+- Accessibility tree may become inconsistent or broken
+
+Invalid ARIA usage violates WCAG 2.1 Success Criterion 4.1.2 (Name, Role, Value), which requires that all user interface components have roles, states, and properties that can be programmatically determined and are consistent with the component's purpose.
+
+THRESHOLDS
+- Good: 0 errors (no invalid ARIA combinations)
+- Poor: ≥ 1 error (any invalid combination indicates a problem)
+
+The threshold is strict because even one invalid combination can create accessibility barriers. Zero tolerance is appropriate because these errors are easily preventable and indicate misunderstanding of ARIA best practices.
+
+COMMON PITFALLS
+1. Native elements with redundant roles: Adding explicit ARIA roles to elements that already have those roles
+   - `<button role="button">` → Should be just `<button>`
+   - `<a href="#" role="link">` → Should be just `<a href="#">`
+   - `<input type="checkbox" role="checkbox">` → Should be just `<input type="checkbox">`
+
+2. Invalid role/attribute pairs: Using ARIA attributes not allowed for a specific role
+   - `role="heading"` with `aria-checked="true"` → aria-checked not allowed for heading role
+   - `role="button"` with `aria-selected="true"` → aria-selected not allowed for button role
+
+3. Conflicting ARIA attributes: Using attributes that conflict with each other or the element's role
+   - `aria-hidden="true"` on interactive elements → Hides element from assistive tech but it's still interactive
+   - `role="presentation"` on interactive elements → Removes semantics but element remains interactive
+
+4. Missing required parents: Using child roles without required parent roles
+   - `role="menuitem"` without parent `role="menu"` or `role="menubar"`
+   - `role="tab"` without parent `role="tablist"`
+
+5. Missing required children: Using parent roles without required child roles
+   - `role="listbox"` without child elements with `role="option"`
+   - `role="radiogroup"` without child elements with `role="radio"`
+
+6. Using ARIA instead of native HTML: Creating custom widgets when native elements would work
+   - `<div role="button" tabindex="0">` when `<button>` would suffice
+   - `<span role="link" tabindex="0">` when `<a>` would suffice
+
+7. Overriding native semantics incorrectly: Using ARIA to change native element behavior inappropriately
+   - `<button role="link">` → Changes button to link, but button behavior remains
+   - `<a role="button">` → Changes link to button, but link behavior remains
+
+OPTIMIZATION STRATEGIES
+1. Follow the First Rule of ARIA: Use native HTML elements whenever possible instead of adding ARIA roles
+2. Remove redundant roles: Eliminate explicit ARIA roles from native elements that already have those roles
+3. Validate ARIA usage: Use tools like axe-core, WAVE, or Lighthouse to detect invalid combinations
+4. Consult ARIA specification: Reference W3C ARIA specification for allowed attributes per role
+5. Use ARIA Authoring Practices Guide: Follow W3C patterns for common widgets
+6. Test with screen readers: Verify that ARIA changes work correctly with assistive technologies
+7. Review role requirements: Ensure parent/child role relationships are correct
+8. Avoid conflicting attributes: Don't use aria-hidden on interactive elements or presentation role on functional elements
+9. Prefer semantic HTML: Use proper HTML5 semantic elements before resorting to ARIA
+10. Code review: Include ARIA validation in code review processes
+
+TECHNICAL DETAILS
+The W3C ARIA specification defines strict rules for role/attribute combinations:
+
+1. Allowed Attributes: Each ARIA role has a defined set of allowed attributes. The specification includes tables listing which attributes are:
+   - Required: Must be present for the role to function
+   - Supported: Allowed but not required
+   - Prohibited: Not allowed for this role
+
+2. Role Hierarchy: Some roles have parent/child relationships:
+   - Abstract roles: Cannot be used directly (e.g., structure, widget, window)
+   - Concrete roles: Can be used in markup (e.g., button, link, heading)
+   - Landmark roles: Define page regions (e.g., navigation, main, complementary)
+
+3. Native Element Mapping: HTML elements have implicit ARIA roles:
+   - `<button>` → implicit role="button"
+   - `<a href>` → implicit role="link"
+   - `<input type="checkbox">` → implicit role="checkbox"
+   - `<h1>` → implicit role="heading" with aria-level="1"
+
+4. ARIA Attribute Categories:
+   - States: aria-checked, aria-selected, aria-expanded, aria-disabled, etc.
+   - Properties: aria-label, aria-labelledby, aria-describedby, aria-required, etc.
+   - Live regions: aria-live, aria-atomic, aria-relevant
+   - Relationships: aria-owns, aria-controls, aria-flowto
+
+5. Validation Rules:
+   - aria-allowed-attr: Validates attributes are allowed for the role
+   - aria-required-parent: Validates required parent role exists
+   - aria-required-children: Validates required child roles exist
+   - aria-required-owned: Validates required owned elements exist
+
+Invalid combinations are detected by comparing element attributes against the ARIA specification's role definitions and allowed attributes tables.
+
+HISTORY
+The concept of invalid ARIA combinations emerged as developers began using ARIA incorrectly, leading to accessibility issues. The W3C ARIA specification has always included rules about allowed attributes, but these were not always well understood or enforced.
+
+2014: W3C published WAI-ARIA 1.0, which included role definitions and allowed attributes tables. However, many developers were not aware of these restrictions.
+
+2017: WAI-ARIA 1.1 refined the specification with clearer rules about role/attribute combinations. The "First Rule of ARIA" became widely promoted as a best practice.
+
+2018: WCAG 2.1 maintained Success Criterion 4.1.2, requiring that roles, states, and properties be programmatically determinable and consistent. This implicitly requires valid ARIA usage.
+
+2019: Accessibility testing tools like axe-core began implementing strict validation of ARIA role/attribute combinations, making invalid combinations easier to detect.
+
+2021: WAI-ARIA 1.2 further refined the specification with updated role definitions and clearer documentation of allowed attributes.
+
+2023: WCAG 2.2 continued to emphasize proper ARIA usage through Success Criterion 4.1.2.
+
+The "First Rule of ARIA" became a fundamental principle: "If you can use a native HTML element or attribute with the semantics and behavior you require already built in, instead of re-purposing an element and adding an ARIA role, state or property to make it accessible, then do so."
+
+Today, invalid ARIA combinations are one of the most common accessibility issues found in web audits, often resulting from developers adding ARIA "just to be safe" without understanding when it's needed or appropriate.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C WAI-ARIA specifications and WCAG 2.1/2.2 accessibility guidelines. ARIA invalid combination detection is implemented in major accessibility testing tools including:
+
+- axe-core: Open-source accessibility testing engine with specific rules for aria-allowed-attr, aria-required-parent, and redundant roles
+- WAVE (Web Accessibility Evaluation Tool): Browser extension and online tool that flags invalid ARIA usage
+- Lighthouse: Google's automated auditing tool includes ARIA validation in accessibility audits
+- Pa11y: Command-line accessibility testing tool that checks ARIA validity
+- Accessibility Insights: Microsoft's accessibility testing tool with ARIA validation
+- HTML Validator: W3C validator can detect some ARIA implementation issues
+
+The "First Rule of ARIA" is widely promoted by:
+- W3C ARIA Authoring Practices Guide
+- MDN Web Docs ARIA documentation
+- WebAIM accessibility resources
+- A11y Project community guidelines
+
+Legal requirements (Section 508, EN 301 549, AODA) require WCAG compliance, which includes proper ARIA usage through Success Criterion 4.1.2.
+
+RELATED METRICS
+ARIA Invalid Combinations are part of a comprehensive accessibility measurement framework. Related metrics include:
+
+- AEC (ARIA Errors): Missing accessible names on ARIA elements (complementary to invalid combinations)
+- ARS (ARIA Relationship Errors): Broken ARIA relationships (aria-labelledby, aria-describedby)
+- AIV (this metric): Invalid role/attribute combinations
+- ASC (Accessibility Score): Composite score including ARIA validation
+
+Together, these metrics identify different types of ARIA implementation problems that create accessibility barriers.
+
+MEASUREMENT LIMITATIONS
+Client-side ARIA validation has several limitations:
+
+1. Dynamic content: Elements added after initial page load may not be detected in automated scans
+2. JavaScript-generated ARIA: ARIA attributes added dynamically may not be immediately available for testing
+3. Shadow DOM: Elements within Shadow DOM may require special handling for ARIA validation
+4. Framework abstractions: Some frameworks may generate ARIA that appears invalid but works correctly in context
+5. False positives: Tools may flag valid ARIA usage that appears invalid due to complex patterns
+6. Browser differences: Different browsers may handle invalid ARIA differently, making detection inconsistent
+7. Context-dependent validity: Some ARIA combinations may be valid in specific contexts but invalid in others
+8. Specification evolution: ARIA specification updates may change what's considered valid
+
+Automated testing should be supplemented with:
+- Manual code review of ARIA usage
+- Screen reader testing to verify actual behavior
+- Consultation of ARIA Authoring Practices Guide
+- Understanding of native HTML element semantics
+
+Measurements are most accurate when performed on fully rendered pages with all dynamic content loaded and after user interactions that may add ARIA attributes.
+
+
+SOURCES
+- MDN ARIA Roles: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles
+- W3C WAI-ARIA: https://www.w3.org/WAI/ARIA/
+- W3C ARIA Authoring Practices Guide: https://www.w3.org/WAI/ARIA/apg/
+- MDN First Rule of ARIA: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#the_first_rule_of_aria
+- axe-core ARIA Rules: https://github.com/dequelabs/axe-core
+- WCAG 2.1 Success Criterion 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+- See metrics.txt for additional sources

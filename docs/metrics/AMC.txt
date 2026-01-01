@@ -1,0 +1,181 @@
+AMC - Alt Text Missing
+
+WHAT IT MEASURES
+Number of images without alternative text descriptions. Missing alt text prevents screen readers from describing images to visually impaired users. The alt attribute provides a text alternative that conveys the same information or function as the image.
+
+Images fall into three categories:
+1. Informative images: Convey content or information - must have descriptive alt text
+2. Decorative images: Purely decorative, don't convey information - should have alt="" (empty)
+3. Functional images: Used as links or buttons - alt text should describe the function, not appearance
+
+Missing alt text means screen readers cannot communicate image content to users who cannot see the images, creating a significant accessibility barrier.
+
+HOW IT'S MEASURED
+DOM analysis checking img elements for missing or empty alt attributes. The measurement process:
+
+1. Identifies all `<img>` elements in the DOM
+2. Checks for the presence of the alt attribute
+3. Validates that alt text is appropriate:
+   - Informative images: Must have non-empty, descriptive alt text
+   - Decorative images: Should have alt="" (empty string)
+   - Functional images: Must have alt text describing the function
+
+4. Counts images that are missing alt attributes entirely
+5. May also flag images with inappropriate alt text (e.g., decorative images with descriptive alt, or informative images with placeholder text like "image" or filename)
+
+The measurement distinguishes between:
+- Missing alt attribute: `<img src="photo.jpg">` (no alt attribute)
+- Empty alt for informative image: `<img src="chart.jpg" alt="">` (should have description)
+- Inappropriate alt text: `<img src="logo.png" alt="image">` (placeholder text)
+
+WHY IT'S IMPORTANT
+Alt text is essential for screen reader users to understand image content. Missing alt text violates WCAG 2.1 Success Criterion 1.1.1 (Level A), which requires that all non-text content has a text alternative.
+
+Impact on users:
+- Screen reader users cannot understand image content without alt text
+- Screen readers may announce "image" or the filename, providing no useful information
+- Images used as links without alt text are completely inaccessible
+- Charts, graphs, and infographics become meaningless without descriptions
+- Functional images (buttons, links) become unusable without alt text
+
+Accessibility impact:
+- WCAG 2.1 Level A violation (required for basic accessibility compliance)
+- Legal compliance issues in jurisdictions requiring WCAG compliance
+- Excludes visually impaired users from understanding visual content
+- Reduces overall site accessibility score
+
+SEO impact:
+- Search engines use alt text to understand image content
+- Missing alt text reduces image search visibility
+- Alt text helps with image SEO and discoverability
+
+THRESHOLDS
+- Good: 0 errors (all images have appropriate alt text)
+- Needs Improvement: 1-2 errors (minor issues)
+- Poor: ≥ 3 errors (significant accessibility barriers)
+
+The threshold of 3 errors is based on WCAG compliance requirements where multiple violations indicate systemic accessibility issues. However, even one missing alt text can create a barrier for users.
+
+COMMON PITFALLS
+1. Images without alt attributes: `<img src="photo.jpg">` - completely missing alt attribute
+2. Decorative images with descriptive alt: Adding alt text to purely decorative images that should have alt=""
+3. Missing alt for informative images: Images conveying information without descriptive alt text
+4. Using filename as alt text: `<img src="IMG_1234.jpg" alt="IMG_1234.jpg">` - not helpful
+5. Placeholder alt text: Using generic text like "image", "photo", "picture" instead of descriptions
+6. Functional images without alt: Images used as links or buttons missing function-describing alt text
+7. Redundant alt text: Starting alt text with "image of" or "picture of" (screen readers already announce it's an image)
+8. Alt text too long: Extremely verbose alt text that becomes tedious for screen reader users
+9. Missing alt on background images: CSS background images cannot have alt text (should use img elements for important images)
+10. Context-ignorant alt text: Same image needing different alt text in different contexts but using same description
+
+OPTIMIZATION STRATEGIES
+1. Add descriptive alt text to informative images: Provide concise, accurate descriptions of image content
+2. Use alt="" for decorative images: Mark purely decorative images with empty alt attribute
+3. Describe function for functional images: Alt text for images used as links/buttons should describe the function, not appearance
+4. Keep alt text concise: Typically 125 characters or less, but can be longer for complex images like charts
+5. Don't include "image of": Screen readers already announce it's an image, so start with the description
+6. Consider context: Same image may need different alt text depending on surrounding content
+7. Test with screen readers: Verify alt text is helpful and appropriate
+8. Use automated testing: Tools can detect missing alt attributes
+9. Review image content: Determine if images are informative, decorative, or functional
+10. Provide detailed descriptions for complex images: Charts, graphs, and infographics may need longer, more detailed alt text
+
+TECHNICAL DETAILS
+The HTML img element's alt attribute has been required since HTML 4.01 (1999). In HTML5, the alt attribute is required for all img elements, with the exception that decorative images should use alt="" (empty string).
+
+Alt text best practices:
+- Informative images: Describe the image content and its purpose in context
+- Decorative images: Use alt="" to indicate the image should be ignored
+- Functional images: Describe the function (e.g., "Submit form" not "Blue button")
+- Complex images: May require longer descriptions or additional aria-describedby for detailed explanations
+
+Screen reader behavior:
+- When alt text is present: Screen reader announces "Image: [alt text]"
+- When alt is missing: Screen reader may announce "Image" or the filename
+- When alt="" is used: Screen reader skips the image entirely (appropriate for decorative images)
+
+Images that cannot have alt text:
+- CSS background images: Cannot have alt attributes (use img elements for important images)
+- SVG used as img: Can have alt attribute
+- SVG inline: Should use <title> and <desc> elements instead of alt
+
+HISTORY
+The alt attribute has a long history in web accessibility:
+
+1995: HTML 2.0 (RFC 1866) introduced the img element with the alt attribute. The alt attribute was designed to provide text alternatives for images, recognizing that not all users could view images.
+
+1999: HTML 4.01 made the alt attribute required for all img elements. WCAG 1.0 was published, including Guideline 1.1 requiring text equivalents for non-text content, including images.
+
+2000s: As screen reader usage grew, the importance of alt text became more widely recognized. Web developers began to understand the difference between informative and decorative images.
+
+2008: WCAG 2.0 was published with Success Criterion 1.1.1 (Level A), requiring text alternatives for all non-text content. This made alt text a legal requirement in many jurisdictions.
+
+2014: HTML5 specification clarified that decorative images should use alt="" (empty string) rather than omitting the attribute. This distinction became important for proper screen reader behavior.
+
+2018: WCAG 2.1 maintained the 1.1.1 requirement, continuing to emphasize the importance of alt text for accessibility.
+
+2023: WCAG 2.2 continued to require alt text through Success Criterion 1.1.1.
+
+Throughout this history, missing alt text has remained one of the most common accessibility issues found in web audits. Studies consistently show that a significant percentage of websites have images missing alt text, making this one of the top accessibility barriers on the web.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C HTML specifications and WCAG 2.1/2.2 accessibility guidelines. Alt text detection is implemented in major accessibility testing tools including:
+
+- axe-core: Open-source accessibility testing engine with specific rules for image-alt
+- WAVE (Web Accessibility Evaluation Tool): Browser extension and online tool that flags missing alt text
+- Lighthouse: Google's automated auditing tool includes alt text checks in accessibility audits
+- Pa11y: Command-line accessibility testing tool that checks for missing alt attributes
+- Accessibility Insights: Microsoft's accessibility testing tool with alt text validation
+- HTML Validator: W3C validator flags missing alt attributes
+
+Legal requirements:
+- Section 508 (United States): Requires WCAG 2.0 Level AA compliance, including alt text
+- EN 301 549 (European Union): Requires WCAG 2.1 Level AA compliance
+- AODA (Ontario, Canada): Requires WCAG 2.0 Level AA compliance
+- Many other jurisdictions have similar requirements
+
+Industry guidelines:
+- WebAIM provides comprehensive alt text guidelines
+- W3C HTML specification requires alt attribute for img elements
+- WCAG 2.1 Success Criterion 1.1.1 (Level A) requires text alternatives
+
+Thresholds are based on WCAG compliance requirements where zero errors is the target for full compliance. Multiple missing alt texts indicate systemic accessibility issues.
+
+RELATED METRICS
+Alt Text Missing is part of a comprehensive accessibility measurement framework. Related metrics include:
+
+- DIM (Decorative Image Marking): Count of decorative images incorrectly marked (overlaps with AMC)
+- AEC (ARIA Errors): Missing ARIA labels (similar accessibility issue with missing descriptions)
+- ASC (Accessibility Score): Composite score including alt text issues
+- CIC (Contrast Issues): Another common accessibility barrier
+
+Together, these metrics identify different types of accessibility barriers that prevent users with disabilities from accessing web content.
+
+MEASUREMENT LIMITATIONS
+Client-side alt text detection has several limitations:
+
+1. Dynamic content: Images added after initial page load may not be detected in automated scans
+2. JavaScript-generated images: Images created by frameworks may not be immediately available for testing
+3. CSS background images: Cannot have alt attributes, so important images should use img elements instead
+4. Context-dependent alt text: Determining if alt text is appropriate requires understanding image context and purpose
+5. False positives: Tools may flag images that appear to need alt text but are actually decorative
+6. Lazy-loaded images: Images loaded via lazy loading may not be present during initial scan
+7. Iframe content: Cross-origin iframes cannot be fully analyzed due to security restrictions
+8. SVG images: Inline SVG uses <title> and <desc> instead of alt, requiring different detection
+
+Automated testing should be supplemented with:
+- Manual review of image content and context
+- Screen reader testing to verify alt text is helpful
+- Content author review to determine if images are informative or decorative
+- User testing with people who use screen readers
+
+Measurements are most accurate when performed on fully rendered pages with all images loaded and after user interactions that may reveal additional images.
+
+
+SOURCES
+- MDN img element: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-alt
+- WCAG 2.1 Success Criterion 1.1.1: https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html
+- WebAIM Alt Text: https://webaim.org/techniques/images/
+- HTML5 img specification: https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element
+- W3C HTML 4.01 specification: https://www.w3.org/TR/html401/struct/objects.html#h-13.8
+- See metrics.txt for additional sources

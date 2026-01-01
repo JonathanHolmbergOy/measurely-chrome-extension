@@ -1,0 +1,158 @@
+DLI - DL Item Parents
+=====================
+
+OVERVIEW
+--------
+Rule ID: dlitem
+Impact: Serious
+Category: Accessibility (Document Structure)
+WCAG: 2.0 Level A (1.3.1 Info and Relationships)
+
+Description:
+Ensures dt and dd elements are properly contained by dl elements (directly or within a div inside dl). Orphaned dt/dd elements break semantic structure and screen reader navigation.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Proper parent containment:
+- Maintains term/definition relationship
+- Enables screen reader list navigation
+- Preserves semantic document structure
+- Meets WCAG 1.3.1 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all <dt> and <dd> elements
+2. Checks parent is <dl> or <div> inside <dl>
+3. Reports orphaned dt/dd elements
+4. Provides element text for identification
+
+
+HOW TO FIX
+----------
+1. Wrap dt/dd elements in <dl>
+2. Ensure proper nesting structure
+3. Remove dt/dd from incorrect contexts
+4. Use alternative markup if not a definition list
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<div>
+    <dt>Term</dt>
+    <dd>Definition</dd>
+</div>
+
+<section>
+    <dt>HTML</dt>
+    <dd>HyperText Markup Language</dd>
+</section>
+
+<!-- dt/dd without dl parent -->
+<dt>Orphaned term</dt>
+<dd>Orphaned definition</dd>
+
+Good:
+<dl>
+    <dt>Term</dt>
+    <dd>Definition</dd>
+</dl>
+
+<dl>
+    <div>
+        <dt>HTML</dt>
+        <dd>HyperText Markup Language</dd>
+    </div>
+</dl>
+
+
+MIGRATION FROM INVALID STRUCTURE
+---------------------------------
+Before (Invalid):
+<div class="terms">
+    <dt>Name:</dt>
+    <dd>John Doe</dd>
+    <dt>Email:</dt>
+    <dd>john@example.com</dd>
+</div>
+
+After (Valid):
+<dl class="terms">
+    <dt>Name:</dt>
+    <dd>John Doe</dd>
+    <dt>Email:</dt>
+    <dd>john@example.com</dd>
+</dl>
+
+
+ALTERNATIVE MARKUP
+------------------
+If not a true definition list, use alternative markup:
+
+Instead of:
+<div>
+    <dt>Label</dt>
+    <dd>Value</dd>
+</div>
+
+Use:
+<div class="key-value">
+    <span class="label">Label:</span>
+    <span class="value">Value</span>
+</div>
+
+Or table for tabular data:
+<table>
+    <tr>
+        <th>Label</th>
+        <td>Value</td>
+    </tr>
+</table>
+
+
+GROUPED DEFINITIONS
+-------------------
+<dl>
+    <div class="definition-group">
+        <dt>Term 1</dt>
+        <dd>Definition for term 1</dd>
+        <dd>Alternative definition</dd>
+    </div>
+    
+    <div class="definition-group">
+        <dt>Term 2</dt>
+        <dd>Definition for term 2</dd>
+    </div>
+</dl>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Invalid structure rendered but affects accessibility
+- Firefox: Invalid structure rendered but affects accessibility
+- Safari: Invalid structure rendered but affects accessibility
+- Screen Readers: Invalid structure breaks navigation
+
+
+RELATED RULES
+-------------
+- DLS (Definition List Structure)
+- LST (List Structure)
+- ARP (ARIA Required Parent)
+
+
+SOURCES
+-------
+- MDN dt: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dt
+- MDN dd: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dd
+- HTML Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-dt-element
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#dlitem
+- WCAG 1.3.1: https://www.w3.org/WAI/WCAG21/Understanding/info-and-relationships.html
+

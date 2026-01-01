@@ -1,0 +1,88 @@
+RMC - Reduced Motion Compliance
+
+WHAT IT MEASURES
+Whether animations and motion effects respect the `prefers-reduced-motion` CSS media query setting. This metric checks if the site is prepared to handle users who prefer reduced motion, which is essential for users with vestibular disorders, motion sensitivity, and other conditions that can be triggered by animations.
+
+The `prefers-reduced-motion` media query:
+- Detects user's motion preference
+- Allows sites to reduce or disable animations
+- Supported in modern browsers
+- Can be set in OS accessibility settings
+
+WCAG requirements:
+- WCAG 2.1 Success Criterion 2.3.3 (Animation from Interactions) - Level AAA
+- WCAG 2.2 Success Criterion 2.3.7 (Reduced Motion) - Level AAA
+- Respecting user preferences is best practice
+
+HOW IT'S MEASURED
+CSS analysis checking for @media (prefers-reduced-motion: reduce) rules and animated elements. The measurement process:
+
+1. Checks for CSS rules:
+   - Scans stylesheets for `@media (prefers-reduced-motion: reduce)` rules
+   - Verifies CSS is prepared to handle reduced motion
+   - Counts media query rules
+
+2. Identifies animated elements:
+   - Finds elements with animations (animation-name, transition-duration)
+   - Counts animated elements
+   - Checks if animations are addressed
+
+3. Evaluates compliance:
+   - Returns true if no animations OR CSS rules present
+   - Returns false if animations exist but no CSS rules
+   - Returns null if cannot query elements
+
+WHY IT'S IMPORTANT
+Respecting reduced motion preferences is essential for users with vestibular disorders and motion sensitivity. This improves accessibility and user experience for users who need reduced motion.
+
+Accessibility impact:
+- Prevents motion-triggered symptoms
+- Essential for users with vestibular disorders
+- Improves accessibility
+- Respects user preferences
+- WCAG best practice
+
+User experience:
+- Better experience for motion-sensitive users
+- Reduces motion sickness
+- Improves usability
+- Respects user choices
+
+THRESHOLDS
+- Good: true (Compliant, animations handled properly)
+- Poor: false (Non-compliant, animations not handled)
+
+Note: Returns true if no animations are found (compliant by default) or if CSS rules are present.
+
+COMMON PITFALLS
+1. Missing reduced motion CSS: No `@media (prefers-reduced-motion: reduce)` rules
+2. Animations without media queries: Animations not addressed in CSS
+3. No motion reduction support: Site doesn't respect user preferences
+4. Incomplete coverage: Some animations not covered by media queries
+
+OPTIMIZATION STRATEGIES
+1. Add @media (prefers-reduced-motion: reduce) rules: Implement CSS to handle reduced motion
+2. Disable or reduce animations: Turn off or reduce animations for users who prefer reduced motion
+3. Test with reduced motion: Verify site works with reduced motion enabled
+4. Cover all animations: Ensure all animations are addressed
+5. Document motion preferences: Ensure team understands reduced motion needs
+
+
+HISTORY
+User experience metrics emerged as web applications became more interactive. Frame rate monitoring and scroll performance measurement became important as single-page applications and complex interactions became common. Responsive design metrics gained prominence with mobile web usage growth starting around 2010. Modern UX metrics focus on perceived performance and user satisfaction rather than just technical measurements.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

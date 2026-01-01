@@ -1,0 +1,216 @@
+CIC - Contrast Issues
+
+WHAT IT MEASURES
+Number of text elements with insufficient color contrast ratios. Color contrast measures the difference in luminance (brightness) between text and its background. Low contrast makes text difficult or impossible to read, especially for users with visual impairments, and violates WCAG accessibility standards.
+
+The metric identifies:
+- Text elements failing WCAG 2.1 Level AA contrast requirements
+- Normal text (≤18pt or ≤14pt bold) requiring 4.5:1 contrast ratio
+- Large text (>18pt or >14pt bold) requiring 3:1 contrast ratio
+- UI components and graphical objects requiring 3:1 contrast ratio
+
+Contrast ratio calculation:
+- Uses relative luminance formula: (L1 + 0.05) / (L2 + 0.05)
+- L1 = lighter color luminance, L2 = darker color luminance
+- Results in ratio from 1:1 (no contrast) to 21:1 (maximum contrast)
+
+HOW IT'S MEASURED
+getComputedStyle analysis calculating contrast ratios between text and background colors using WCAG formula. The measurement process:
+
+1. Identifies text elements:
+   - All elements containing text content
+   - Elements with text nodes
+   - Form labels and input placeholders
+   - Links and buttons with text
+
+2. Gets computed styles:
+   - Uses getComputedStyle() to get actual rendered colors
+   - Extracts color (text color) and backgroundColor
+   - Handles transparent backgrounds by finding underlying colors
+   - Accounts for opacity and rgba values
+
+3. Calculates contrast ratios:
+   - Converts colors to relative luminance
+   - Applies WCAG contrast formula
+   - Determines if text is "large" (font-size and font-weight)
+   - Compares ratio to required threshold (4.5:1 or 3:1)
+
+4. Flags violations:
+   - Normal text with ratio < 4.5:1
+   - Large text with ratio < 3:1
+   - UI components with ratio < 3:1
+
+5. Counts total violations
+
+Measurement considerations:
+- Must handle transparent backgrounds
+- Accounts for gradient backgrounds (uses average or worst case)
+- Considers background images
+- Handles nested elements with different backgrounds
+- May need to traverse DOM to find actual background
+
+WHY IT'S IMPORTANT
+Insufficient contrast makes text unreadable for users with visual impairments and violates WCAG 2.1 Level AA (4.5:1 for normal text, 3:1 for large text).
+
+Accessibility impact:
+- Users with low vision cannot read low-contrast text
+- Violates WCAG 2.1 Success Criterion 1.4.3 (Level AA)
+- Creates barriers for users with color blindness
+- Reduces readability for all users in various lighting conditions
+- May violate legal accessibility requirements
+
+User experience impact:
+- Low contrast causes eye strain
+- Reduces readability and comprehension
+- Makes content inaccessible to some users
+- Creates frustration and abandonment
+- Affects mobile users in bright sunlight
+
+Business impact:
+- Legal compliance issues
+- Reduced accessibility
+- Poor user experience
+- Lower conversion rates
+- Negative brand perception
+
+THRESHOLDS
+- Good: 0 errors (All text meets contrast requirements)
+- Needs Improvement: 1-2 errors (Minor contrast issues)
+- Poor: ≥ 3 errors (Significant contrast problems, accessibility barriers)
+
+WCAG 2.1 Level AA requires:
+- Normal text: 4.5:1 contrast ratio
+- Large text: 3:1 contrast ratio
+- UI components: 3:1 contrast ratio
+
+COMMON PITFALLS
+1. Text with low contrast ratios: Colors too similar (e.g., light gray on white)
+2. Background images affecting contrast: Text over images with varying colors
+3. Gradient backgrounds: Gradients creating areas of low contrast
+4. Insufficient color difference: Not enough luminance difference between colors
+5. Transparent backgrounds: Overlays or semi-transparent elements reducing contrast
+6. Hover states: Low contrast in hover/active states
+7. Placeholder text: Low contrast placeholder text in form inputs
+8. Disabled states: Low contrast for disabled buttons/inputs
+9. Decorative text: Text that should be decorative but conveys information
+10. Dynamic content: Content added dynamically with low contrast
+11. CSS variables: Color variables that don't maintain contrast
+12. Dark mode: Insufficient contrast in dark mode themes
+
+OPTIMIZATION STRATEGIES
+1. Ensure 4.5:1 contrast for normal text: Use contrast checking tools to verify
+2. Ensure 3:1 contrast for large text: Large text has lower requirement but still needs good contrast
+3. Test all text elements: Don't assume colors meet requirements
+4. Use contrast checking tools: Automated tools and browser extensions
+5. Avoid low-contrast color combinations: Choose colors with sufficient difference
+6. Test with different backgrounds: Account for background images and gradients
+7. Consider transparent overlays: Add semi-transparent overlays to improve contrast over images
+8. Test in different modes: Verify contrast in light and dark modes
+9. Use high-contrast mode testing: Test with system high-contrast settings
+10. Document color choices: Maintain design system with contrast-verified colors
+11. Test hover/active states: Ensure interactive states maintain contrast
+12. Use CSS to enhance contrast: Add text shadows or outlines if needed
+13. Provide alternative styles: Offer high-contrast theme option
+14. Test with real users: Get feedback from users with visual impairments
+
+
+TECHNICAL DETAILS
+WCAG contrast ratio calculation uses the relative luminance formula defined in WCAG 2.1. The formula accounts for how the human eye perceives brightness differences.
+
+Relative luminance calculation:
+1. Convert color to RGB values (0-255)
+2. Normalize RGB values: R' = R/255, G' = G/255, B' = B/255
+3. Apply gamma correction for each channel
+4. Calculate relative luminance: L = 0.2126 × R' + 0.7152 × G' + 0.0722 × B'
+5. Contrast ratio: (L1 + 0.05) / (L2 + 0.05) where L1 is lighter, L2 is darker
+
+WCAG 2.1 Success Criterion 1.4.3 (Contrast - Minimum) requires:
+- Normal text: 4.5:1 contrast ratio (Level AA)
+- Large text: 3:1 contrast ratio (Level AA)
+- UI components: 3:1 contrast ratio (Level AA)
+
+WCAG 2.1 Success Criterion 1.4.6 (Contrast - Enhanced) requires:
+- Normal text: 7:1 contrast ratio (Level AAA)
+- Large text: 4.5:1 contrast ratio (Level AAA)
+
+Large text definition:
+- At least 18pt (24px) regular weight
+- At least 14pt (18.67px) bold weight
+
+HISTORY
+Color contrast requirements have been part of web accessibility standards since the beginning:
+
+1999: WCAG 1.0 included contrast requirements, though less specific than current standards.
+
+2008: WCAG 2.0 introduced Success Criterion 1.4.3 (Contrast - Minimum) with specific contrast ratio requirements (4.5:1 for normal text, 3:1 for large text). This was based on research into visual perception and readability.
+
+2018: WCAG 2.1 maintained the same contrast requirements, emphasizing their importance for accessibility.
+
+2023: WCAG 2.2 continued to require the same contrast ratios, reinforcing their critical role in accessibility.
+
+The contrast ratio formula is based on research into human visual perception, particularly how people with various types of color vision deficiencies perceive contrast. The 4.5:1 ratio for normal text ensures that text is readable by people with moderate low vision.
+
+INDUSTRY STANDARDS
+This metric aligns with WCAG 2.1/2.2 Success Criterion 1.4.3 (Level AA) and is checked by accessibility testing tools including:
+
+- axe-core: Open-source accessibility testing engine with contrast checking
+- WAVE (Web Accessibility Evaluation Tool): Flags contrast issues
+- Lighthouse: Google's automated auditing tool includes contrast checks
+- Pa11y: Command-line accessibility testing tool
+- Accessibility Insights: Microsoft's accessibility testing tool
+- Colour Contrast Analyser: Standalone contrast checking tool
+
+Legal requirements:
+- Section 508 (United States): Requires WCAG 2.0 Level AA compliance
+- EN 301 549 (European Union): Requires WCAG 2.1 Level AA compliance
+- AODA (Ontario, Canada): Requires WCAG 2.0 Level AA compliance
+- Many other jurisdictions have similar requirements
+
+Industry guidelines:
+- WCAG 2.1/2.2 provide the foundation for contrast requirements
+- W3C WAI provides guidance on implementing contrast
+- WebAIM provides contrast checking tools and guidance
+
+RELATED METRICS
+Contrast Issues is part of a comprehensive accessibility measurement framework. Related metrics include:
+
+- NTC (Non-Text Contrast Issues): Contrast for UI components and graphical objects
+- FCI (Focus Contrast Issues): Contrast for focus indicators
+- CIC focuses on text contrast, while NTC and FCI focus on other contrast requirements
+
+Together, these metrics ensure all visual elements meet WCAG contrast requirements.
+
+MEASUREMENT LIMITATIONS
+Client-side contrast measurement has several limitations:
+
+1. Complex backgrounds: Gradient backgrounds, background images, and multiple layered backgrounds are difficult to measure accurately
+2. Transparent elements: Semi-transparent overlays and opacity can affect contrast calculations
+3. Dynamic content: Content added after page load may not be measured
+4. CSS variables: Color values from CSS variables may not be resolved correctly
+5. Browser differences: Different browsers may render colors slightly differently
+6. Display calibration: User's display calibration affects perceived contrast
+7. Context-dependent: Some text may be decorative and not require contrast
+8. Hover states: Contrast in interactive states may not be measured
+9. Print styles: Contrast in print stylesheets not measured
+10. High-contrast mode: System high-contrast settings may override measurements
+
+Automated testing should be supplemented with:
+- Manual visual inspection
+- Contrast checking tools (e.g., Colour Contrast Analyser)
+- User testing with people who have visual impairments
+- Testing in different lighting conditions
+- Testing with different display settings
+
+Measurements are most accurate when:
+- Backgrounds are solid colors
+- Text and background colors are clearly defined
+- All text content is loaded
+- Page is fully rendered
+- No dynamic content changes are occurring
+
+
+SOURCES
+- WCAG 2.1 Success Criterion 1.4.3: https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html
+- WCAG Contrast Ratio Formula: https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html#contrast-ratiodef
+- WebAIM Contrast Checker: https://webaim.org/resources/contrastchecker/
+- See metrics.txt for additional sources

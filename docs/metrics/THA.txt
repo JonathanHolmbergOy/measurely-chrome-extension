@@ -1,0 +1,164 @@
+THA - Table Headers Attribute
+==============================
+
+OVERVIEW
+--------
+Rule ID: td-headers-attr
+Impact: Serious
+Category: Accessibility (Tables)
+WCAG: 2.0 Level A (1.3.1 Info and Relationships)
+
+Description:
+Ensures table cells with headers attribute reference valid th elements or elements with columnheader/rowheader roles. Invalid header references break screen reader table navigation.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Valid headers attribute:
+- Enables screen readers to announce cell relationships
+- Supports complex table navigation
+- Maintains data table accessibility
+- Meets WCAG 1.3.1 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds td/th elements with headers attribute
+2. Validates each ID references a valid header element
+3. Checks referenced elements are th or have header roles
+4. Reports invalid references
+
+
+HOW TO FIX
+----------
+1. Ensure referenced IDs exist in table
+2. Reference only th elements or elements with header roles
+3. Use scope attribute for simple tables instead
+4. Validate all header IDs are correct
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<table>
+    <tr>
+        <th id="name">Name</th>
+        <th id="age">Age</th>
+    </tr>
+    <tr>
+        <td headers="name">John</td>
+        <td headers="invalid-id">25</td>  <!-- ID doesn't exist -->
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th id="h1">Header</th>
+    </tr>
+    <tr>
+        <td headers="h1 h2 h3">Data</td>  <!-- h2, h3 don't exist -->
+    </tr>
+</table>
+
+Good:
+<table>
+    <tr>
+        <th id="name">Name</th>
+        <th id="age">Age</th>
+    </tr>
+    <tr>
+        <td headers="name">John</td>
+        <td headers="age">25</td>
+    </tr>
+</table>
+
+
+COMPLEX TABLE PATTERN
+----------------------
+<table>
+    <tr>
+        <th id="blank"></th>
+        <th id="mon">Monday</th>
+        <th id="tue">Tuesday</th>
+    </tr>
+    <tr>
+        <th id="morning">Morning</th>
+        <td headers="morning mon">9:00 AM</td>
+        <td headers="morning tue">10:00 AM</td>
+    </tr>
+    <tr>
+        <th id="afternoon">Afternoon</th>
+        <td headers="afternoon mon">2:00 PM</td>
+        <td headers="afternoon tue">3:00 PM</td>
+    </tr>
+</table>
+
+
+SIMPLE TABLE ALTERNATIVE
+-------------------------
+For simple tables, use scope instead:
+
+<table>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Age</th>
+    </tr>
+    <tr>
+        <th scope="row">John</th>
+        <td>25</td>
+    </tr>
+</table>
+
+
+MULTI-LEVEL HEADERS
+-------------------
+<table>
+    <tr>
+        <th id="q1" colspan="3">Q1</th>
+        <th id="q2" colspan="3">Q2</th>
+    </tr>
+    <tr>
+        <th id="jan">Jan</th>
+        <th id="feb">Feb</th>
+        <th id="mar">Mar</th>
+        <th id="apr">Apr</th>
+        <th id="may">May</th>
+        <th id="jun">Jun</th>
+    </tr>
+    <tr>
+        <td headers="q1 jan">100</td>
+        <td headers="q1 feb">150</td>
+        <td headers="q1 mar">200</td>
+        <td headers="q2 apr">180</td>
+        <td headers="q2 may">220</td>
+        <td headers="q2 jun">250</td>
+    </tr>
+</table>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: headers attribute supported
+- Firefox: headers attribute supported
+- Safari: headers attribute supported
+- Screen Readers: Critical for complex table navigation
+
+
+RELATED RULES
+-------------
+- THD (TH Has Data Cells)
+- TSC (Table Scope Valid)
+
+
+SOURCES
+-------
+- MDN headers: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td#attr-headers
+- WCAG H43: https://www.w3.org/WAI/WCAG21/Techniques/html/H43
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#td-headers-attr
+- WCAG 1.3.1: https://www.w3.org/WAI/WCAG21/Understanding/info-and-relationships.html
+

@@ -1,0 +1,93 @@
+UXS - User Experience Score (composite)
+
+WHAT IT MEASURES
+Composite score (0-100) based on multiple user experience factors including scroll smoothness, visual stability (CLS), frame rates, and overall interaction quality. This metric provides an overall assessment of how smooth and stable the user experience feels.
+
+UX factors included:
+- Scroll smoothness: Average scroll jank measurements
+- Visual stability: Cumulative Layout Shift (CLS) scores
+- Frame rates: Frame drop counts and performance
+- Interaction responsiveness: Input latency and responsiveness
+- Overall smoothness: Combined smoothness indicators
+
+The score combines:
+- Scroll performance metrics
+- Layout stability metrics
+- Frame rate metrics
+- Interaction metrics
+- Other UX indicators
+
+HOW IT'S MEASURED
+Weighted calculation combining scroll jank measurements and visual stability (CLS) scores. The measurement process:
+
+1. Measures scroll smoothness:
+   - Tracks scroll jank
+   - Calculates average scroll performance
+   - Scores scroll smoothness
+
+2. Measures visual stability:
+   - Uses CLS measurements
+   - Evaluates layout shift frequency
+   - Scores visual stability
+
+3. Combines scores:
+   - Weighted combination of factors
+   - Returns composite score 0-100
+
+WHY IT'S IMPORTANT
+Overall UX score indicates how smooth and stable the experience is. Higher scores mean better user experience, reduced frustration, and improved engagement.
+
+User experience impact:
+- Smooth interactions
+- Stable layouts
+- Better perceived performance
+- Increased engagement
+- Higher satisfaction
+
+Business impact:
+- Better user retention
+- Higher conversion rates
+- Improved brand perception
+- Better user satisfaction
+
+THRESHOLDS
+- Good: ≥ 80 (Excellent UX, smooth and stable)
+- Needs Improvement: 60-79 (Moderate UX, some issues)
+- Poor: ≤ 60 (Poor UX, significant problems)
+
+COMMON PITFALLS
+1. Scroll jank: Stuttering during scrolling
+2. Layout shifts: Unexpected layout changes
+3. Poor performance: Slow interactions
+4. Unstable layouts: Layouts shifting during load
+5. Stuttering animations: Animations not smooth
+
+OPTIMIZATION STRATEGIES
+1. Optimize scroll performance: Ensure smooth scrolling
+2. Reduce layout shifts: Prevent unexpected layout changes
+3. Improve frame rates: Maintain 60fps where possible
+4. Ensure visual stability: Keep layouts stable
+5. Optimize animations: Make animations smooth
+6. Monitor UX score: Track UX score over time
+7. Test user experience: Get feedback on smoothness
+8. Profile performance: Use DevTools to identify issues
+
+
+HISTORY
+User experience metrics emerged as web applications became more interactive. Frame rate monitoring and scroll performance measurement became important as single-page applications and complex interactions became common. Responsive design metrics gained prominence with mobile web usage growth starting around 2010. Modern UX metrics focus on perceived performance and user satisfaction rather than just technical measurements.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

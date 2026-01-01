@@ -1,0 +1,221 @@
+CRU - Connection Reuse Efficiency
+
+WHAT IT MEASURES
+Percentage of HTTP requests that reuse existing TCP connections versus creating new ones. Connection reuse is critical for performance because creating new connections requires DNS lookup, TCP handshake, and TLS negotiation, which add significant latency. Higher connection reuse means better performance and lower latency.
+
+The metric calculates:
+- Connection reuse: Requests using existing connections (same connectStart timestamp)
+- New connections: Requests creating new connections (different connectStart)
+- Efficiency rate: (Reused connections / Total connections) × 100
+
+Connection reuse benefits:
+- Eliminates DNS lookup time
+- Eliminates TCP handshake (3-way handshake)
+- Eliminates TLS negotiation (for HTTPS)
+- Reduces server load
+- Improves overall page load time
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis comparing connectStart values - same connectStart indicates connection reuse. The measurement process:
+
+1. Collects resource timing data:
+   - Uses PerformanceResourceTiming API
+   - Gathers timing data for all resources loaded
+   - Records connectStart timestamp for each resource
+
+2. Groups resources by connection:
+   - Groups resources with same connectStart timestamp
+   - Same connectStart = same connection (reused)
+   - Different connectStart = new connection
+
+3. Calculates reuse efficiency:
+   - Counts unique connections (unique connectStart values)
+   - Counts total resources
+   - Calculates: (Total resources - Unique connections) / Total resources × 100
+   - Or: Reused requests / Total requests × 100
+
+4. Considers connection types:
+   - HTTP/1.1: Limited to ~6 connections per origin
+   - HTTP/2: Single connection, multiplexing
+   - HTTP/3: Single connection, QUIC protocol
+
+Measurement considerations:
+- HTTP/2 and HTTP/3 naturally have high reuse (single connection)
+- HTTP/1.1 has lower reuse due to connection limits
+- Different origins require separate connections
+- Must account for connection limits per origin
+
+WHY IT'S IMPORTANT
+Connection reuse reduces overhead. Creating new connections adds DNS, TCP, and SSL handshake time, significantly impacting performance.
+
+Performance impact:
+- New connection overhead: ~100-300ms (DNS + TCP + TLS)
+- Reused connection: ~0ms overhead
+- High reuse = faster page loads
+- Lower server load
+- Better resource utilization
+
+Network efficiency:
+- Reduces network round trips
+- Lowers bandwidth usage
+- Reduces connection overhead
+- Improves overall efficiency
+
+User experience:
+- Faster page loads
+- Lower latency
+- Better perceived performance
+- Improved mobile experience
+
+THRESHOLDS
+- Good: ≥ 80% (Most requests reuse connections)
+- Needs Improvement: 50-79% (Some reuse, room for improvement)
+- Poor: ≤ 50% (Poor reuse, many new connections)
+
+Note: HTTP/2 and HTTP/3 should achieve near 100% reuse (single connection). HTTP/1.1 is limited by connection limits per origin.
+
+COMMON PITFALLS
+1. HTTP/1.1 limitations: Limited to ~6 connections per origin
+2. Different origins requiring new connections: Each origin needs separate connection
+3. Connection limits: Browser limits connections per origin
+4. No keep-alive: Connections not kept alive between requests
+5. Connection timeouts: Connections closed due to inactivity
+6. Mixed HTTP/HTTPS: HTTP and HTTPS require separate connections
+7. Subdomain differences: Different subdomains require separate connections
+8. CDN configuration: CDN not configured for connection reuse
+9. Server configuration: Server closing connections prematurely
+10. Load balancer issues: Load balancer not maintaining connections
+
+OPTIMIZATION STRATEGIES
+1. Use HTTP/2 or HTTP/3: Single connection with multiplexing
+2. Implement connection pooling: Reuse connections efficiently
+3. Use same origin when possible: Consolidate resources to same origin
+4. Configure keep-alive: Enable HTTP keep-alive on server
+5. Use CDN: CDNs optimize connection reuse
+6. Minimize origins: Reduce number of different origins
+7. Use subdomain sharding carefully: Only if necessary for HTTP/1.1
+8. Configure connection timeouts: Set appropriate keep-alive timeouts
+9. Monitor connection reuse: Track reuse rates over time
+10. Test with different protocols: Verify HTTP/2 and HTTP/3 usage
+11. Optimize server configuration: Ensure servers support connection reuse
+12. Use connection pooling libraries: For server-side applications
+
+
+HISTORY
+Connection reuse has evolved from a fundamental problem in early HTTP to a sophisticated optimization technique:
+
+1991-1996: **HTTP/0.9 and HTTP/1.0** - Every resource required a new TCP connection. For a page with 10 images, the browser would:
+1. Establish TCP connection (DNS + TCP handshake)
+2. Request resource
+3. Receive response
+4. Close connection
+5. Repeat for next resource
+
+This was extremely inefficient. Each connection required:
+- DNS lookup: 20-120ms
+- TCP handshake: 50-200ms (3-way handshake)
+- TLS negotiation: 100-300ms (if HTTPS)
+
+Total: 170-620ms per resource just for connection establishment!
+
+1997: **HTTP/1.1** (RFC 2068) introduced **persistent connections** (keep-alive). Connections stayed open for multiple requests, eliminating the need to reconnect for each resource. This was the first major connection reuse optimization.
+
+HTTP/1.1 also added pipelining: sending multiple requests without waiting for responses. However, pipelining had problems (head-of-line blocking) and was rarely used in practice.
+
+2000s: Browsers implemented a workaround for HTTP/1.1's head-of-line blocking: open multiple parallel connections per domain (typically 6). This wasn't true connection reuse, but rather working around the lack of multiplexing.
+
+The "6 connections per domain" limit became standard across browsers. Developers used domain sharding (splitting resources across multiple domains) to exceed this limit, which actually reduced connection reuse and hurt performance.
+
+2009-2012: Google's SPDY protocol introduced true **connection multiplexing**: multiple requests over a single connection without head-of-line blocking. This enabled optimal connection reuse - one connection per origin, all resources multiplexed.
+
+SPDY showed that connection reuse dramatically improved performance:
+- Fewer connections reduced memory and CPU overhead
+- Congestion control worked better with fewer connections
+- Mobile networks performed better with single, persistent connections
+
+2015: **HTTP/2** (RFC 7540) standardized multiplexing from SPDY. Key features for connection reuse:
+- One connection per origin (instead of 6 for HTTP/1.1)
+- Multiplexing without head-of-line blocking (at HTTP layer)
+- Stream prioritization
+- Connection coalescing (reuse connection for multiple domains if same IP)
+
+HTTP/2 connection reuse benefits:
+- Reduced connection establishment overhead
+- Lower server resource usage (fewer connections)
+- Better congestion control (TCP works better with fewer connections)
+- Improved mobile performance (high-latency networks benefit more)
+
+2016-2018: HTTP/2 adoption grew. Measurement tools added connection reuse tracking:
+- Resource Timing API's `nextHopProtocol` indicated HTTP version
+- Connection ID tracking showed resource sharing connections
+- DevTools displayed connection reuse in Network panel
+
+Best practices evolved:
+- Remove domain sharding (counterproductive with HTTP/2)
+- Use single domain for resources (enables connection reuse)
+- Implement HTTP/2 on all domains
+- Use connection coalescing for related domains
+
+2020: **HTTP/3** (RFC 9114) improved connection reuse further:
+- Built on QUIC (UDP-based)
+- **Connection migration**: Connections survive network changes (WiFi → cellular)
+- Faster connection establishment (0-RTT, 1-RTT)
+- Better loss recovery (no TCP head-of-line blocking)
+
+HTTP/3 connection migration was revolutionary: a mobile user could switch from WiFi to cellular without dropping the connection. This made connection reuse even more effective on mobile devices.
+
+2021-Present: Connection reuse is now highly optimized:
+
+Modern browser behavior:
+- HTTP/1.1: Keep-alive for sequential requests, up to 6 connections
+- HTTP/2: One connection per origin, multiplexed
+- HTTP/3: One QUIC connection per origin, with migration support
+
+Measurement:
+- Resource Timing API provides connection information
+- Performance monitoring tracks connection reuse efficiency
+- HTTP/2 Push (less used) vs. Preload for critical resources
+
+Connection reuse efficiency:
+- HTTP/1.1: ~30-60% (limited by 6-connection pool)
+- HTTP/2: ~90-98% (multiplexing over one connection)
+- HTTP/3: ~95-99% (multiplexing + connection migration)
+
+Factors affecting connection reuse:
+- Domain sharding (reduces reuse - avoid with HTTP/2+)
+- Connection limits (server configuration)
+- Idle timeout (how long connections stay open)
+- Cross-origin resources (can't reuse for different origins)
+- TLS session resumption (reduces reconnection cost)
+
+Modern optimizations:
+- Use HTTP/2 or HTTP/3 to maximize reuse
+- Avoid domain sharding
+- Preconnect to third-party origins (resource hints)
+- Use TLS session resumption
+- Implement connection coalescing on server
+
+Connection reuse directly impacts performance:
+- Reduces DNS lookups
+- Eliminates TCP handshakes
+- Reduces TLS negotiation
+- Improves TTFB (Time to First Byte)
+- Better mobile performance
+
+The evolution from "new connection per resource" (HTTP/1.0) to "one multiplexed connection with migration" (HTTP/3) represents a ~10-100x reduction in connection overhead, making connection reuse one of the most impactful performance optimizations in web history.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

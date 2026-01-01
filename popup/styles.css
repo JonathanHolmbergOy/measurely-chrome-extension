@@ -1,0 +1,220 @@
+body {
+  width: max(350px, 19vw);
+  max-height: 810px;
+  padding: 8px;
+  border: 1px solid var(--border-color-1);
+  font-family: var(--txt-family-1);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+header {
+  align-items: start;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color-2);
+  padding: 0.1em;
+}
+
+h1 {
+  font-size: 1.3em;
+  padding-bottom: 0.2em;
+}
+
+h2 {
+  font-size: 1.3em;
+}
+
+.measurely-logo-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+  align-items: center;
+}
+
+.measurely-icon-wrapper {
+  margin-block: auto;
+}
+
+.measurely-logo {
+  width: 48px;
+  height: 48px;
+}
+
+.progress-circle {
+  stroke: var(--brand-color);
+  stroke-width: 3;
+  fill: none;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transform-origin: center;
+  transform: rotate(-90deg);
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.measurely-logo.loading .progress-circle {
+  animation: fill-progress 12s linear forwards;
+}
+
+#measurely-copy-button {
+  height: 32px;
+  width: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.measurely-results {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em 0.2em;
+  border-radius: var(--border-radius-2);
+}
+
+.measurely-result-section {
+  padding: 0.1em 0.2em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color-3);
+}
+
+.measurely-result-section header {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: none;
+  padding: 0;
+}
+
+.measurely-result-section h2 {
+  font-size: 1.3em;
+  font-weight: var(--txt-weight-3);
+  line-height: var(--txt-height-2);
+  margin: 0;
+}
+
+.measurely-result-section p {
+  margin: 0;
+  padding: 0;
+}
+
+.measurely-results small {
+  font-size: 0.85em;
+  opacity: 0.9;
+  font-weight: var(--txt-weight-4);
+  padding-left: 0.2em;
+  line-height: var(--txt-height-2);
+}
+
+.issue-count {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.issue-count.visible {
+  opacity: 1;
+  color: var(--txt-color-1);
+  font-weight: var(--txt-weight-1);
+}
+
+.measurely-score-value {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.measurely-score-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  transform: rotate(-90deg);
+}
+
+.progress-bg {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 2;
+}
+
+.progress-fg {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 176;
+  stroke-dashoffset: 176;
+  transition: stroke-dashoffset 1.3s ease;
+}
+
+.score-number {
+  position: relative;
+  z-index: 1;
+  font-size: 21px;
+  font-weight: var(--txt-weight-4);
+  color: var(--txt-color-2);
+}
+
+.score-good .progress-fg {
+  stroke: var(--good-color-1);
+}
+
+.score-ok .progress-fg {
+  stroke: var(--okay-color-1);
+}
+
+.score-poor .progress-fg {
+  stroke: var(--poor-color-1);
+}
+
+.score-pending .score-number {
+  color: transparent;
+}
+
+.score-pending .progress-fg {
+  stroke: transparent;
+}
+
+/* Disabled category styles */
+.score-disabled .score-number {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.score-disabled .progress-fg {
+  stroke: var(--text-secondary);
+  opacity: 0.3;
+}
+
+.measurely-button-wrapper {
+  padding-inline: 0.8em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}
+
+.measurely-popup-button {
+  position: relative;
+  width: 100%;
+  padding-block: 0.8em;
+}
+
+.measurely-footer {
+  display: flex;
+  justify-content: center;
+  padding-block: 0.5em;
+  font-size: 0.55em;
+  opacity: 0.5;
+}

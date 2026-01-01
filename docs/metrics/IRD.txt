@@ -1,0 +1,109 @@
+IRD - Interaction Readiness Delay
+
+WHAT IT MEASURES
+Time until the page becomes fully interactive and ready for user input. This metric measures usability by quantifying how quickly users can start engaging with content after the page begins loading. IRD is closely related to Time to Interactive (TTI).
+
+Interaction readiness means:
+- Main thread is quiet (no long tasks blocking)
+- Critical resources are loaded
+- Event handlers are registered
+- Page can respond to user input quickly
+- Visual content is rendered
+
+The metric measures:
+- Time from navigation start to interactivity
+- Delay before users can interact
+- Usability and engagement readiness
+- Perceived responsiveness
+
+HOW IT'S MEASURED
+Calculated as Time to Interactive (TTI), measuring when main thread is quiet and critical resources loaded. The measurement process:
+
+1. Monitors main thread activity:
+   - Tracks long tasks (> 50ms) blocking main thread
+   - Measures time between long tasks
+   - Identifies when main thread becomes quiet
+
+2. Checks resource loading:
+   - Verifies critical resources are loaded
+   - Tracks JavaScript execution completion
+   - Monitors CSS loading
+
+3. Validates interactivity:
+   - Ensures event handlers are registered
+   - Verifies page can respond to input
+   - Confirms visual content is rendered
+
+4. Calculates IRD:
+   - Time from navigation start to interactivity
+   - Returns delay in milliseconds
+   - May use TTI calculation method
+
+WHY IT'S IMPORTANT
+High IRD means users wait longer before they can interact with the page, reducing engagement and satisfaction. Fast interaction readiness improves user experience and engagement.
+
+User experience impact:
+- Users can start interacting quickly
+- Better perceived performance
+- Increased engagement
+- Reduced frustration
+- Higher satisfaction
+
+Performance impact:
+- Indicates JavaScript performance issues
+- Suggests resource loading problems
+- Points to main thread blocking
+- Affects overall page usability
+
+Business impact:
+- Better user engagement
+- Higher conversion rates
+- Reduced bounce rates
+- Improved user satisfaction
+
+THRESHOLDS
+- Good: ≤ 1000ms (Fast interactivity, good usability)
+- Needs Improvement: 1000-3000ms (Some delay, acceptable)
+- Poor: ≥ 3000ms (Long delay, poor usability)
+
+COMMON PITFALLS
+1. Large JavaScript bundles: Big JS files delaying execution
+2. Long tasks: Tasks > 50ms blocking main thread
+3. Render-blocking resources: CSS/JS blocking interactivity
+4. Slow resource loading: Resources taking too long to load
+5. Synchronous JavaScript: Blocking scripts preventing interactivity
+6. Third-party scripts: External scripts delaying readiness
+7. No code splitting: All JavaScript loaded upfront
+8. Inefficient JavaScript: Poorly optimized code
+
+OPTIMIZATION STRATEGIES
+1. Reduce JavaScript payload: Minimize JavaScript size
+2. Optimize long tasks: Break up tasks > 50ms
+3. Defer non-critical resources: Load non-critical code later
+4. Improve TTI: Optimize Time to Interactive
+5. Code splitting: Split JavaScript into smaller chunks
+6. Use async/defer: Load scripts asynchronously
+7. Minimize main thread work: Reduce blocking operations
+8. Optimize third-party scripts: Defer external scripts
+9. Lazy load resources: Load resources when needed
+10. Test with throttling: Verify performance on slow connections
+
+
+HISTORY
+User experience metrics emerged as web applications became more interactive. Frame rate monitoring and scroll performance measurement became important as single-page applications and complex interactions became common. Responsive design metrics gained prominence with mobile web usage growth starting around 2010. Modern UX metrics focus on perceived performance and user satisfaction rather than just technical measurements.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

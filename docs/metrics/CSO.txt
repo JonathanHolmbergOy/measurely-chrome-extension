@@ -1,0 +1,229 @@
+CSO - Code Splitting Opportunities
+
+WHAT IT MEASURES
+Count of JavaScript bundles exceeding size thresholds that should be split into smaller chunks. Code splitting is a technique that breaks large JavaScript bundles into smaller pieces that can be loaded on-demand, improving initial page load performance by only loading code that's immediately needed.
+
+The metric identifies:
+- JavaScript bundles exceeding recommended size (typically > 200KB)
+- Opportunities to split code by route, feature, or component
+- Monolithic bundles that delay initial load
+- Unused code being loaded upfront
+
+Code splitting benefits:
+- Faster initial page load
+- Reduced initial bundle size
+- Load code only when needed
+- Better caching (smaller chunks)
+- Improved Time to Interactive (TTI)
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis identifying JavaScript resources exceeding size thresholds (typically > 200KB). The measurement process:
+
+1. Identifies JavaScript resources:
+   - Uses PerformanceResourceTiming API
+   - Filters resources by type (application/javascript, text/javascript)
+   - Identifies <script> tags and dynamic imports
+
+2. Measures bundle sizes:
+   - Records decodedBodySize (uncompressed) for each JavaScript file
+   - May also consider transferSize (compressed) for network impact
+   - Tracks total JavaScript size per resource
+
+3. Flags large bundles:
+   - Identifies bundles exceeding threshold (typically 200KB)
+   - Counts number of bundles that should be split
+   - May analyze bundle composition if source maps available
+
+4. Returns count:
+   - Number of bundles exceeding size threshold
+   - Total size of large bundles
+   - Recommendations for splitting
+
+WHY IT'S IMPORTANT
+Large bundles delay initial load and parse time. Code splitting loads only needed code, improving performance and user experience.
+
+Performance impact:
+- Large bundles block parsing and execution
+- Delays Time to Interactive (TTI)
+- Increases initial page load time
+- Slows down mobile devices
+- Wastes bandwidth loading unused code
+
+User experience:
+- Slower perceived page load
+- Delayed interactivity
+- Poor mobile experience
+- Increased bounce rates
+
+Best practices:
+- Keep initial bundles under 200KB
+- Split by route or feature
+- Lazy load non-critical code
+- Use dynamic imports
+
+THRESHOLDS
+- Good: 0 (No bundles exceeding threshold, good splitting)
+- Needs Improvement: 1-2 (Some large bundles, splitting opportunities)
+- Poor: ≥ 3 (Multiple large bundles, significant splitting needed)
+
+Note: Threshold of 200KB is a guideline. Actual optimal size depends on network conditions and device capabilities.
+
+COMMON PITFALLS
+1. Large monolithic bundles: Single large JavaScript file containing all code
+2. No code splitting: All code loaded upfront regardless of need
+3. Loading unused code: Code for unused features loaded initially
+4. Inefficient bundling: Bundler not configured for code splitting
+5. Framework bloat: Including entire frameworks when only parts needed
+6. Duplicate dependencies: Same libraries bundled multiple times
+7. No tree shaking: Dead code not eliminated
+8. Missing dynamic imports: Not using import() for lazy loading
+9. Vendor bundles too large: Third-party code not split appropriately
+10. No route-based splitting: All routes loaded in initial bundle
+
+OPTIMIZATION STRATEGIES
+1. Implement code splitting: Break large bundles into smaller chunks
+2. Use dynamic imports: Use import() for lazy loading
+3. Split by route: Load route-specific code on demand
+4. Lazy load components: Load components when needed
+5. Optimize bundle sizes: Remove unused code, tree shake
+6. Split vendor code: Separate third-party code from application code
+7. Use webpack code splitting: Configure webpack for automatic splitting
+8. Implement route-based splitting: Split code by application routes
+9. Use React.lazy or similar: Framework-specific lazy loading
+10. Monitor bundle sizes: Track bundle sizes over time
+11. Analyze bundle composition: Use tools to see what's in bundles
+12. Set bundle size budgets: Enforce maximum bundle sizes
+13. Use modern bundlers: Leverage bundler features for splitting
+14. Test with throttling: Verify performance on slow connections
+
+
+HISTORY
+Code splitting emerged from the challenge of managing increasingly large JavaScript bundles:
+
+2010-2015: Single Page Applications (SPAs) became popular with frameworks like Angular, Backbone, and early React. The pattern was simple: bundle all JavaScript into one file. This approach had advantages (one HTTP request, simple caching) but problems emerged as applications grew.
+
+Problems with monolithic bundles:
+- Bundle sizes exceeded 500KB-2MB (uncompressed)
+- Initial page load required downloading entire application
+- Users downloaded code for features they never used
+- Mobile users suffered from large JavaScript parse/execution time
+
+The insight: Most users don't use most features. An e-commerce site's checkout code shouldn't load on the homepage. Admin features shouldn't load for regular users.
+
+2015: Webpack 1.0 popularized code splitting. The concept: split JavaScript into multiple chunks that load on-demand. Entry point loads immediately, other chunks load when needed.
+
+Basic approach:
+```javascript
+// Dynamic import (loads chunk when called)
+import('./feature.js').then(module => {
+  module.feature();
+});
+```
+
+This was manual and required developer decisions about what to split.
+
+2016-2017: **Route-based code splitting** became a pattern in React Router and other routing libraries. Each route loaded its own JavaScript chunk. Navigate to `/about` → load about.js chunk.
+
+This was more automatic than manual splitting, but developers still needed to configure it.
+
+2017-2018: Build tool improvements made code splitting easier:
+- Webpack 2-3: Better chunk splitting algorithms
+- Rollup: Tree-shaking complemented code splitting
+- Automatic vendor splitting (third-party libraries in separate chunk)
+- Intelligent chunking (shared code in common chunks)
+
+Patterns emerged:
+1. **Entry point splitting**: Different bundles for different pages
+2. **Route-based splitting**: Lazy load routes
+3. **Component-based splitting**: Lazy load components
+4. **Vendor splitting**: Third-party libraries separate from app code
+
+2018-2020: Framework support improved dramatically:
+- **React**: React.lazy() and Suspense for component lazy loading
+- **Vue**: Async components with dynamic imports
+- **Angular**: Lazy loading for route modules
+- **Next.js**: Automatic code splitting per page
+
+Code splitting became nearly automatic with modern frameworks. Developers could do:
+```javascript
+const HeavyComponent = React.lazy(() => import('./HeavyComponent'));
+```
+
+And the framework handled splitting, loading, and error handling.
+
+2020: As Core Web Vitals became important, code splitting's impact was measurable:
+- Smaller initial bundles improved Time to Interactive (TTI)
+- Reduced JavaScript execution time improved FID/INP
+- Faster page loads improved LCP
+
+Studies showed:
+- Properly split code could reduce initial bundle by 40-70%
+- Initial page load improved by 30-60%
+- TTI and TBT (Total Blocking Time) significantly better
+
+However, over-splitting created new problems:
+- Too many chunks increased HTTP requests (pre-HTTP/2)
+- Excessive splitting increased connection overhead
+- Complex dependency graphs were hard to debug
+
+2021-Present: Code splitting strategies matured:
+
+Best practices:
+1. **Route-based splitting** (fundamental): Split by page/route
+2. **Component-level splitting**: Lazy load heavy components (charts, editors, etc.)
+3. **Conditional splitting**: Load features only if user needs them
+4. **Vendor splitting**: Separate third-party from first-party code
+5. **Common chunk extraction**: Share code across chunks
+
+Modern build tools optimize automatically:
+- **Webpack 5**: Module federation, intelligent chunking
+- **Vite**: Native ESM dev, optimized production chunks
+- **Parcel**: Zero-config code splitting
+- **esbuild/swc**: Fast bundling with splitting
+
+Analysis tools identify splitting opportunities:
+- **Webpack Bundle Analyzer**: Visualize bundle composition
+- **Chrome Coverage Tab**: Show unused code
+- **Lighthouse**: Audit for code splitting opportunities
+- **Source Map Explorer**: Analyze bundle content
+
+Metrics to track:
+- Initial bundle size (< 200KB gzipped is ideal)
+- Number of chunks (balance splitting vs. requests)
+- Chunk load time (measure lazy-load performance)
+- Coverage (% of loaded code actually executed)
+
+Common splitting strategies:
+1. **Landing page**: Minimal bundle (~50-100KB)
+2. **Authenticated app**: Load after login
+3. **Admin features**: Load only for admin users
+4. **Heavy libraries**: Load when needed (PDF viewer, rich text editor)
+5. **Below-the-fold**: Lazy load content not initially visible
+
+Trade-offs:
+- **Too little splitting**: Large initial bundle, slow TTI
+- **Too much splitting**: Many requests, complexity, loading delays
+- **Optimal splitting**: Balance initial load size with chunk loading overhead
+
+Code splitting directly impacts Core Web Vitals:
+- **TTI**: Smaller bundles reduce parse/execute time
+- **FID/INP**: Less JavaScript blocking main thread
+- **LCP**: Faster initial load can improve LCP
+
+Modern frameworks make code splitting nearly effortless, transforming it from an advanced optimization to a standard practice. The challenge shifted from "how to split code" to "what splitting strategy is optimal for this application."
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

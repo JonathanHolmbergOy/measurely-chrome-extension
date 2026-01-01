@@ -1,0 +1,177 @@
+HVP - HTTP Version Protocol
+
+WHAT IT MEASURES
+HTTP protocol version detected (HTTP/1.1, HTTP/2, HTTP/3) and its performance impact. This metric identifies which HTTP protocol version is being used and evaluates the performance benefits of modern protocols.
+
+HTTP protocol versions:
+- HTTP/1.1: Legacy protocol, limited to ~6 connections per origin, no multiplexing
+- HTTP/2: Modern protocol with multiplexing, header compression, server push
+- HTTP/3: Latest protocol using QUIC, improved performance over unreliable networks
+
+Protocol features:
+- HTTP/1.1: Single request per connection, no header compression
+- HTTP/2: Multiplexing (multiple requests on one connection), header compression, server push
+- HTTP/3: QUIC-based, faster connection establishment, better mobile performance
+
+HOW IT'S MEASURED
+PerformanceResourceTiming API checking nextHopProtocol property, or analysis of connection characteristics (multiplexing, header compression). The measurement process:
+
+1. Checks protocol version:
+   - Uses PerformanceResourceTiming.nextHopProtocol
+   - Identifies protocol for each resource
+   - Determines most common protocol used
+
+2. Analyzes connection characteristics:
+   - Checks for multiplexing (multiple requests on one connection)
+   - Detects header compression
+   - Identifies protocol negotiation
+
+3. Returns protocol version:
+   - Returns numeric value (1 = HTTP/1.1, 2 = HTTP/2, 3 = HTTP/3)
+   - May return string value ("http/1.1", "h2", "h3")
+   - Identifies protocol performance impact
+
+WHY IT'S IMPORTANT
+HTTP/2 and HTTP/3 provide multiplexing, header compression, and better performance than HTTP/1.1. Modern protocols significantly improve page load performance.
+
+Performance benefits:
+- HTTP/2: Multiplexing reduces connection overhead, header compression reduces size
+- HTTP/3: Faster connection establishment, better mobile performance
+- Single connection: HTTP/2/3 use one connection vs multiple for HTTP/1.1
+- Reduced latency: Faster protocol negotiation and data transfer
+
+User experience:
+- Faster page loads with HTTP/2/3
+- Better mobile performance
+- Reduced connection overhead
+- Improved perceived performance
+
+THRESHOLDS
+- Good: ≥ 2 (HTTP/2 or HTTP/3, modern protocol)
+- Poor: 1 (HTTP/1.1, legacy protocol)
+
+Note: HTTP/3 is best but not yet universally supported. HTTP/2 is widely supported and provides significant benefits over HTTP/1.1.
+
+COMMON PITFALLS
+1. Using HTTP/1.1: Legacy protocol with performance limitations
+2. Missing HTTP/2 support: Server not configured for HTTP/2
+3. No HTTP/3 support: Missing latest protocol version
+4. Protocol negotiation issues: Browser/server not negotiating properly
+5. CDN limitations: CDN not supporting modern protocols
+6. Server configuration: Server not configured for HTTP/2/3
+7. TLS requirements: HTTP/2 requires TLS (HTTPS)
+
+OPTIMIZATION STRATEGIES
+1. Upgrade to HTTP/2: Configure server to support HTTP/2
+2. Enable HTTP/3 where supported: Use HTTP/3 when available
+3. Configure server for protocol negotiation: Allow ALPN (Application-Layer Protocol Negotiation)
+4. Use CDN with modern protocols: Choose CDN supporting HTTP/2/3
+5. Ensure HTTPS: HTTP/2 requires HTTPS
+6. Test protocol support: Verify HTTP/2/3 is working
+7. Monitor protocol usage: Track which protocol is being used
+8. Update server software: Ensure server version supports modern protocols
+9. Configure properly: Follow server documentation for HTTP/2/3 setup
+10. Test performance: Measure performance improvements from protocol upgrade
+
+
+HISTORY
+HTTP version evolution has been driven by the need for faster, more efficient web communication:
+
+1991-1996: **HTTP/0.9 and HTTP/1.0** - The early web used simple text-based protocols. Each resource required a new TCP connection (very inefficient). HTTP/1.0 (1996) added headers and status codes but still used one connection per resource.
+
+1997-1999: **HTTP/1.1** (RFC 2068, later RFC 2616) introduced persistent connections and pipelining. Multiple requests could be sent over one connection, dramatically improving performance. HTTP/1.1 became the standard for the next 15+ years.
+
+However, HTTP/1.1 limitations became apparent:
+- Head-of-line blocking (requests processed in order, one slow request blocks others)
+- No request prioritization
+- Redundant headers on every request (inefficient)
+- Limited connection parallelism (browsers typically opened 6 connections per domain)
+
+2009-2012: Google developed SPDY (pronounced "speedy") as an experimental protocol to address HTTP/1.1's limitations. SPDY introduced:
+- Multiplexing (multiple requests over one connection simultaneously)
+- Header compression
+- Server push (send resources before requested)
+- Request prioritization
+
+SPDY showed 20-60% performance improvements in testing. Google deployed SPDY on Google services, and other major sites adopted it.
+
+2012-2015: SPDY's success led the IETF to standardize these improvements as HTTP/2. The HTTP Working Group used SPDY as the foundation but made refinements.
+
+May 2015: **HTTP/2** was published as RFC 7540. Key features:
+- Binary protocol (more efficient than text-based HTTP/1.1)
+- Multiplexing without head-of-line blocking
+- Header compression (HPACK)
+- Server push
+- Stream prioritization
+
+Browser adoption was rapid:
+- Chrome, Firefox, Edge, Safari all added HTTP/2 support in 2015-2016
+- By 2016, most major websites supported HTTP/2
+- HTTP/2 required HTTPS (TLS) for browser support
+
+2016-2018: HTTP/2 adoption grew from 10% to 30% of websites. Performance improvements were measurable:
+- Reduced connection overhead (one connection instead of 6)
+- Faster loading with many small resources
+- Better mobile performance (single connection better on high-latency mobile networks)
+
+However, HTTP/2 still had a limitation: **TCP head-of-line blocking**. Packet loss would stall all streams, as TCP ensures ordered delivery. On lossy connections (mobile networks), this sometimes made HTTP/2 slower than HTTP/1.1.
+
+2018-2021: Google developed **QUIC** (Quick UDP Internet Connections), a transport protocol built on UDP instead of TCP. QUIC addressed TCP's head-of-line blocking and improved connection establishment (faster than TCP+TLS).
+
+The IETF standardized QUIC and built **HTTP/3** on top of it.
+
+November 2020: **HTTP/3** was published as RFC 9114. Key improvements over HTTP/2:
+- Uses QUIC (UDP-based) instead of TCP
+- No head-of-line blocking (at transport layer)
+- Faster connection establishment (0-RTT and 1-RTT)
+- Better loss recovery
+- Connection migration (survive network changes, e.g., WiFi to cellular)
+
+2021-Present: HTTP/3 adoption is growing:
+- Chrome 87+ (2020), Firefox 88+ (2021), Edge 92+ (2021), Safari 14+ (2020)
+- Cloudflare, Google, Facebook deployed HTTP/3
+- CDNs provide HTTP/3 support
+- By 2024, ~25-30% of top websites support HTTP/3
+
+Performance characteristics:
+- **HTTP/1.1**: Baseline, works everywhere but slowest
+- **HTTP/2**: 20-50% faster than HTTP/1.1 for typical pages
+- **HTTP/3**: 10-30% faster than HTTP/2 on high-latency or lossy networks
+
+Detection methods evolved:
+- 2012+: Resource Timing API added `nextHopProtocol` property
+- Developers could programmatically detect HTTP version for resources
+- Monitoring tools track HTTP version adoption
+
+Modern HTTP version usage (2024):
+- HTTP/1.1: ~40% (legacy support, some servers haven't upgraded)
+- HTTP/2: ~55% (widespread adoption)
+- HTTP/3: ~25% (growing, with HTTP/2 fallback)
+
+Performance impact:
+- HTTP/2 dramatically improves load time for resource-heavy pages
+- HTTP/3 helps most on mobile networks (high latency, packet loss)
+- Upgrading from HTTP/1.1 to HTTP/2 is one of the easiest performance wins
+
+Implementation:
+- HTTP/2: Requires TLS and server support (nginx, Apache, Node.js all support it)
+- HTTP/3: Requires QUIC support (Cloudflare, Google Cloud, AWS, Azure support it)
+- Browsers automatically negotiate the best available version
+
+The evolution from HTTP/1.1 → HTTP/2 → HTTP/3 represents continuous optimization for modern web needs: more resources, mobile devices, real-time applications. Each version maintained backward compatibility while improving performance significantly.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

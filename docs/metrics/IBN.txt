@@ -1,0 +1,91 @@
+IBN - Input Button Names
+========================
+
+OVERVIEW
+--------
+Rule ID: input-button-name
+Impact: Critical
+Category: Accessibility (Interactive Elements)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Ensures input elements of type button, submit, and reset have discernible names via value attribute, aria-label, aria-labelledby, or title. Without accessible names, screen readers announce these as "button" without context.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 3 violations
+
+
+WHY IT MATTERS
+--------------
+Accessible names for input buttons:
+- Enable screen readers to announce button purpose
+- Allow voice control users to activate by name
+- Provide context for form submission actions
+- Meet WCAG 4.1.2 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds input[type="button/submit/reset"] elements
+2. Checks for value, aria-label, aria-labelledby, or title
+3. Reports inputs with no accessible name
+4. Provides type and ID for fixing
+
+
+HOW TO FIX
+----------
+1. Add value attribute (most common for input buttons)
+2. Use aria-label for dynamic labels
+3. Use aria-labelledby to reference existing text
+4. Add title attribute as fallback
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<input type="submit">
+<input type="button">
+<input type="reset">
+
+Good:
+<input type="submit" value="Submit Form">
+<input type="button" value="Add Item" aria-label="Add new todo item">
+<input type="reset" value="Clear Form">
+
+Dynamic Labels:
+<input type="button" id="save-btn" aria-label="Save document">
+<script>
+    const btn = document.getElementById('save-btn');
+    btn.setAttribute('aria-label', `Save ${documentName}`);
+</script>
+
+
+COMPARISON WITH BTN
+--------------------
+This rule specifically targets <input> elements with button types, while BTN targets <button> elements and [role="button"]. Both are critical but apply to different element types.
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: Critical for form usability
+
+
+RELATED RULES
+-------------
+- BTN (Button Names)
+- SEN (Select Element Names)
+- FLI (Form Label Issues)
+
+
+SOURCES
+-------
+- MDN Input: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/button
+- MDN aria-label: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#input-button-name
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

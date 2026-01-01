@@ -1,0 +1,195 @@
+FEA - Form Error Associations
+
+WHAT IT MEASURES
+Count of form inputs with errors missing proper ARIA error association attributes. When form inputs have validation errors, they must be properly associated with error messages so screen reader users can understand what went wrong and how to fix it. This requires both `aria-invalid="true"` to indicate the error state and `aria-errormessage` (or `aria-describedby`) to reference the error message element.
+
+Proper error association includes:
+- `aria-invalid="true"` on the input with the error
+- `aria-errormessage="error-id"` pointing to the error message element
+- Error message element with matching `id` attribute
+- Error message should be visible and descriptive
+
+HOW IT'S MEASURED
+DOM analysis checking form inputs with errors for aria-errormessage and aria-invalid attributes. The measurement process:
+
+1. Identifies form inputs (input, select, textarea) that have validation errors
+2. Checks for error indicators:
+   - Visual error messages near inputs
+   - Error states in form validation
+   - Error classes or attributes
+3. Validates ARIA error attributes:
+   - Checks for `aria-invalid="true"` on inputs with errors
+   - Checks for `aria-errormessage` or `aria-describedby` referencing error messages
+   - Validates that referenced error message IDs exist
+   - Verifies error messages are associated with correct inputs
+4. Flags inputs with errors that are missing proper ARIA associations
+
+The measurement distinguishes between:
+- Properly associated: Input has aria-invalid and aria-errormessage pointing to valid error message
+- Missing aria-invalid: Error exists but aria-invalid not set
+- Missing aria-errormessage: Error exists but not associated with error message
+- Broken reference: aria-errormessage points to non-existent ID
+- Unassociated error: Error message exists but not linked to input
+
+WHY IT'S IMPORTANT
+Proper error associations help screen reader users understand form errors and how to fix them. Without proper associations, screen reader users may not know that an error occurred, what the error is, or which field has the error.
+
+Impact on users:
+- Screen reader users cannot identify which fields have errors
+- Error messages are not announced to assistive technology users
+- Users cannot understand what went wrong or how to fix errors
+- Form completion becomes impossible or extremely difficult
+- Violates WCAG 2.1 Success Criterion 3.3.1 (Error Identification) - Level A
+- Violates WCAG 2.1 Success Criterion 4.1.3 (Status Messages) - Level AA
+
+Accessibility impact:
+- Forms become unusable for screen reader users
+- Legal compliance issues in jurisdictions requiring WCAG compliance
+- Reduced accessibility score
+- Exclusion of users with disabilities
+
+Technical impact:
+- Poor user experience for assistive technology users
+- Increased form abandonment
+- Reduced form completion rates
+- Potential legal liability
+
+THRESHOLDS
+- Good: 0 errors (all form errors properly associated)
+- Needs Improvement: 1-2 errors (minor association issues)
+- Poor: ≥ 3 errors (significant form accessibility barriers)
+
+Even a single unassociated form error can prevent users from completing forms. The threshold reflects that proper error association is critical for form accessibility.
+
+COMMON PITFALLS
+1. Missing aria-errormessage: Error messages exist but not linked to inputs
+2. Missing aria-invalid: Inputs with errors not marked with aria-invalid="true"
+3. Unassociated error messages: Error messages displayed but not programmatically linked
+4. Broken references: aria-errormessage pointing to non-existent IDs
+5. Visual-only errors: Errors shown visually but not announced to screen readers
+6. Generic error messages: Error messages that don't describe the specific problem
+7. Error messages not visible: Error messages hidden or not accessible
+8. Multiple errors not associated: Forms with multiple errors, none properly associated
+9. Dynamic errors: Errors added dynamically without proper ARIA attributes
+10. Error placement: Error messages placed where screen readers won't find them
+
+OPTIMIZATION STRATEGIES
+1. Add aria-errormessage to inputs with errors: Link error messages to inputs using aria-errormessage
+2. Set aria-invalid='true': Mark inputs with errors using aria-invalid attribute
+3. Associate error messages properly: Ensure error message IDs match aria-errormessage references
+4. Make error messages descriptive: Provide clear, specific error messages
+5. Place error messages near inputs: Position error messages close to associated inputs
+6. Test with screen readers: Verify error announcements work correctly
+7. Use aria-describedby as alternative: Can use aria-describedby instead of aria-errormessage
+8. Update ARIA on validation: Set aria-invalid and aria-errormessage when validation occurs
+9. Clear ARIA on correction: Remove aria-invalid and update aria-errormessage when errors are fixed
+10. Provide error summaries: Consider providing error summaries for forms with multiple errors
+
+
+TECHNICAL DETAILS
+Form error association uses ARIA attributes to link form inputs with their error messages:
+
+aria-invalid attribute:
+- Indicates that the input has a validation error
+- Should be set to "true" when input has an error
+- Should be set to "false" or removed when error is corrected
+- Can also be "grammar" or "spelling" for specific error types
+
+aria-errormessage attribute:
+- References the ID of the element containing the error message
+- Should point to an element that exists in the DOM
+- Error message element should have the matching ID
+- Alternative: Can use aria-describedby instead
+
+Error message requirements:
+- Must be visible to users
+- Must be descriptive and specific
+- Should be placed near the associated input
+- Should be programmatically associated via ID reference
+
+WCAG requirements:
+- WCAG 2.1 Success Criterion 3.3.1 (Error Identification) - Level A: Errors must be identified and described
+- WCAG 2.1 Success Criterion 3.3.3 (Error Suggestion) - Level AA: Suggestions for correction should be provided
+- WCAG 2.1 Success Criterion 4.1.3 (Status Messages) - Level AA: Status messages must be programmatically determinable
+
+HISTORY
+Form error association requirements have evolved with accessibility standards:
+
+1999: WCAG 1.0 Guideline 10 required that form controls be properly labeled, but didn't specifically address error association.
+
+2008: WCAG 2.0 Success Criterion 3.3.1 (Error Identification) was introduced as Level A requirement. This required that errors be identified and described to users.
+
+2014: WAI-ARIA 1.0 introduced aria-invalid and aria-errormessage attributes to support form error association. These attributes provided a standardized way to associate errors with form inputs.
+
+2018: WCAG 2.1 maintained the error identification requirement and added Success Criterion 4.1.3 (Status Messages) - Level AA, which requires that status messages (including errors) be programmatically determinable.
+
+2021: WAI-ARIA 1.2 refined the aria-errormessage specification. Best practices for form error association became more widely known.
+
+2023: WCAG 2.2 continued to emphasize proper error association. Modern form validation libraries began to include ARIA error association by default.
+
+The importance of form error association grew as:
+- Screen reader users reported difficulty understanding form errors
+- Accessibility audits identified missing error associations as a common issue
+- Legal requirements for accessibility compliance increased
+- Form validation became more complex and dynamic
+
+INDUSTRY STANDARDS
+This metric aligns with W3C ARIA specifications and WCAG 2.1/2.2 accessibility guidelines. Form error association validation is implemented in major accessibility testing tools including:
+
+- axe-core: Open-source accessibility testing engine with aria-errormessage rules
+- WAVE (Web Accessibility Evaluation Tool): Flags missing error associations
+- Lighthouse: Google's automated auditing tool includes form accessibility checks
+- Pa11y: Command-line accessibility testing tool that validates error associations
+- Accessibility Insights: Microsoft's accessibility testing tool with form validation
+- Browser DevTools: Can inspect ARIA attributes and relationships
+
+Legal requirements:
+- Section 508 (United States): Requires WCAG 2.0 Level AA compliance
+- EN 301 549 (European Union): Requires WCAG 2.1 Level AA compliance
+- AODA (Ontario, Canada): Requires WCAG 2.0 Level AA compliance
+- WCAG 2.1 Success Criterion 3.3.1 (Level A) requires error identification
+- WCAG 2.1 Success Criterion 4.1.3 (Level AA) requires programmatically determinable status messages
+
+Industry guidelines:
+- W3C ARIA Authoring Practices Guide provides guidance on form error association
+- W3C WCAG 2.1 Success Criterion 3.3.1 (Error Identification)
+- WebAIM provides best practices for accessible forms
+
+Thresholds are based on WCAG compliance requirements where zero errors is the target. Even a single unassociated form error can prevent users from completing forms.
+
+RELATED METRICS
+Form Error Associations is part of a comprehensive accessibility measurement framework. Related metrics include:
+
+- FLI (Form Label Issues): Missing labels on form inputs (overlaps when labels are used for error association)
+- RFI (Required Field Indicators): Missing indicators for required fields
+- ASC (Accessibility Score): Composite score including form accessibility issues
+
+Together, these metrics identify different types of form accessibility issues that prevent users from effectively completing and submitting forms.
+
+MEASUREMENT LIMITATIONS
+Client-side form error association detection has several limitations:
+
+1. Dynamic errors: Errors may only appear after user interaction or form submission
+2. JavaScript validation: Errors managed by JavaScript may not be immediately detectable
+3. Error state detection: Determining if an input has an error can be challenging without triggering validation
+4. Hidden error messages: Error messages may be hidden until validation occurs
+5. Complex validation: Multi-step or conditional validation may be difficult to test
+6. Real-time validation: Errors that appear/disappear in real-time may be missed in static analysis
+
+Automated testing should be supplemented with:
+- Manual form testing with screen readers
+- Triggering validation to see error states
+- Testing error correction and ARIA attribute updates
+- User testing with people who use assistive technologies
+- Testing with different form validation scenarios
+
+Measurements are most accurate when combined with manual testing and real user feedback on form accessibility.
+
+
+SOURCES
+- W3C ARIA 1.2 aria-errormessage: https://www.w3.org/TR/wai-aria-1.2/#aria-errormessage
+- WCAG 2.1 Success Criterion 3.3.1: https://www.w3.org/WAI/WCAG21/Understanding/error-identification.html
+- WCAG 2.1 Success Criterion 4.1.3: https://www.w3.org/WAI/WCAG21/Understanding/status-messages.html
+- MDN aria-errormessage: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-errormessage
+- WebAIM Accessible Forms: https://webaim.org/techniques/forms/
+- See metrics.txt for additional sources

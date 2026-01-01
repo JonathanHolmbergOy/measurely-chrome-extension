@@ -1,0 +1,185 @@
+CHM - Consistent Help
+
+WHAT IT MEASURES
+Whether help mechanisms (help links, tooltips, support, documentation) are consistently located across pages. This metric checks compliance with WCAG 2.2 Success Criterion 3.2.6 (Consistent Help), which requires that help mechanisms that appear on multiple pages are located in the same relative location on each page.
+
+Help mechanisms include:
+- Help links or buttons
+- Support contact information
+- Documentation links
+- Tooltips or help text
+- FAQ links
+- Chat support widgets
+- Help icons or buttons
+- Contextual help
+
+The metric verifies that when help mechanisms are present on multiple pages, they appear in the same relative position (e.g., always in the header, always in the footer, always as a floating button in the bottom-right corner).
+
+HOW IT'S MEASURED
+DOM analysis checking for consistent placement of help-related elements across pages. The measurement process:
+
+1. Identifies help-related elements:
+   - Elements with help-related text (e.g., "help", "support", "FAQ", "documentation")
+   - Links with help-related hrefs or aria-labels
+   - Buttons with help-related labels
+   - Icons or elements with help-related classes/IDs
+   - Tooltip triggers or help widgets
+
+2. Determines element position:
+   - Calculates relative position within page layout
+   - Identifies parent containers (header, footer, sidebar, main content)
+   - Records CSS positioning (fixed, absolute, relative)
+   - Notes visual location (top-left, top-right, bottom-left, bottom-right, center)
+
+3. Compares across pages:
+   - Checks if same help mechanisms appear on multiple pages
+   - Verifies if help mechanisms are in same relative location
+   - Flags inconsistencies in placement
+
+4. Returns boolean result:
+   - true: Help mechanisms are consistently located
+   - false: Help mechanisms are inconsistently located or missing
+
+Measurement considerations:
+- May require testing multiple pages
+- Must account for responsive design variations
+- Should consider both visual and DOM position
+- May need to test across different viewport sizes
+
+WHY IT'S IMPORTANT
+Consistent help location helps users find assistance easily. WCAG 2.2 Success Criterion 3.2.6 requires help mechanisms to be in the same relative location to improve usability and accessibility.
+
+User experience impact:
+- Users can quickly locate help when needed
+- Reduces cognitive load by establishing predictable patterns
+- Improves efficiency for users who need frequent help
+- Creates sense of consistency and professionalism
+- Reduces frustration from searching for help
+
+Accessibility impact:
+- Users with cognitive disabilities benefit from consistent patterns
+- Screen reader users can navigate more efficiently with predictable locations
+- Keyboard users can access help more quickly
+- Reduces learning curve for assistive technology users
+- Supports WCAG 2.2 Level A compliance
+
+Usability impact:
+- Consistent help placement is a fundamental usability principle
+- Follows established design patterns
+- Reduces support requests by making help easily accessible
+- Improves overall user satisfaction
+
+THRESHOLDS
+- Good: true (Help mechanisms consistently located)
+- Poor: false (Help mechanisms inconsistently located or missing)
+
+WCAG 2.2 Success Criterion 3.2.6 (Level A) requires consistent help location. Any inconsistency is a violation.
+
+COMMON PITFALLS
+1. Inconsistent help placement: Help links appear in different locations on different pages
+2. Help links in different locations: Some pages have help in header, others in footer
+3. No consistent help mechanism: Help mechanisms vary or are missing on some pages
+4. Responsive design inconsistencies: Help location changes between desktop and mobile
+5. Different help mechanisms: Using different types of help (link vs button vs widget) inconsistently
+6. Missing help on some pages: Help available on some pages but not others
+7. Hidden help: Help mechanisms present but not easily discoverable
+8. Inconsistent styling: Help mechanisms styled differently across pages
+9. Different help content: Help mechanisms link to different resources inconsistently
+10. Dynamic help placement: Help location changes based on page content
+
+OPTIMIZATION STRATEGIES
+1. Place help mechanisms consistently: Choose a standard location (header, footer, fixed position) and use it across all pages
+2. Use same location across pages: Ensure help appears in same relative position on every page
+3. Ensure help is easily findable: Make help mechanisms visible and accessible
+4. Standardize help mechanisms: Use same type of help (link, button, widget) consistently
+5. Document help placement: Establish design system guidelines for help placement
+6. Test across pages: Verify consistency across all pages in the site
+7. Consider responsive design: Ensure help location is consistent across viewport sizes
+8. Use consistent styling: Apply same visual styling to help mechanisms across pages
+9. Provide multiple help access points: Consider both persistent (header/footer) and contextual help
+10. Make help keyboard accessible: Ensure help mechanisms are keyboard navigable
+
+
+TECHNICAL DETAILS
+WCAG 2.2 Success Criterion 3.2.6 (Consistent Help) is a Level A requirement that states: "If a Web page contains any of the following help mechanisms, and those mechanisms are repeated on multiple Web pages within a set of Web pages, they occur in the same relative order on each page where they are repeated, unless a change is initiated by the user."
+
+Help mechanisms covered:
+- Human contact details
+- Human contact mechanism
+- Self-help option
+- A fully automated contact mechanism
+
+The criterion applies when:
+- Help mechanisms appear on multiple pages
+- The same help mechanisms are repeated
+- The mechanisms are provided to help users complete processes
+
+Exceptions:
+- User-initiated changes (e.g., user preferences)
+- Changes that improve accessibility
+
+HISTORY
+WCAG 2.2 was published in October 2023, introducing Success Criterion 3.2.6 (Consistent Help) as a new Level A requirement. This criterion addresses the need for consistent help placement to improve usability and accessibility.
+
+The concept of consistent help placement has been a usability best practice for decades, but WCAG 2.2 formalized it as an accessibility requirement. This reflects the understanding that consistent patterns benefit all users, especially those with cognitive disabilities or who rely on assistive technologies.
+
+Previous WCAG versions (2.0, 2.1) included related criteria about consistent navigation (3.2.3) and consistent identification (3.2.4), but did not specifically address help mechanisms. WCAG 2.2 expanded consistency requirements to include help mechanisms.
+
+INDUSTRY STANDARDS
+This metric aligns with WCAG 2.2 Success Criterion 3.2.6 (Level A) and is checked by accessibility testing tools including:
+
+- axe-core: Open-source accessibility testing engine
+- WAVE (Web Accessibility Evaluation Tool): Flags inconsistent help mechanisms
+- Lighthouse: Google's automated auditing tool includes WCAG 2.2 checks
+- Pa11y: Command-line accessibility testing tool
+- Accessibility Insights: Microsoft's accessibility testing tool
+
+Legal requirements:
+- Section 508 (United States): Requires WCAG 2.0 Level AA compliance (WCAG 2.2 extends this)
+- EN 301 549 (European Union): Requires WCAG 2.1 Level AA compliance
+- AODA (Ontario, Canada): Requires WCAG 2.0 Level AA compliance
+- Many jurisdictions are updating requirements to include WCAG 2.2
+
+Industry guidelines:
+- WCAG 2.2 provides the foundation for what should be tested
+- W3C WAI provides guidance on implementing consistent help
+- Usability best practices support consistent help placement
+
+RELATED METRICS
+Consistent Help is part of a comprehensive accessibility measurement framework. Related metrics include:
+
+- LMR (Landmark Regions): Consistent page structure and landmarks
+- KNS (Keyboard Navigation Score): Consistent keyboard navigation patterns
+- ASC (Accessibility Score): Composite score including consistency metrics
+- Other WCAG 2.2 consistency criteria (3.2.3, 3.2.4, 3.2.5)
+
+Together, these metrics ensure consistent, predictable user experiences that benefit all users, especially those with disabilities.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement of consistent help has several limitations:
+
+1. Multi-page testing: Requires testing multiple pages to verify consistency
+2. Dynamic content: Help mechanisms added dynamically may not be detected
+3. Context-dependent: Determining what constitutes "help" may require interpretation
+4. Responsive design: Help location may vary by viewport size (may be acceptable)
+5. User preferences: User-initiated changes to help location are exceptions
+6. Partial implementation: Help mechanisms on some but not all pages
+7. Different help types: Various help mechanisms may need different consistency rules
+
+Automated testing should be supplemented with:
+- Manual review of help placement across pages
+- User testing to verify help is easily findable
+- Design system review to ensure consistency guidelines
+- Cross-browser and cross-device testing
+
+Measurements are most accurate when:
+- Multiple pages are tested
+- Both visual and DOM position are considered
+- Responsive variations are accounted for
+- User preferences and exceptions are understood
+
+
+SOURCES
+- WCAG 2.2 Success Criterion 3.2.6: https://www.w3.org/WAI/WCAG22/Understanding/consistent-help.html
+- W3C Understanding WCAG 2.2: https://www.w3.org/WAI/WCAG22/Understanding/
+- See metrics.txt for additional sources

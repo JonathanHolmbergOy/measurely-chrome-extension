@@ -1,0 +1,36 @@
+RCB - Request Count Budget
+
+WHAT IT MEASURES
+Total HTTP requests vs recommended budget (typically 50-100 requests).
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis counting total resource requests and comparing to budget
+
+WHY IT'S IMPORTANT
+Too many HTTP requests increase load time due to connection overhead. Fewer requests improve performance
+
+THRESHOLDS
+Good ≤ 100, Poor ≥ 200
+
+COMMON PITFALLS
+Too many requests, no request optimization, uncombined resources, excessive third-party requests
+
+OPTIMIZATION STRATEGIES
+Combine resources, reduce requests, use sprites, minimize third-party requests, optimize request count
+
+
+HISTORY
+Resource optimization metrics became critical as web pages grew in complexity. Image optimization techniques evolved from simple compression to modern formats like WebP (2010) and AVIF (2019). Code splitting and tree shaking emerged with modern JavaScript bundlers in the 2010s. Performance budgets became a standard practice as mobile web usage highlighted the importance of resource efficiency.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

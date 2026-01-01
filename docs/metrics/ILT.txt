@@ -1,0 +1,103 @@
+ILT - Input Latency
+
+WHAT IT MEASURES
+Time from user input event (click, tap, keypress) to visual feedback or response. Measures responsiveness of interactive elements and user interface by quantifying how long users wait between interaction and visible response.
+
+Input latency includes:
+- Time from input event to event handler start
+- Time for event handler execution
+- Time until visual feedback appears
+- Total perceived delay
+
+Visual feedback can be:
+- UI state changes (button pressed, form submitted)
+- Visual updates (content changes, animations)
+- Cursor changes (pointer, loading)
+- Element state changes (hover, active)
+
+HOW IT'S MEASURED
+PerformanceObserver API with 'event' entry type, measuring input delay. Requires actual user interaction. The measurement process:
+
+1. Observes input events:
+   - Uses PerformanceObserver with 'event' entry type
+   - Tracks user interactions (click, tap, keypress)
+   - Records event timing
+
+2. Measures latency:
+   - Calculates time from input to response
+   - Measures event handler execution time
+   - Tracks visual feedback timing
+
+3. Returns latency value:
+   - Average input latency in milliseconds
+   - May track per-interaction latency
+   - Identifies slow interactions
+
+Measurement considerations:
+- Requires real user interaction
+- May measure multiple interactions
+- Tracks both handler delay and visual feedback
+- Can identify specific slow interactions
+
+WHY IT'S IMPORTANT
+High input latency makes interfaces feel unresponsive. Users expect immediate feedback from interactions, and delays create perception of poor performance and unresponsiveness.
+
+User experience impact:
+- Unresponsive feeling
+- Poor perceived performance
+- Frustration with delays
+- Reduced user satisfaction
+- Increased abandonment
+
+Performance impact:
+- Indicates main thread blocking
+- Suggests JavaScript performance issues
+- Points to inefficient event handling
+- Affects overall interactivity
+
+THRESHOLDS
+- Good: ≤ 100ms (Responsive, immediate feedback)
+- Needs Improvement: 100-300ms (Some delay, noticeable)
+- Poor: ≥ 300ms (Significant delay, unresponsive)
+
+COMMON PITFALLS
+1. Long event handlers: Slow event handler execution
+2. Blocking JavaScript: Main thread blocked during input
+3. Synchronous operations: Blocking operations in event handlers
+4. Heavy computations on main thread: Expensive work blocking response
+5. No immediate feedback: Missing visual feedback during processing
+6. Inefficient event handling: Poorly optimized event handlers
+7. Third-party scripts: External scripts blocking interactions
+8. Large JavaScript bundles: Slow parsing/execution delaying response
+
+OPTIMIZATION STRATEGIES
+1. Optimize event handlers: Make event handlers fast and efficient
+2. Use debouncing: Debounce frequent events (scroll, resize)
+3. Defer heavy work: Move expensive operations off main thread
+4. Break up long tasks: Split work into smaller chunks
+5. Use web workers: Offload computation to web workers
+6. Provide immediate feedback: Show loading states immediately
+7. Optimize JavaScript: Minimize and optimize JavaScript execution
+8. Use requestAnimationFrame: Align work with browser paint cycles
+9. Minimize main thread work: Reduce work on main thread
+10. Profile performance: Use DevTools to identify bottlenecks
+
+
+HISTORY
+User experience metrics emerged as web applications became more interactive. Frame rate monitoring and scroll performance measurement became important as single-page applications and complex interactions became common. Responsive design metrics gained prominence with mobile web usage growth starting around 2010. Modern UX metrics focus on perceived performance and user satisfaction rather than just technical measurements.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

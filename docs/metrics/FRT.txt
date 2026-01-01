@@ -1,0 +1,93 @@
+FRT - Frame Titles
+==================
+
+OVERVIEW
+--------
+Rule ID: frame-title
+Impact: Serious
+Category: Accessibility (Frame Elements)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value, 2.4.1 Bypass Blocks)
+
+Description:
+Ensures iframe and frame elements have title or aria-label attributes. Frame titles help screen reader users understand the purpose and content of embedded content before entering it.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Frame titles:
+- Identify iframe purpose for screen readers
+- Enable users to skip irrelevant embedded content
+- Provide context before loading frame content
+- Meet WCAG 2.4.1 and 4.1.2 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all <iframe> and <frame> elements
+2. Checks for title or aria-label attribute
+3. Reports frames without accessible names
+4. Includes src and ID for identification
+
+
+HOW TO FIX
+----------
+1. Add descriptive title attribute (preferred)
+2. Use aria-label for dynamic descriptions
+3. Ensure title describes iframe purpose, not just "iframe"
+4. Update titles if iframe content changes
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<iframe src="https://example.com/map"></iframe>
+<iframe src="https://youtube.com/embed/xyz"></iframe>
+<iframe title="iframe"></iframe>
+
+Good:
+<iframe src="https://example.com/map" title="Store location map"></iframe>
+<iframe src="https://youtube.com/embed/xyz" title="Product demo video"></iframe>
+<iframe aria-label="Live chat support" src="/chat"></iframe>
+
+
+COMMON IFRAME TYPES
+--------------------
+Maps:
+<iframe src="..." title="Our office location on Google Maps"></iframe>
+
+Videos:
+<iframe src="..." title="Tutorial: How to install the software"></iframe>
+
+Ads:
+<iframe src="..." title="Advertisement"></iframe>
+
+Embedded Content:
+<iframe src="..." title="Customer testimonials"></iframe>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: Critical for context
+
+
+RELATED RULES
+-------------
+- IFC (Iframe Content Issues)
+- BYP (Bypass Blocks)
+
+
+SOURCES
+-------
+- MDN iframe: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe
+- WCAG H64: https://www.w3.org/WAI/WCAG21/Techniques/html/H64
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#frame-title
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

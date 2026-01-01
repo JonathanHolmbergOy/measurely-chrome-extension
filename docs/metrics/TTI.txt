@@ -1,0 +1,132 @@
+TTI - Time to Interactive
+
+WHAT IT MEASURES
+Time until the page is fully interactive and reliably responsive to user input. TTI measures when JavaScript has finished loading, the main thread is quiet, and the page can respond to user interactions quickly.
+
+TTI criteria:
+- Main thread quiet: No long tasks (> 50ms) for 5 seconds
+- Critical resources loaded: All critical resources have loaded
+- Event handlers registered: Interactive elements have handlers
+- Page responsive: Can respond to input within 50ms
+
+The metric measures:
+- Time from navigation start to interactivity
+- When users can actually use the page
+- JavaScript execution completion
+- Main thread availability
+
+HOW IT'S MEASURED
+Calculated by identifying when main thread has been quiet for 5 seconds and all critical resources have loaded. Uses PerformanceNavigationTiming and long task timing. The measurement process:
+
+1. Monitors main thread:
+   - Tracks long tasks (> 50ms)
+   - Identifies when main thread is quiet
+   - Verifies 5-second quiet period
+
+2. Checks resource loading:
+   - Verifies critical resources loaded
+   - Checks JavaScript execution completion
+   - Validates event handlers registered
+
+3. Calculates TTI:
+   - Time from navigation start to interactivity
+   - Returns TTI in milliseconds
+
+WHY IT'S IMPORTANT
+Measures when users can actually interact with the page. High TTI means users wait longer before they can click buttons or use forms, directly impacting user experience and engagement.
+
+User experience impact:
+- Users can interact with page
+- Better perceived performance
+- Increased engagement
+- Reduced frustration
+- Higher satisfaction
+
+Performance impact:
+- Indicates JavaScript performance
+- Reflects main thread blocking
+- Affects user interactions
+- Impacts overall usability
+
+THRESHOLDS
+- Good: ≤ 5000ms (Fast interactivity, good UX)
+- Needs Improvement: 5000-7000ms (Moderate interactivity)
+- Poor: ≥ 7000ms (Slow interactivity, poor UX)
+
+COMMON PITFALLS
+1. Large JavaScript bundles: Big JS files delaying execution
+2. Long tasks blocking main thread: Tasks > 50ms preventing interactivity
+3. Render-blocking scripts: Scripts blocking page rendering
+4. Synchronous JavaScript execution: Blocking scripts preventing interactivity
+5. Heavy JavaScript: Expensive operations delaying TTI
+
+OPTIMIZATION STRATEGIES
+1. Code splitting: Split JavaScript into smaller chunks
+2. Lazy loading JavaScript: Load non-critical code later
+3. Reducing JavaScript payload: Minimize JavaScript size
+4. Optimizing long tasks: Break up tasks > 50ms
+5. Deferring non-critical scripts: Load non-critical code after page load
+6. Using async/defer: Load scripts asynchronously
+7. Minimize main thread work: Reduce blocking operations
+8. Monitor TTI: Track TTI over time
+
+
+HISTORY
+Time to Interactive (TTI) emerged from the need to measure when pages become fully usable, not just visible:
+
+Early 2010s: As web applications became more JavaScript-heavy, a growing problem emerged: pages would appear loaded (visible content) but were actually unresponsive. Users would try to click buttons or type in forms, but nothing would happen because JavaScript was still executing in the background. Traditional load metrics (window.onload, DOMContentLoaded) didn't capture this "looks ready but isn't" problem.
+
+2013-2015: Google's Web Performance team researched metrics to quantify "true interactivity." They found that users often experienced frustration when pages appeared loaded but were actually unresponsive due to main thread blocking. This led to the concept of "Time to Interactive" - when a page is both visually rendered AND responsive to user input.
+
+2016: Google's Lighthouse tool introduced TTI as a metric. The definition was: the time when the page has displayed useful content AND the main thread is idle (no long tasks > 50ms) for at least 5 seconds. This captured both visual readiness and interactive readiness.
+
+The TTI calculation method:
+1. Start at First Contentful Paint (FCP)
+2. Search forward for a 5-second window with no long tasks (> 50ms)
+3. TTI is the start of that quiet window
+4. If no quiet window exists, TTI is not measurable
+
+2017-2018: TTI gained adoption in performance monitoring tools. However, measurement challenges emerged:
+- TTI could be very late on pages with continuous background activity
+- TTI was difficult to measure in Real User Monitoring (some pages never have a quiet period)
+- TTI was not a W3C standard, making browser-native measurement impossible
+- TTI could vary dramatically based on device capabilities
+
+2018: W3C considered standardizing TTI but faced challenges. The "5-second quiet window" heuristic worked well for synthetic testing but was problematic for real users. Pages with polling, analytics, or background tasks might never achieve TTI.
+
+2020: Google's Core Web Vitals initiative did NOT include TTI. Instead, Google chose FID (later INP) to measure interactivity. FID/INP measured actual interaction latency rather than trying to predict when a page "should" be interactive. This was a significant shift away from TTI.
+
+Lighthouse continued to report TTI as a diagnostic metric, but it was no longer central to performance measurement. The focus shifted to:
+- LCP for loading
+- FID/INP for interactivity (actual interactions)
+- CLS for visual stability
+
+2021-Present: TTI remains useful in controlled testing environments (Lighthouse, WebPageTest) but is rarely used in Real User Monitoring. It's most valuable as a lab metric for:
+- Identifying excessive JavaScript execution during load
+- Finding long tasks that block interactivity
+- Benchmarking performance improvements
+- Comparing performance across devices
+
+TTI's legacy: While TTI itself isn't a Core Web Vital, it influenced modern performance thinking:
+- The concept of "long tasks" (> 50ms) became standard
+- Total Blocking Time (TBT), derived from TTI concepts, became a Lighthouse metric
+- The need to measure both visual AND interactive readiness is now well understood
+- INP provides a more practical measure of interactivity throughout the session
+
+Today, developers typically optimize for LCP and INP rather than TTI, but TTI remains useful for understanding when pages become fully interactive in lab testing.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

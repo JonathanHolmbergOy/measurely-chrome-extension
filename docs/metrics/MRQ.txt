@@ -1,0 +1,143 @@
+MRQ - Marquee Elements
+======================
+
+OVERVIEW
+--------
+Rule ID: marquee
+Impact: Serious
+Category: Accessibility (Deprecated Elements)
+WCAG: 2.0 Level A (2.2.2 Pause, Stop, Hide)
+
+Description:
+Detects deprecated <marquee> elements that cause content to scroll automatically. Marquees make content difficult to read, can trigger seizures, and are inaccessible to users who need more time to read.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Marquee elements:
+- Make text impossible to read for some users
+- Cannot be paused by users who need more time
+- Can trigger seizures in photosensitive users
+- Are deprecated and poorly supported
+- Violate WCAG 2.2.2 Level A
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Searches for <marquee> elements in DOM
+2. Counts total occurrences
+3. Reports presence of deprecated elements
+4. Flags as critical accessibility violation
+
+
+HOW TO FIX
+----------
+1. Remove all <marquee> elements
+2. Display content statically
+3. Use CSS animations with pause controls if movement needed
+4. Respect prefers-reduced-motion setting
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<marquee>Breaking news scrolling across the screen!</marquee>
+<marquee direction="up">Vertical scrolling text</marquee>
+<marquee behavior="alternate">Bouncing text</marquee>
+
+Good:
+<!-- Static content -->
+<p>Breaking news: [Content]</p>
+
+<!-- Controlled carousel with pause -->
+<div class="carousel" role="region" aria-label="News ticker">
+    <button onclick="pauseCarousel()">Pause</button>
+    <div class="carousel-content">
+        <p>News item 1</p>
+    </div>
+</div>
+
+<!-- CSS animation with reduced motion support -->
+<div class="scrolling-text">
+    <p>Announcement</p>
+</div>
+
+<style>
+@media (prefers-reduced-motion: no-preference) {
+    .scrolling-text p {
+        animation: scroll 10s linear infinite;
+    }
+}
+
+@keyframes scroll {
+    from { transform: translateX(100%); }
+    to { transform: translateX(-100%); }
+}
+</style>
+
+
+ACCESSIBLE NEWS TICKER
+----------------------
+<div class="news-ticker">
+    <h2 class="sr-only">News Updates</h2>
+    <button id="pause-ticker" aria-label="Pause news ticker">
+        <span aria-hidden="true">⏸</span>
+        <span class="sr-only">Pause</span>
+    </button>
+    
+    <div class="ticker-content" aria-live="off" aria-atomic="true">
+        <span class="news-item">Item 1</span>
+        <span class="news-item">Item 2</span>
+    </div>
+</div>
+
+JavaScript:
+const ticker = document.querySelector('.ticker-content');
+const pauseBtn = document.getElementById('pause-ticker');
+let isPaused = false;
+
+pauseBtn.addEventListener('click', () => {
+    isPaused = !isPaused;
+    ticker.style.animationPlayState = isPaused ? 'paused' : 'running';
+    pauseBtn.textContent = isPaused ? '▶' : '⏸';
+});
+
+
+CAROUSEL ALTERNATIVE
+--------------------
+<div class="carousel">
+    <button aria-label="Previous item">←</button>
+    <div role="region" aria-live="polite">
+        <p>Current item content</p>
+    </div>
+    <button aria-label="Next item">→</button>
+    <button aria-label="Pause auto-advance">Pause</button>
+</div>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: <marquee> deprecated but still works
+- Firefox: <marquee> deprecated but still works
+- Safari: <marquee> deprecated but still works
+- Screen Readers: Cannot pause, content may not be announced
+
+
+RELATED RULES
+-------------
+- BLK (Blink Elements)
+- MRF (Meta Refresh)
+
+
+SOURCES
+-------
+- MDN Marquee (deprecated): https://developer.mozilla.org/en-US/docs/Web/HTML/Element/marquee
+- WCAG 2.2.2: https://www.w3.org/WAI/WCAG21/Understanding/pause-stop-hide.html
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#marquee
+- WCAG 2.3.1: https://www.w3.org/WAI/WCAG21/Understanding/three-flashes-or-below-threshold.html
+

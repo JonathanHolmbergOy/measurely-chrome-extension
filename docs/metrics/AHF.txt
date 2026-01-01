@@ -1,0 +1,132 @@
+AHF - ARIA Hidden Focus
+=======================
+
+OVERVIEW
+--------
+Rule ID: aria-hidden-focus
+Impact: Serious
+Category: Accessibility (ARIA Validation)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Detects elements with aria-hidden="true" that are still focusable or contain focusable children. This creates confusion where keyboard focus moves to elements announced as "hidden" by screen readers.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+aria-hidden="true" on focusable elements causes:
+- Screen readers announce "hidden" but element receives focus
+- Keyboard users see focus on invisible elements
+- Confusion about element availability
+- WCAG 4.1.2 violations
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all elements with aria-hidden="true"
+2. Checks if element is focusable (links, buttons, inputs, tabindex ≥ 0)
+3. Checks for focusable descendants
+4. Reports violations with element type
+
+
+HOW TO FIX
+----------
+1. Remove aria-hidden="true" from focusable elements
+2. Add tabindex="-1" to make element not focusable
+3. Use CSS visibility:hidden or display:none instead
+4. Move aria-hidden to parent container
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<button aria-hidden="true">Click me</button>
+<a href="/page" aria-hidden="true">Link</a>
+<div aria-hidden="true">
+    <button>Hidden but focusable</button>
+</div>
+<input type="text" aria-hidden="true">
+
+Good:
+<button aria-hidden="true" tabindex="-1">Click me</button>
+<div aria-hidden="true">
+    <button tabindex="-1">Now not focusable</button>
+</div>
+<div style="display:none;">
+    <button>Hidden and not focusable</button>
+</div>
+
+
+MODAL DIALOG PATTERN
+---------------------
+When modal open, hide background:
+
+<!-- Background content -->
+<main aria-hidden="true" inert>
+    <button tabindex="-1">Can't focus this</button>
+</main>
+
+<!-- Modal -->
+<div role="dialog" aria-modal="true">
+    <h2>Modal Title</h2>
+    <button>This IS focusable</button>
+</div>
+
+
+ICON BUTTONS
+------------
+For icon-only buttons with decorative text:
+
+Bad:
+<button>
+    <svg aria-hidden="true" tabindex="0">...</svg>
+</button>
+
+Good:
+<button aria-label="Close">
+    <svg aria-hidden="true" focusable="false">...</svg>
+</button>
+
+
+OFFSCREEN CONTENT
+-----------------
+For content moved offscreen but still in DOM:
+
+Bad:
+<div aria-hidden="true" style="position:absolute;left:-9999px;">
+    <a href="/link">Link</a>
+</div>
+
+Good:
+<div style="position:absolute;left:-9999px;">
+    <a href="/link" tabindex="-1" aria-hidden="true">Link</a>
+</div>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: aria-hidden doesn't affect focusability
+- Firefox: aria-hidden doesn't affect focusability
+- Safari: aria-hidden doesn't affect focusability
+- Screen Readers: Announces elements as hidden
+
+
+RELATED RULES
+-------------
+- AHB (ARIA Hidden Body)
+- AVA (ARIA Valid Attributes)
+- FEC (Focusable Elements)
+
+
+SOURCES
+-------
+- W3C aria-hidden: https://www.w3.org/TR/wai-aria-1.2/#aria-hidden
+- MDN aria-hidden: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-hidden
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#aria-hidden-focus
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

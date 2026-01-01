@@ -1,0 +1,89 @@
+TBS - Total Bundle Size
+
+WHAT IT MEASURES
+Total size of all JavaScript bundles loaded on the page, measured in kilobytes. Larger bundles increase download time, parse time, and execution time, significantly impacting initial page load performance.
+
+The metric calculates:
+- Sum of all JavaScript file sizes
+- Total JavaScript payload
+- Impact on page load performance
+- Bundle size efficiency
+
+Bundle size impact:
+- Download time: Larger files take longer to download
+- Parse time: More code takes longer to parse
+- Execution time: More code takes longer to execute
+- Memory usage: Larger bundles use more memory
+- Time to Interactive: Affects TTI significantly
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis summing JavaScript resource sizes. The measurement process:
+
+1. Identifies JavaScript resources:
+   - Uses PerformanceResourceTiming API
+   - Filters resources by type (application/javascript, text/javascript)
+   - Identifies all JavaScript files
+
+2. Calculates total size:
+   - Sums decodedBodySize (uncompressed) for all JS files
+   - May also consider transferSize (compressed)
+   - Returns total in kilobytes
+
+WHY IT'S IMPORTANT
+Large JavaScript bundles delay page load and parse time. Smaller bundles improve performance significantly, especially on mobile devices and slower connections.
+
+Performance impact:
+- Delays page load
+- Increases parse time
+- Delays Time to Interactive
+- Affects First Input Delay
+- Impacts mobile performance significantly
+
+User experience:
+- Slower page loads
+- Delayed interactivity
+- Poor mobile experience
+- Increased data usage
+- Higher bounce rates
+
+THRESHOLDS
+- Good: ≤ 100KB (Small bundles, good performance)
+- Needs Improvement: 100-500KB (Moderate bundles)
+- Poor: ≥ 500KB (Large bundles, performance issues)
+
+Note: Thresholds are lower for mobile (typically 200-300KB total).
+
+COMMON PITFALLS
+1. Large monolithic bundles: Single large JavaScript file
+2. No code splitting: All code loaded upfront
+3. Unused code included: Dead code not removed
+4. Inefficient bundling: Poor bundling configuration
+5. Framework bloat: Including entire frameworks
+6. Duplicate dependencies: Same libraries bundled multiple times
+
+OPTIMIZATION STRATEGIES
+1. Implement code splitting: Split JavaScript into smaller chunks
+2. Reduce bundle size: Minimize JavaScript payload
+3. Remove unused code: Use tree shaking to eliminate dead code
+4. Optimize bundling: Configure bundler for optimal output
+5. Lazy load code: Load code when needed
+6. Use modern bundlers: Leverage bundler optimizations
+7. Monitor bundle size: Track bundle sizes over time
+8. Set size budgets: Enforce maximum bundle sizes
+
+
+HISTORY
+Resource optimization metrics became critical as web pages grew in complexity. Image optimization techniques evolved from simple compression to modern formats like WebP (2010) and AVIF (2019). Code splitting and tree shaking emerged with modern JavaScript bundlers in the 2010s. Performance budgets became a standard practice as mobile web usage highlighted the importance of resource efficiency.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

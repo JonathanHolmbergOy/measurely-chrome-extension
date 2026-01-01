@@ -1,0 +1,107 @@
+ACR - Average Compression Ratio
+
+WHAT IT MEASURES
+Ratio of compressed to uncompressed resource sizes. Lower ratios indicate better compression, reducing bandwidth usage and load times.
+The compression ratio is calculated as compressed size divided by original size, where a ratio of 0.7 means the compressed file is 70% of the original size (30% reduction),
+and a ratio of 0.3 means 70% reduction.
+
+HOW IT'S MEASURED
+PerformanceResourceTiming API provides two key properties for compression measurement:
+- transferSize: The compressed size in bytes transferred over the network
+- decodedBodySize: The uncompressed size in bytes after decompression
+
+Compression ratio = transferSize / decodedBodySize
+
+If transferSize equals decodedBodySize, compression is not enabled. The average compression ratio is calculated across all text-based resources (HTML, CSS, JavaScript, JSON, XML) that support compression.
+
+WHY IT'S IMPORTANT
+Better compression reduces bandwidth usage and speeds up page loads, especially on slower connections. Compression can reduce text file sizes by 60-90%, significantly decreasing download times. This is particularly critical for:
+- Mobile users on limited bandwidth plans
+- Users on slower network connections
+- International users with higher latency
+- Reducing server bandwidth costs
+- Improving Time to First Byte (TTFB) and overall page load performance
+
+Compression is one of the most cost-effective performance optimizations, requiring minimal server configuration but providing substantial bandwidth savings.
+
+THRESHOLDS
+- Good: ≤ 0.7 (30%+ size reduction)
+- Needs Improvement: 0.7 - 0.9 (10-30% reduction)
+- Poor: ≥ 0.9 (minimal or no compression)
+
+Typical compression ratios:
+- Gzip: 0.3-0.7 for text files (30-70% reduction)
+- Brotli: 0.2-0.6 for text files (40-80% reduction)
+- No compression: 1.0 (0% reduction)
+
+COMMON PITFALLS
+1. No compression enabled: Server not configured to compress responses
+2. Inefficient compression: Using older compression methods or suboptimal settings
+3. Large uncompressed resources: Text files served without compression
+4. Missing gzip/brotli: Server only supports one compression method or none
+5. Compressing already-compressed files: Attempting to compress images, videos, or fonts (which are already compressed)
+6. Incorrect Content-Encoding headers: Server not properly signaling compression
+7. Client not requesting compression: Browser not sending Accept-Encoding header (rare in modern browsers)
+
+OPTIMIZATION STRATEGIES
+1. Enable gzip compression: Standard compression method supported by all modern browsers and servers
+2. Enable Brotli compression: Provides 15-25% better compression than gzip for text resources
+3. Compress all text resources: HTML, CSS, JavaScript, JSON, XML, SVG, and other text-based formats
+4. Optimize compression settings: Balance compression level (1-9 for gzip, 1-11 for Brotli) with CPU usage
+5. Test compression ratios: Use tools to verify compression is working and measure actual ratios
+6. Configure server properly: Ensure Content-Encoding headers are set correctly
+7. Use CDN compression: Many CDNs provide automatic compression
+8. Monitor compression effectiveness: Track compression ratios over time to ensure optimization
+
+TECHNICAL DETAILS
+Compression works best on text-based resources because they contain repetitive patterns and whitespace that compress efficiently.
+Binary files like images, videos, and fonts are already compressed and should not be compressed again (this can actually increase file size).
+
+The compression ratio calculation excludes:
+- Resources served from cache (no network transfer)
+- Already-compressed binary formats (images, videos, fonts)
+- Resources smaller than compression overhead threshold
+
+Gzip uses the DEFLATE algorithm (LZ77 + Huffman coding) and typically achieves 60-80% compression for text.
+Brotli uses a combination of modern compression techniques and typically achieves 70-90% compression for text, with better performance on larger files.
+
+HISTORY
+HTTP compression has a long history in web performance optimization:
+
+1990s: Early HTTP compression experiments began as web pages grew in size and complexity. Developers recognized that text-based resources could be significantly reduced in size.
+1999: RFC 2616 (HTTP/1.1) standardized the Content-Encoding header, formalizing compression support in HTTP. Gzip compression became the de facto standard, using the DEFLATE algorithm that was already widely used in other contexts.
+2000s: Gzip compression became standard practice for web servers. Apache mod_deflate and similar modules made compression easy to enable. Compression ratios of 60-80% for text files became common.
+2015: Google introduced Brotli compression, a new compression algorithm designed specifically for web content. Brotli was developed to provide better compression ratios than gzip, particularly for text resources.
+2016: Brotli was standardized in RFC 7932. Browser support grew rapidly, with Chrome 50+, Firefox 44+, Safari 11+, and Edge 15+ adding support.
+2017-2020: Brotli adoption increased as CDNs and web servers added support. Performance monitoring tools began tracking compression ratios as a key performance indicator.
+
+Present: Both gzip and Brotli are widely supported. Brotli provides better compression (typically 15-25% better than gzip) but requires more CPU.
+Many sites use Brotli when supported, with gzip as fallback.
+
+Compression ratio measurement became important as performance budgets and resource optimization gained prominence.
+The PerformanceResourceTiming API, standardized in 2012, enabled client-side measurement of compression effectiveness.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API.
+The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016.
+Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights,
+Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions.
+Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment.
+Some measurements require specific browser APIs that may not be available in all environments.
+Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- MDN: https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming
+- Web.dev: https://web.dev/uses-text-compression/
+- MDN HTTP Compression: https://developer.mozilla.org/en-US/docs/Web/HTTP/Compression
+- RFC 2616 (HTTP/1.1): https://www.rfc-editor.org/rfc/rfc2616
+- RFC 7932 (Brotli): https://www.rfc-editor.org/rfc/rfc7932
+- Google Brotli: https://github.com/google/brotli
+- W3C Resource Timing: https://www.w3.org/TR/resource-timing-2/

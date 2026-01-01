@@ -1,0 +1,104 @@
+CSPQ - CSP Directive Quality
+
+WHAT IT MEASURES
+Score (0-100) based on CSP directive restrictiveness, specifically evaluating how strict and secure each CSP directive is. This metric penalizes unsafe practices like unsafe-inline, unsafe-eval, and wildcards, while rewarding secure practices like nonces, hashes, and specific source lists.
+
+The score evaluates:
+- Restrictiveness of each directive
+- Presence of unsafe-inline (major penalty)
+- Presence of unsafe-eval (major penalty)
+- Use of wildcards (*) in source lists
+- Use of nonces or hashes (rewarded)
+- Specificity of source lists
+
+Higher scores indicate:
+- More restrictive and secure policies
+- Better protection against XSS
+- Following CSP security best practices
+- Elimination of unsafe directives
+
+HOW IT'S MEASURED
+Fetch API to retrieve CSP header, analysis of directive restrictiveness. May be unavailable due to CORS restrictions. The measurement process:
+
+1. Retrieves CSP header:
+   - Uses fetch API or checks response headers
+   - Looks for Content-Security-Policy header
+   - May be limited by CORS restrictions
+
+2. Parses directives:
+   - Extracts all CSP directives
+   - Analyzes source lists for each directive
+   - Identifies policy keywords (unsafe-inline, unsafe-eval, etc.)
+
+3. Evaluates restrictiveness:
+   - Checks for unsafe-inline (major penalty)
+   - Checks for unsafe-eval (major penalty)
+   - Identifies wildcards in source lists (penalty)
+   - Checks for nonces or hashes (reward)
+   - Evaluates source list specificity
+
+4. Calculates quality score:
+   - Applies penalties for unsafe practices
+   - Applies rewards for secure practices
+   - Scores each directive
+   - Calculates overall quality score
+
+WHY IT'S IMPORTANT
+CSP quality directly impacts XSS protection. Restrictive policies provide better security than permissive ones by preventing code injection and controlling resource loading.
+
+Security impact:
+- unsafe-inline allows inline scripts/styles (bypasses CSP protection)
+- unsafe-eval allows eval() and similar functions (security risk)
+- Wildcards allow any source (minimal protection)
+- Nonces/hashes provide secure inline content (best practice)
+- Specific sources provide targeted protection
+
+Attack prevention:
+- Restrictive CSP prevents XSS attacks
+- Blocks unauthorized script execution
+- Controls resource loading
+- Prevents code injection
+- Reduces attack surface
+
+THRESHOLDS
+- Good: ≥ 80 (Restrictive CSP, good security practices)
+- Needs Improvement: 60-79 (Moderate restrictiveness, improvements needed)
+- Poor: ≤ 60 (Permissive CSP, security gaps)
+
+Note: Eliminating unsafe-inline and unsafe-eval is critical for a high score.
+
+COMMON PITFALLS
+1. unsafe-inline usage: Allowing inline scripts/styles bypasses CSP protection
+2. unsafe-eval usage: Allowing eval() creates security vulnerabilities
+3. Wildcards in directives: Using * allows any source, minimal protection
+4. Permissive policies: Overly permissive source lists reduce security
+5. No nonces or hashes: Missing secure alternatives to unsafe-inline
+6. Inconsistent restrictiveness: Some directives strict, others permissive
+7. Missing strict-dynamic: Not leveraging strict-dynamic for better security
+8. Overly broad source lists: Too many allowed sources reduce security
+
+OPTIMIZATION STRATEGIES
+1. Eliminate unsafe-inline: Replace with nonces or hashes
+2. Remove unsafe-eval: Avoid eval() and similar functions
+3. Avoid wildcards: Use specific source lists instead
+4. Use nonces or hashes: Implement nonce-based or hash-based CSP
+5. Implement strict policies: Use restrictive source lists
+6. Use strict-dynamic: Leverage strict-dynamic for better security
+7. Minimize source lists: Only include necessary sources
+8. Regular audits: Review and tighten CSP directives
+9. Test thoroughly: Ensure CSP doesn't break functionality
+10. Monitor reports: Use CSP reports to identify issues
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

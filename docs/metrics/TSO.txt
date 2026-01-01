@@ -1,0 +1,217 @@
+TSO - Tree Shaking Opportunities
+
+WHAT IT MEASURES
+Estimated percentage of unused code in JavaScript bundles that could be removed through tree shaking. Tree shaking is a dead code elimination technique that removes unused code from bundles, reducing bundle size and improving performance.
+
+Tree shaking:
+- Removes unused code from bundles
+- Requires ES modules
+- Works with modern bundlers (Webpack, Rollup, etc.)
+- Reduces bundle size
+- Improves performance
+
+The metric estimates:
+- Percentage of unused code
+- Potential size reduction
+- Optimization opportunities
+
+HOW IT'S MEASURED
+Static analysis estimating unused code based on bundle size vs actually used exports. Requires build tool analysis. The measurement process:
+
+1. Analyzes JavaScript bundles:
+   - Examines bundle contents
+   - Identifies imported code
+   - Tracks used exports
+
+2. Estimates unused code:
+   - Compares bundle size to used code
+   - Calculates unused percentage
+   - Identifies optimization opportunities
+
+3. Returns percentage:
+   - Estimated unused code percentage
+   - May include size reduction potential
+
+WHY IT'S IMPORTANT
+Unused code increases bundle size unnecessarily, slowing download and parse time. Tree shaking can significantly reduce bundle sizes and improve performance.
+
+Performance impact:
+- Increases bundle size
+- Slows download time
+- Increases parse time
+- Delays Time to Interactive
+- Wastes bandwidth
+
+User experience:
+- Slower page loads
+- Higher data usage
+- Poor mobile performance
+- Increased frustration
+
+THRESHOLDS
+- Good: ≤ 20% (Low unused code, well optimized)
+- Needs Improvement: 20-40% (Moderate unused code)
+- Poor: ≥ 40% (High unused code, significant optimization needed)
+
+COMMON PITFALLS
+1. No tree shaking: Tree shaking not enabled
+2. Importing entire libraries: Importing whole libraries instead of specific functions
+3. Unused exports: Code exported but never used
+4. Inefficient bundling: Bundler not configured for tree shaking
+5. CommonJS modules: Using CommonJS instead of ES modules
+
+OPTIMIZATION STRATEGIES
+1. Enable tree shaking in bundler: Configure bundler for tree shaking
+2. Use ES modules: Use ES6 import/export syntax
+3. Import specific functions: Import only what you need
+4. Remove unused dependencies: Eliminate unused packages
+5. Optimize imports: Use specific imports instead of wildcards
+6. Configure bundler: Set up bundler for optimal tree shaking
+7. Monitor bundle size: Track bundle sizes over time
+8. Test tree shaking: Verify unused code is removed
+
+
+HISTORY
+Tree shaking emerged from the need to eliminate dead code in JavaScript bundles:
+
+2012-2015: JavaScript bundlers like Browserify and early Webpack concatenated modules into bundles. The problem: if you imported one function from a library, the entire library was included in the bundle. This led to massive bundles containing code that was never executed.
+
+Example: Import one utility from Lodash (a 70KB library), get the entire library in your bundle, even if you only needed one 1KB function.
+
+```javascript
+import { debounce } from 'lodash'; // Bundles entire 70KB Lodash
+```
+
+The accumulation of unused code:
+- Third-party libraries included unused features
+- Internal utilities imported but never called
+- Development-only code accidentally included in production
+- Polyfills for unsupported features
+
+Result: Bundles containing 30-60% unused code were common.
+
+2015: **Rollup** was created by Rich Harris with tree shaking as a core feature. Tree shaking eliminates unused code by analyzing ES6 module imports/exports. The name comes from the metaphor: shake the tree, dead leaves fall off.
+
+How it works:
+1. Analyze static imports/exports (ES6 modules only)
+2. Build dependency graph
+3. Mark used code
+4. Eliminate unmarked (unused) code
+
+Key requirement: ES6 modules (`import/export`). CommonJS (`require()`) couldn't be tree-shaken because imports are dynamic and can't be statically analyzed.
+
+2016-2017: Webpack 2 added tree shaking support, making it available to the broader ecosystem. However, effectiveness varied based on:
+- Module format (ES6 required)
+- Side effects (could code have side effects?)
+- Build configuration
+
+Challenges:
+- **Side effects**: Some modules run code on import. Can't be safely removed.
+- **CommonJS**: Old modules using `require()` couldn't be tree-shaken
+- **Export patterns**: Some export patterns prevented tree shaking
+
+2017: The "sideEffects" field was added to package.json to help bundlers:
+```json
+{
+  "sideEffects": false
+}
+```
+
+This declared "this package has no side effects, tree shake aggressively." Libraries like Lodash released ES6 versions (lodash-es) specifically for tree shaking.
+
+2018-2020: Tree shaking matured:
+- Most popular libraries shipped ES6 module versions
+- Build tools improved detection of side effects
+- Babel was configured to preserve ES6 modules
+- "Use production mode" became standard (enables tree shaking)
+
+However, tree shaking wasn't automatic. Common issues:
+- Accidentally importing entire library instead of specific exports
+- Babel transpiling ES6 to CommonJS
+- Libraries with side effects preventing elimination
+- Build configurations not enabling tree shaking
+
+2020: With Core Web Vitals, tree shaking became critical for performance:
+- Unused code increased JavaScript execution time (poor TTI, TBT)
+- Larger bundles delayed loading (poor FCP, LCP)
+- More parsing/compilation time blocked main thread (poor FID/INP)
+
+Studies showed significant opportunities:
+- Average site shipped 30-50% unused JavaScript
+- Tree shaking could reduce bundles by 20-40%
+- Some libraries (moment.js, lodash) were particularly wasteful without tree shaking
+
+2021-Present: Tree shaking is now standard but requires care:
+
+Build tool support:
+- **Webpack 5**: Improved tree shaking, better side effect detection
+- **Rollup**: Still the gold standard for tree shaking
+- **Vite**: Uses Rollup for production, excellent tree shaking
+- **esbuild**: Fast bundler with tree shaking
+- **Parcel**: Automatic tree shaking
+
+Best practices:
+1. **Use ES6 imports**: `import { func } from 'lib'` (not CommonJS require)
+2. **Import specifically**: `import { debounce } from 'lodash-es'` (not `import _ from 'lodash'`)
+3. **Mark side effects**: Declare sideEffects: false if none
+4. **Use modern libraries**: Choose libraries with good tree-shaking support
+5. **Check bundle analysis**: Use tools to verify tree shaking worked
+
+Library considerations:
+- **Good tree shaking**: date-fns, lodash-es, ramda
+- **Poor tree shaking**: moment.js (use date-fns or day.js instead)
+- **Requires care**: mui (Material-UI), aws-sdk (use v3 with modular imports)
+
+Analysis tools:
+- **Webpack Bundle Analyzer**: Visualize what code is in bundles
+- **Source Map Explorer**: Show bundle composition
+- **Chrome Coverage Tab**: Show unused code in running app
+- **Rollup Plugin Visualizer**: Analyze Rollup bundles
+
+Detection methods:
+1. Compare bundle size with production build vs. development
+2. Use Coverage tab in Chrome DevTools
+3. Analyze bundle with visualization tools
+4. Measure actual unused code percentage
+
+Tree shaking effectiveness varies:
+- **Highly effective**: Pure utility libraries (date-fns, lodash-es)
+- **Moderately effective**: UI component libraries (MUI, Ant Design)
+- **Limited effectiveness**: Frameworks (React, Vue - mostly used)
+- **Not effective**: CommonJS modules, modules with side effects
+
+Common pitfalls:
+- Importing entire library: `import _ from 'lodash'` (should use lodash-es + specific imports)
+- Babel converting ES6 to CommonJS: Configure Babel to preserve modules
+- Development builds: Tree shaking only happens in production builds
+- Side effects: Some necessary code has side effects and can't be eliminated
+
+Modern frameworks help:
+- **React**: Automatic tree shaking of components
+- **Vue 3**: Composition API designed for tree shaking
+- **Angular**: Ivy compiler with better tree shaking
+- **Svelte**: Compiles to minimal code (no unused framework code)
+
+Tree shaking complemented by:
+- **Code splitting**: Load code when needed
+- **Minification**: Compress code
+- **Compression**: gzip/Brotli for transfer
+- **Dead code elimination**: Remove unreachable code
+
+The evolution: manual dead code elimination → static analysis → automatic tree shaking → sophisticated side effect tracking. Tree shaking transformed from an advanced optimization to an expected build tool feature, dramatically reducing bundle sizes and improving performance.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

@@ -1,0 +1,159 @@
+INP - Interaction to Next Paint
+
+WHAT IT MEASURES
+Response time from user interaction (click, tap, keypress) to visual feedback (next paint). INP is a Core Web Vital that measures interactivity and user experience responsiveness by quantifying the latency of all user interactions throughout the page lifecycle.
+
+INP measures:
+- Input delay: Time from interaction to event handler start
+- Processing time: Event handler execution time
+- Presentation delay: Time from handler completion to visual update
+- Total latency: Sum of all three phases
+
+Key characteristics:
+- Measures ALL interactions (not just first like FID)
+- Reports worst interaction or high percentile
+- Replaces FID as Core Web Vital in 2024
+- Better indicator of overall interactivity
+
+HOW IT'S MEASURED
+PerformanceObserver API with 'event' entry type, measuring time from user input event to next paint. Requires actual user interaction. The measurement process:
+
+1. Observes all interactions:
+   - Uses PerformanceObserver with 'event' entry type
+   - Tracks all user interactions (click, tap, keypress)
+   - Records interaction timing
+
+2. Measures latency:
+   - Calculates input delay (interaction to handler start)
+   - Measures processing time (handler execution)
+   - Tracks presentation delay (handler to paint)
+
+3. Calculates INP:
+   - Tracks all interactions throughout page lifecycle
+   - Reports worst interaction or 98th percentile
+   - Returns INP value in milliseconds
+
+4. Returns INP value:
+   - Worst interaction latency
+   - Or high percentile of interactions
+   - null if no interactions occurred
+
+WHY IT'S IMPORTANT
+Replaces FID as Core Web Vital in 2024. Measures all interactions, not just first. Better indicator of overall interactivity and user experience responsiveness.
+
+User experience impact:
+- High INP = unresponsive page
+- Users perceive page as slow or broken
+- Frustrating interaction delays
+- Poor perceived performance
+- Increased bounce rates
+
+Performance impact:
+- Indicates main thread blocking
+- Suggests JavaScript performance issues
+- Points to inefficient event handling
+- Affects Core Web Vitals score
+- Impacts search rankings (Google ranking factor)
+
+Business impact:
+- INP is a Core Web Vital and Google ranking factor
+- Poor INP reduces search visibility
+- Affects user engagement and conversions
+- Reflects poorly on brand quality
+
+THRESHOLDS
+- Good: ≤ 200ms (Responsive, good interactivity)
+- Needs Improvement: 200-500ms (Some delay, noticeable)
+- Poor: ≥ 500ms (Significant delay, poor responsiveness)
+
+These thresholds are based on Google's Core Web Vitals research and user perception studies.
+
+COMMON PITFALLS
+1. Long tasks: Tasks > 50ms blocking main thread
+2. Heavy JavaScript execution: Expensive operations on main thread
+3. Large event handlers: Slow event handler execution
+4. Synchronous operations: Blocking operations preventing response
+5. Main thread blocking: JavaScript blocking user interactions
+6. Third-party scripts: External scripts blocking interactions
+7. Inefficient event handling: Poorly optimized event handlers
+8. No code splitting: All JavaScript loaded upfront
+9. Missing async/defer: Scripts blocking without async/defer
+10. Excessive DOM manipulation: Heavy DOM work blocking interactions
+
+OPTIMIZATION STRATEGIES
+1. Optimize event handlers: Make event handlers fast and efficient
+2. Break up long tasks: Split tasks > 50ms into smaller chunks
+3. Reduce JavaScript execution time: Minimize and optimize JavaScript
+4. Use passive event listeners: Mark scroll/touch listeners as passive
+5. Defer non-critical work: Move work off main thread or defer execution
+6. Use web workers: Offload heavy computation to web workers
+7. Minimize main thread work: Reduce work on main thread
+8. Optimize third-party scripts: Defer or async load external scripts
+9. Use requestIdleCallback: Schedule non-critical work during idle time
+10. Profile performance: Use DevTools to identify bottlenecks
+11. Monitor long tasks: Use Long Tasks API to find blockers
+12. Test with throttling: Simulate slower devices
+13. Optimize bundle size: Reduce JavaScript bundle size
+14. Use code splitting: Split JavaScript into smaller chunks
+
+
+TECHNICAL IMPLEMENTATION
+INP measures the latency of all user interactions throughout the page lifecycle. It reports the worst interaction (highest latency) or a high percentile of interactions. INP considers input delay, processing time, and presentation delay.
+
+HISTORY
+Interaction to Next Paint (INP) was developed to address limitations in First Input Delay (FID):
+
+2020-2021: After FID became a Core Web Vital, developers and researchers identified a significant limitation: FID only measured the FIRST user interaction. A page could have good FID but still feel sluggish during subsequent interactions. Many sites optimized for FID by deferring JavaScript to after first paint, but this caused poor responsiveness later in the session.
+
+Research showed that users interact with pages multiple times, and responsiveness throughout the session matters more than just the first interaction. Scrolling, clicking navigation, submitting forms, and other interactions needed measurement.
+
+May 2022: Google announced Interaction to Next Paint (INP) as an experimental metric. INP was designed to measure the latency of ALL user interactions throughout the page lifecycle, not just the first one. The metric captures:
+- Input delay (time to process input)
+- Processing time (event handler execution)
+- Presentation delay (time to paint result)
+
+INP uses the Event Timing API (more comprehensive than FID's first-input API) to track all interactions: clicks, taps, and keyboard inputs. The metric reports the worst interaction latency (or 98th percentile if many interactions occur), ensuring that even occasional slow interactions are captured.
+
+Initial thresholds:
+- Good: ≤ 200ms
+- Needs Improvement: 200-500ms
+- Poor: ≥ 500ms
+
+2022-2023: INP was available in monitoring tools as an experimental metric. Developers began optimizing for INP by:
+- Breaking up long tasks throughout the page lifecycle (not just during load)
+- Using setTimeout to yield to the main thread
+- Optimizing event handlers for all interactions
+- Implementing proper loading states and feedback
+- Reducing JavaScript execution during interactions
+
+May 2023: Google announced that INP would replace FID as a Core Web Vital in March 2024. This signaled a shift from measuring only first-interaction responsiveness to measuring overall interactivity. The announcement gave developers time to optimize for INP.
+
+March 2024: INP officially became a Core Web Vital, replacing FID. This was a significant change because:
+- INP is more comprehensive (all interactions vs. just first)
+- INP is harder to optimize (requires consistent responsiveness)
+- INP better reflects real user experience throughout sessions
+- INP captures presentation delay, not just input delay
+
+Present: INP is now the primary interactivity metric for web performance. It's measured by all major monitoring tools (Google Analytics, Chrome User Experience Report, Lighthouse, WebPageTest) and is a Google search ranking factor. Sites must maintain good responsiveness throughout the entire user session, not just at initial load.
+
+INP has influenced modern web development practices:
+- Frameworks are optimizing for better interactivity (React 18's concurrent features, etc.)
+- Developers are more aware of main thread blocking
+- Tools for measuring long tasks are more widely used
+- Performance budgets now include interaction latency targets
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

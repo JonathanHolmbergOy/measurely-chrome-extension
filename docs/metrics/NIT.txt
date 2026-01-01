@@ -1,0 +1,125 @@
+NIT - Nested Interactive
+========================
+
+OVERVIEW
+--------
+Rule ID: nested-interactive
+Impact: Serious
+Category: Accessibility (Interactive Elements)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Detects interactive elements nested inside other interactive elements (e.g., button inside link, link inside button). Nested interactive elements create focus management issues and confusing screen reader announcements.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Nested interactive elements cause:
+- Ambiguous keyboard navigation behavior
+- Unclear focus indicators
+- Confusing screen reader announcements
+- Unpredictable click/activation behavior
+- WCAG 4.1.2 violations
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all interactive elements (a, button, input, select, textarea)
+2. Checks if contained within another interactive element
+3. Reports nesting violations
+4. Provides parent and child element details
+
+
+HOW TO FIX
+----------
+1. Remove inner interactive element
+2. Restructure to have separate interactive elements
+3. Use CSS for visual grouping instead of HTML nesting
+4. Consider using a single interactive container
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<a href="/profile">
+    <button>Edit Profile</button>
+</a>
+
+<button>
+    <a href="/page">Click here</a>
+</button>
+
+<a href="/product">
+    Product Name
+    <button onclick="addToCart()">Add to Cart</button>
+</a>
+
+Good:
+<a href="/profile" class="button-style">Edit Profile</a>
+
+<!-- OR separate elements -->
+<div class="profile-card">
+    <a href="/profile">View Profile</a>
+    <button>Edit Profile</button>
+</div>
+
+<!-- Single button with both actions -->
+<div class="product-card">
+    <a href="/product">Product Name</a>
+    <button onclick="addToCart()">Add to Cart</button>
+</div>
+
+
+CARD COMPONENT PATTERN
+-----------------------
+Bad:
+<a href="/article" class="card">
+    <h3>Article Title</h3>
+    <p>Description</p>
+    <button>Read More</button>
+</a>
+
+Good:
+<article class="card">
+    <h3><a href="/article">Article Title</a></h3>
+    <p>Description</p>
+    <a href="/article" class="read-more">Read More</a>
+</article>
+
+<!-- OR with JavaScript overlay -->
+<article class="card" onclick="location.href='/article'">
+    <h3>Article Title</h3>
+    <p>Description</p>
+    <button onclick="event.stopPropagation(); bookmark()">
+        Bookmark
+    </button>
+</article>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Nesting not blocked but behavior undefined
+- Firefox: Nesting not blocked but behavior undefined
+- Safari: Nesting not blocked but behavior undefined
+- Screen Readers: Causes confusion and navigation issues
+
+
+RELATED RULES
+-------------
+- BTN (Button Names)
+- FEC (Focusable Elements)
+- KNS (Keyboard Navigation Score)
+
+
+SOURCES
+-------
+- MDN Interactive Content: https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories#interactive_content
+- HTML Spec: https://html.spec.whatwg.org/multipage/dom.html#interactive-content
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#nested-interactive
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

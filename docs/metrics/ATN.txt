@@ -1,0 +1,143 @@
+ATN - ARIA Tooltip Name
+=======================
+
+OVERVIEW
+--------
+Rule ID: aria-tooltip-name
+Impact: Serious
+Category: Accessibility (ARIA Validation)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Ensures elements with role="tooltip" have accessible names via aria-label, aria-labelledby, or text content. Tooltips without names cannot convey their purpose to screen reader users.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Accessible tooltip names:
+- Enable screen readers to announce tooltip content
+- Provide context for tooltip purpose
+- Meet WCAG 4.1.2 requirements
+- Support keyboard navigation users
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all elements with role="tooltip"
+2. Checks for aria-label, aria-labelledby, or text content
+3. Reports tooltips without accessible names
+4. Includes element ID for fixing
+
+
+HOW TO FIX
+----------
+1. Add aria-label with tooltip text
+2. Include text content inside tooltip element
+3. Use aria-labelledby to reference content
+4. Ensure tooltip is associated with trigger element
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<div role="tooltip"></div>
+<span role="tooltip" id="tooltip1"></span>
+
+Good:
+<div role="tooltip" aria-label="Additional information">
+    More details about this feature
+</div>
+
+<span role="tooltip" id="tooltip1">
+    Click to see more options
+</span>
+
+<div role="tooltip" aria-labelledby="tooltip-content">
+    <span id="tooltip-content">Help text</span>
+</div>
+
+
+TOOLTIP PATTERN (ARIA APG)
+---------------------------
+<button aria-describedby="tooltip1">
+    Settings
+</button>
+
+<div role="tooltip" id="tooltip1">
+    Configure application preferences
+</div>
+
+JavaScript:
+button.addEventListener('mouseenter', () => {
+    tooltip.style.display = 'block';
+});
+
+button.addEventListener('mouseleave', () => {
+    tooltip.style.display = 'none';
+});
+
+button.addEventListener('focus', () => {
+    tooltip.style.display = 'block';
+});
+
+button.addEventListener('blur', () => {
+    tooltip.style.display = 'none';
+});
+
+
+ACCESSIBLE TOOLTIP COMPONENT
+-----------------------------
+<div class="tooltip-container">
+    <button aria-describedby="help-tooltip">
+        Help
+        <svg aria-hidden="true">...</svg>
+    </button>
+    
+    <div role="tooltip" id="help-tooltip" class="tooltip">
+        Get assistance with this feature
+    </div>
+</div>
+
+CSS:
+.tooltip {
+    position: absolute;
+    display: none;
+    background: #333;
+    color: #fff;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.tooltip-container:hover .tooltip,
+.tooltip-container:focus-within .tooltip {
+    display: block;
+}
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: JAWS, NVDA, VoiceOver announce tooltips
+
+
+RELATED RULES
+-------------
+- ATN (ARIA Tooltip Name)
+- ARA (ARIA Required Attributes)
+- ARV (ARIA Roles Valid)
+
+
+SOURCES
+-------
+- W3C Tooltip Pattern: https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/
+- MDN role=tooltip: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tooltip_role
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#aria-tooltip-name
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

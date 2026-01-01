@@ -1,0 +1,136 @@
+LST - List Structure
+====================
+
+OVERVIEW
+--------
+Rule ID: list
+Impact: Serious
+Category: Accessibility (Document Structure)
+WCAG: 2.0 Level A (1.3.1 Info and Relationships)
+
+Description:
+Ensures ul and ol lists only contain li elements as direct children (script and template elements also allowed). Invalid list structure breaks screen reader list navigation and announcement.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Proper list structure:
+- Enables screen readers to announce list length
+- Supports list navigation shortcuts
+- Maintains semantic document structure
+- Meets WCAG 1.3.1 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all <ul> and <ol> elements
+2. Checks direct children are only <li>, <script>, or <template>
+3. Reports lists with invalid children
+4. Identifies invalid child elements
+
+
+HOW TO FIX
+----------
+1. Wrap non-li content in <li> elements
+2. Move non-list content outside the list
+3. Use semantic HTML structure
+4. Validate list nesting
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<ul>
+    <div>Item 1</div>
+    <div>Item 2</div>
+</ul>
+
+<ol>
+    <p>Item 1</p>
+    <li>Item 2</li>
+</ol>
+
+<ul>
+    Item 1
+    <li>Item 2</li>
+</ul>
+
+Good:
+<ul>
+    <li>Item 1</li>
+    <li>Item 2</li>
+</ul>
+
+<ol>
+    <li>Item 1</li>
+    <li>Item 2</li>
+</ol>
+
+
+NESTED LISTS
+------------
+<ul>
+    <li>Item 1
+        <ul>
+            <li>Sub-item 1.1</li>
+            <li>Sub-item 1.2</li>
+        </ul>
+    </li>
+    <li>Item 2</li>
+</ul>
+
+
+COMPLEX LIST ITEMS
+------------------
+<ul>
+    <li>
+        <h3>List item heading</h3>
+        <p>Additional content goes inside the li</p>
+        <button>Action</button>
+    </li>
+    <li>
+        <h3>Another item</h3>
+        <p>More content</p>
+    </li>
+</ul>
+
+
+NAVIGATION LISTS
+----------------
+<nav aria-label="Main navigation">
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+    </ul>
+</nav>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Invalid structure rendered but affects accessibility
+- Firefox: Invalid structure rendered but affects accessibility
+- Safari: Invalid structure rendered but affects accessibility
+- Screen Readers: Invalid structure breaks list navigation
+
+
+RELATED RULES
+-------------
+- DLS (Definition List Structure)
+- DLI (DL Item Parents)
+- ARC (ARIA Required Children)
+
+
+SOURCES
+-------
+- MDN ul: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul
+- MDN ol: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol
+- HTML Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-ul-element
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#list
+- WCAG 1.3.1: https://www.w3.org/WAI/WCAG21/Understanding/info-and-relationships.html
+

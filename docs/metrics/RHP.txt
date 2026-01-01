@@ -1,0 +1,194 @@
+RHP - Resource Hints Present
+
+WHAT IT MEASURES
+Count of critical resources missing resource hints (preload, preconnect, dns-prefetch, prefetch) for faster loading. Resource hints allow browsers to prioritize and pre-fetch critical resources, reducing load times for key assets.
+
+Resource hint types:
+- preload: Preloads critical resources (CSS, fonts, scripts)
+- preconnect: Establishes early connection to third-party domains
+- dns-prefetch: Resolves DNS for external domains
+- prefetch: Prefetches resources likely to be needed
+
+Critical resources that benefit:
+- Critical CSS files
+- Web fonts
+- Critical JavaScript
+- LCP images
+- Third-party domains (analytics, CDNs)
+
+HOW IT'S MEASURED
+DOM analysis checking for <link rel='preload'> and <link rel='preconnect'> tags for critical resources identified in PerformanceResourceTiming. The measurement process:
+
+1. Identifies critical resources:
+   - Uses PerformanceResourceTiming API
+   - Identifies resources that affect performance
+   - Determines critical CSS, fonts, images
+
+2. Checks for resource hints:
+   - Looks for `<link rel='preload'>` tags
+   - Checks for `<link rel='preconnect'>` tags
+   - Verifies hints match critical resources
+
+3. Counts missing hints:
+   - Counts critical resources without hints
+   - Returns total count
+
+WHY IT'S IMPORTANT
+Resource hints allow browsers to prioritize critical resources, reducing load times for key assets. This improves Core Web Vitals and overall page performance.
+
+Performance impact:
+- Faster resource loading
+- Better First Contentful Paint (FCP)
+- Improved Largest Contentful Paint (LCP)
+- Faster Time to Interactive (TTI)
+- Better Core Web Vitals
+
+User experience:
+- Faster perceived page load
+- Better mobile performance
+- Improved engagement
+- Reduced bounce rates
+
+THRESHOLDS
+- Good: 0 errors (All critical resources have hints)
+- Needs Improvement: 1-2 errors (Some missing hints)
+- Poor: ≥ 3 errors (Multiple missing hints, performance impact)
+
+COMMON PITFALLS
+1. Missing preload for critical CSS/fonts: Critical resources not preloaded
+2. Missing preconnect for third-party domains: Third-party connections not established early
+3. No resource prioritization: Resources not prioritized
+4. Missing dns-prefetch: DNS not resolved early
+5. Incorrect preload usage: Preloading non-critical resources
+6. Missing as attribute: Preload without proper `as` attribute
+
+OPTIMIZATION STRATEGIES
+1. Add preload for critical resources: Preload critical CSS, fonts, scripts
+2. Use preconnect for third-party domains: Establish early connections
+3. Implement dns-prefetch: Resolve DNS early for external domains
+4. Use prefetch for likely-needed resources: Prefetch resources likely to be needed
+5. Prioritize LCP resources: Preload LCP images and resources
+6. Test resource hints: Verify hints improve performance
+7. Monitor performance: Track performance improvements
+8. Document critical resources: Identify which resources are critical
+
+
+HISTORY
+Resource hints evolved from the need to give browsers advance information about resources the page will need:
+
+2009-2013: As web pages became more complex, page load time was increasingly dominated by network latency. Even with fast connections, establishing connections (DNS lookup, TCP handshake, TLS negotiation) could take hundreds of milliseconds. By the time the browser discovered it needed a resource, the connection setup delay was unavoidable.
+
+The observation: The browser discovers resources sequentially as it parses HTML, CSS, and JavaScript. But developers often know in advance what resources will be needed. Could we tell the browser about these resources early?
+
+2013: DNS prefetch was one of the first resource hints, allowing developers to trigger DNS resolution before resources were needed:
+```html
+<link rel="dns-prefetch" href="https://example.com">
+```
+
+This was particularly useful for cross-origin resources (analytics, fonts, APIs) where DNS lookup would otherwise delay loading.
+
+2014-2015: More resource hints were proposed and standardized:
+
+**Preconnect** (2014): Not just DNS, but full connection establishment (DNS + TCP + TLS):
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+```
+More expensive than dns-prefetch but saves more time (100-500ms for full connection).
+
+**Prefetch** (2015): Download resources likely needed for future navigation:
+```html
+<link rel="prefetch" href="next-page.html">
+```
+Low priority, fetched when browser is idle. Used for next pages in pagination, etc.
+
+2016: **Preload** was standardized - the most powerful resource hint. Unlike prefetch (for future navigation), preload fetches resources needed for current page but discovered late:
+```html
+<link rel="preload" href="font.woff2" as="font" crossorigin>
+<link rel="preload" href="hero.jpg" as="image">
+```
+
+Preload tells the browser: "This resource is critical for current page, fetch it immediately even though you haven't discovered it in HTML yet."
+
+Use cases:
+- Fonts in CSS (browser doesn't know about font until CSS loads)
+- Hero images in CSS background
+- Late-discovered JavaScript modules
+- Dynamic content that JavaScript will load
+
+2017-2018: Resource hints gained browser support:
+- DNS prefetch: Widely supported (Chrome, Firefox, Safari, Edge)
+- Preconnect: Good support (Chrome, Firefox, Edge; Safari later)
+- Prefetch: Good support but varies by browser
+- Preload: Chrome, Firefox, Edge; Safari added in 2018
+
+Studies showed measurable improvements:
+- DNS prefetch: 20-120ms savings per domain
+- Preconnect: 100-500ms savings (entire connection)
+- Preload: 200ms-2s savings for critical resources
+
+However, overuse could hurt performance:
+- Too many preconnects consumed connection pool
+- Unnecessary preloads wasted bandwidth
+- Prefetch could delay current page resources
+
+2019-2020: As Largest Contentful Paint (LCP) became a Core Web Vital, preload became crucial for optimization. Many LCP issues were caused by late-discovered images or fonts that could be fixed with preload.
+
+Google's Lighthouse began auditing for missing preloads on LCP elements. Web.dev articles popularized preload for web fonts and hero images.
+
+2021: **modulepreload** was introduced for JavaScript modules:
+```html
+<link rel="modulepreload" href="module.js">
+```
+
+Different from regular preload because it also processes the module (parse, compile) before it's needed.
+
+2022-Present: Resource hints are now standard optimization practice:
+
+Best practices emerged:
+- Use preconnect for critical third-party origins (≤6 connections)
+- Use preload for late-discovered critical resources
+- Use dns-prefetch for origins you'll connect to (but not immediately)
+- Use prefetch for high-probability next navigations
+- Don't overuse - each hint has a cost
+
+Priority Hints (`importance` attribute) were added in 2022:
+```html
+<img src="hero.jpg" importance="high">
+<script src="analytics.js" importance="low">
+```
+
+This complemented resource hints by letting developers adjust priority of any resource, not just those with hints.
+
+Modern resource hint usage:
+- Preload LCP images to improve Core Web Vitals
+- Preconnect to critical third-party domains (Google Fonts, APIs)
+- Prefetch next page in multi-step flows
+- DNS prefetch for deferred third-party scripts
+
+Tools check resource hints:
+- Lighthouse audits for missing preloads
+- Chrome DevTools shows which hints are used
+- WebPageTest displays preload effectiveness
+
+Resource hints remain a key performance optimization, particularly for:
+- Improving LCP (preload hero images, fonts)
+- Reducing TTFB (preconnect to API servers)
+- Optimizing multi-page flows (prefetch next pages)
+
+The evolution from dns-prefetch to preload to priority hints shows progressive refinement: giving developers more control over loading priority while keeping simple opt-in syntax.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

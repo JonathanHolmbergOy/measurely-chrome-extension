@@ -1,0 +1,36 @@
+DNSL - DNS Lookup Time
+
+WHAT IT MEASURES
+Average DNS lookup time across all resources. High DNS times indicate DNS configuration issues.
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis calculating domainLookupEnd - domainLookupStart for all resources
+
+WHY IT'S IMPORTANT
+DNS lookup time adds to total load time. Slow DNS resolution delays all resource requests
+
+THRESHOLDS
+Good ≤ 20ms, Poor ≥ 100ms
+
+COMMON PITFALLS
+Slow DNS resolution, DNS configuration issues, no DNS prefetching, inefficient DNS
+
+OPTIMIZATION STRATEGIES
+Use DNS prefetching, optimize DNS configuration, use CDN with fast DNS, implement dns-prefetch links
+
+
+HISTORY
+Network timing metrics have been fundamental to web performance since the early days of the web. The Resource Timing API was standardized by W3C in 2012, providing detailed network timing information. DNS, TCP, and SSL timing measurements became standard as HTTPS adoption increased and network optimization became more sophisticated.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

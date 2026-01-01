@@ -1,0 +1,81 @@
+SRI - Subresource Integrity Coverage
+
+WHAT IT MEASURES
+Percentage of external scripts and stylesheets with Subresource Integrity (SRI) attributes. SRI uses cryptographic hashes to verify that external resources haven't been tampered with, protecting against CDN compromises and supply chain attacks.
+
+SRI implementation:
+- integrity attribute: Contains hash of resource (e.g., sha384-...)
+- crossorigin attribute: Required for cross-origin resources
+- Prevents tampered resources: Browser verifies hash before loading
+- Protects against attacks: CDN compromise, supply chain attacks
+
+SRI format:
+```html
+<script src="https://example.com/script.js"
+        integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC"
+        crossorigin="anonymous"></script>
+```
+
+HOW IT'S MEASURED
+DOM analysis checking script and link elements for integrity attributes. The measurement process:
+
+1. Identifies external resources:
+   - Finds `<script>` and `<link>` elements
+   - Identifies external resources (cross-origin)
+   - Filters for resources needing SRI
+
+2. Checks for integrity:
+   - Verifies `integrity` attribute presence
+   - Checks `crossorigin` attribute (required)
+   - Validates integrity format
+
+3. Calculates coverage:
+   - Counts resources with SRI
+   - Counts total external resources
+   - Calculates percentage
+
+WHY IT'S IMPORTANT
+SRI ensures external resources haven't been tampered with, protecting against CDN compromises and supply chain attacks. This is critical for security when using third-party resources.
+
+Security benefits:
+- Prevents tampered resources
+- Protects against CDN compromises
+- Prevents supply chain attacks
+- Ensures resource integrity
+- Enhances overall security
+
+THRESHOLDS
+- Good: ≥ 80% (Most external resources have SRI)
+- Needs Improvement: 50-79% (Some SRI, room for improvement)
+- Poor: ≤ 50% (Few resources with SRI, security risk)
+
+COMMON PITFALLS
+1. Missing integrity attributes: External resources without SRI
+2. No SRI implementation: SRI not implemented at all
+3. Untrusted external resources: Resources from untrusted sources
+4. Missing crossorigin: SRI requires crossorigin for cross-origin resources
+5. Incorrect hash: Integrity hash doesn't match resource
+
+OPTIMIZATION STRATEGIES
+1. Add integrity attributes: Add SRI to all external scripts/stylesheets
+2. Generate hashes for resources: Create integrity hashes for resources
+3. Use SRI for all third-party resources: Protect all external resources
+4. Include crossorigin: Add crossorigin="anonymous" for cross-origin resources
+5. Update hashes when resources change: Update integrity when resources update
+6. Test SRI: Verify SRI works correctly
+7. Monitor SRI coverage: Track SRI implementation over time
+8. Document SRI requirements: Ensure team understands SRI needs
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

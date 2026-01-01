@@ -1,0 +1,96 @@
+BTN - Button Names
+==================
+
+OVERVIEW
+--------
+Rule ID: button-name
+Impact: Critical
+Category: Accessibility (Interactive Elements)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Ensures all buttons have discernible, accessible names through text content, aria-label, aria-labelledby, or title attributes. Buttons without names are announced as "button" by screen readers without context, leaving users unable to understand their purpose.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 3 violations
+
+
+WHY IT MATTERS
+--------------
+Accessible button names are essential for:
+- Screen reader users to understand button purpose
+- Voice control users to activate buttons by name
+- WCAG 4.1.2 compliance
+- Usable and navigable interfaces
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all <button> and [role="button"] elements
+2. Checks for text content, aria-label, aria-labelledby, or title
+3. Reports buttons with no accessible name
+4. Provides element details for fixing
+
+
+HOW TO FIX
+----------
+1. Add text content inside button element (preferred)
+2. Use aria-label for icon-only buttons
+3. Use aria-labelledby to reference existing text
+4. Add title attribute as last resort
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<button><i class="icon-save"></i></button>
+<button></button>
+<button type="submit"></button>
+
+Good:
+<button>Save</button>
+<button aria-label="Save document"><i class="icon-save"></i></button>
+<button type="submit">Submit Form</button>
+
+Icon Buttons:
+<button aria-label="Close dialog">
+    <svg role="img"><use href="#icon-close"/></svg>
+</button>
+
+
+JAVASCRIPT BEST PRACTICES
+--------------------------
+// Dynamically update button labels
+const btn = document.querySelector('#action-btn');
+btn.setAttribute('aria-label', `Delete ${itemName}`);
+
+// For toggle buttons, update label with state
+const toggle = document.querySelector('#toggle');
+const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+toggle.setAttribute('aria-label', `${isExpanded ? 'Collapse' : 'Expand'} section`);
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: Critical for usability
+
+
+RELATED RULES
+-------------
+- IBN (Input Button Names)
+- SEN (Select Element Names)
+- FLI (Form Label Issues)
+
+
+SOURCES
+-------
+- MDN Button: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button
+- MDN aria-label: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#button-name
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

@@ -1,0 +1,158 @@
+RL - Resource Load Time
+
+WHAT IT MEASURES
+Average time for resources (images, CSS, JavaScript, fonts) to load, measured from when the browser starts requesting the resource until it finishes receiving the response. This metric measures resource loading efficiency and its impact on overall page speed.
+
+Resource load time includes:
+- DNS lookup time
+- TCP connection time
+- SSL/TLS handshake (for HTTPS)
+- Server response time
+- Content download time
+
+The metric calculates:
+- Individual resource load times: responseEnd - startTime
+- Average load time: Mean of all resource load times
+- Overall resource loading efficiency
+
+HOW IT'S MEASURED
+PerformanceResourceTiming API, calculating average of responseEnd - startTime for all resources. The measurement process:
+
+1. Gets all resources:
+   - Uses PerformanceResourceTiming API
+   - Retrieves all resource timing entries
+   - Filters by resource type if needed
+
+2. Calculates load times:
+   - For each resource: responseEnd - startTime
+   - Measures total time from request to response
+   - Accounts for all network phases
+
+3. Calculates average:
+   - Sums all resource load times
+   - Divides by number of resources
+   - Returns average in milliseconds
+
+WHY IT'S IMPORTANT
+Slow resource loading delays page rendering and user experience. Critical for understanding overall page load performance and identifying resource loading bottlenecks.
+
+Performance impact:
+- Delays page rendering
+- Affects First Contentful Paint (FCP)
+- Impacts Largest Contentful Paint (LCP)
+- Delays Time to Interactive (TTI)
+- Affects overall page load time
+
+User experience:
+- Slower perceived page load
+- Delayed content visibility
+- Poor mobile experience
+- Increased bounce rates
+
+THRESHOLDS
+- Good: ≤ 1000ms (Fast resource loading)
+- Needs Improvement: 1000-3000ms (Moderate loading times)
+- Poor: ≥ 3000ms (Slow resource loading, performance issues)
+
+COMMON PITFALLS
+1. Large file sizes: Resources too large, taking long to download
+2. Slow network: Network conditions affecting load times
+3. No compression: Resources not compressed (gzip/brotli)
+4. Missing resource hints: No preload/preconnect for critical resources
+5. Inefficient loading strategies: All resources loaded upfront
+6. Slow server response: High TTFB delaying resource loading
+7. No CDN: Resources not served from CDN
+8. Unoptimized resources: Resources not optimized
+
+OPTIMIZATION STRATEGIES
+1. Optimize file sizes: Compress and minimize resources
+2. Use compression: Enable gzip/brotli compression
+3. Implement resource hints: Use preload/preconnect for critical resources
+4. Use CDN: Serve resources from CDN
+5. Optimize images: Compress and optimize images
+6. Lazy load non-critical resources: Defer loading of non-critical resources
+7. Minimize resources: Reduce resource sizes
+8. Optimize server: Improve server response times
+9. Use HTTP/2 or HTTP/3: Leverage modern protocols
+10. Monitor resource loading: Track load times over time
+
+
+HISTORY
+Resource loading measurement has been fundamental to web performance since the web's inception:
+
+1990s: Early web pages were simple HTML documents. Resource loading meant downloading HTML, a few images, and maybe some basic CSS. Browsers loaded resources sequentially, and there was no API for developers to measure resource timing. The only indicator was when the page "finished" (all resources loaded).
+
+Early 2000s: As web pages grew more complex with more resources (images, CSS, JavaScript, fonts), resource loading became a performance bottleneck. Browsers improved by implementing parallel loading (loading multiple resources simultaneously), but developers still had limited visibility into resource timing.
+
+2004-2008: AJAX and Web 2.0 applications introduced dynamic resource loading. The XMLHttpRequest API allowed loading resources programmatically, but timing information was still limited. Developers used manual timing (storing Date.now() before/after requests) to estimate resource load time.
+
+2008-2010: Browser vendors began competing on page load speed. Chrome launched with aggressive performance optimization. Network panels in browser DevTools showed resource loading waterfalls, giving developers visual insight into resource timing, but this required manual inspection.
+
+2012: W3C standardized the Resource Timing API as part of the Performance Timeline specification. This was a breakthrough - for the first time, developers could programmatically measure resource loading performance with detailed timing information:
+- DNS lookup time
+- TCP connection time
+- TLS negotiation time
+- Request time
+- Response time (TTFB)
+- Download time
+- Total duration
+
+The API exposed entries for each resource via performance.getEntriesByType('resource'), showing:
+- fetchStart, domainLookupStart, connectStart, requestStart, responseStart, responseEnd
+- Sizes: transferSize, encodedBodySize, decodedBodySize
+
+2014: HTTP/2 was standardized (RFC 7540), introducing multiplexing - multiple resources could load over a single TCP connection. This significantly improved resource loading performance, especially for pages with many small resources. The Resource Timing API was updated to reflect HTTP/2 connection reuse.
+
+2015-2018: Resource hints were standardized to optimize resource loading:
+- dns-prefetch: Pre-resolve DNS for cross-origin resources
+- preconnect: Pre-establish connections (DNS, TCP, TLS)
+- prefetch: Load resources likely needed for future navigation
+- preload: Load critical resources earlier in page lifecycle
+
+The Resource Timing API provided visibility into whether these hints were effective.
+
+2018-2020: Resource loading became more sophisticated:
+- Lazy loading for images and iframes (native browser support in 2019)
+- Priority hints (importance attribute) to guide browser loading priority
+- HTTP/3 with QUIC protocol for even faster resource loading
+- Service Workers for advanced caching and resource management
+
+The Resource Timing API continued to be essential for measuring the impact of these optimizations.
+
+2020-Present: Resource loading optimization is now standard practice:
+- Modern build tools (Webpack, Vite, etc.) optimize resource bundling
+- CDNs with edge caching reduce resource load time globally
+- Image optimization services (responsive images, WebP/AVIF formats)
+- Font loading strategies (font-display, subsetting)
+- Critical CSS inlining to reduce render-blocking resources
+
+Resource loading directly impacts Core Web Vitals:
+- Slow resource loading delays LCP (images, fonts)
+- Large JavaScript resources increase TBT and affect FID/INP
+- Late-loading resources can cause CLS
+
+Current resource loading best practices:
+- Minimize number of resources (bundling, combining)
+- Minimize resource size (compression, minification, modern formats)
+- Prioritize critical resources (preload, resource hints)
+- Use caching effectively (Cache-Control headers, service workers)
+- Load non-critical resources asynchronously
+- Implement lazy loading for off-screen resources
+
+The Resource Timing API remains the primary tool for measuring and optimizing resource loading performance, used by all major monitoring tools and performance testing platforms.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

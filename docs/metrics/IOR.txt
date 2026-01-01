@@ -1,0 +1,109 @@
+IOR - Image Optimization Rate
+
+WHAT IT MEASURES
+Percentage of images using modern formats (WebP, AVIF) versus traditional formats (JPEG, PNG, GIF). Modern formats provide significantly better compression and faster loading compared to traditional formats, reducing bandwidth usage and improving performance.
+
+Modern image formats:
+- WebP: Google's format, 25-35% better compression than JPEG
+- AVIF: Alliance for Open Media format, 50% better compression than JPEG
+- Both support lossy and lossless compression
+- Both support transparency and animation
+
+Traditional formats:
+- JPEG: Standard format, widely supported but larger file sizes
+- PNG: Lossless format, good for graphics but larger files
+- GIF: Older format, limited color palette, larger files
+
+The metric calculates:
+- Modern format images: Count of WebP/AVIF images
+- Total images: Count of all images
+- Optimization rate: (Modern format images / Total images) × 100
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis checking image resource types and file extensions for modern formats. The measurement process:
+
+1. Identifies image resources:
+   - Uses PerformanceResourceTiming API
+   - Filters resources by type (image/*)
+   - Identifies all image files loaded
+
+2. Checks image formats:
+   - Examines file extensions (.webp, .avif, .jpg, .png, .gif)
+   - Checks Content-Type headers
+   - Identifies format for each image
+
+3. Calculates optimization rate:
+   - Counts images using WebP or AVIF
+   - Counts total images
+   - Calculates percentage: (Modern / Total) × 100
+
+4. Returns rate:
+   - Percentage of images using modern formats
+   - May include breakdown by format
+
+WHY IT'S IMPORTANT
+Modern image formats (WebP, AVIF) provide 25-50% better compression than JPEG/PNG, reducing bandwidth and load times significantly.
+
+Performance benefits:
+- 25-50% smaller file sizes
+- Faster image loading
+- Reduced bandwidth usage
+- Better mobile performance
+- Improved Largest Contentful Paint (LCP)
+
+User experience:
+- Faster page loads
+- Lower data usage for mobile users
+- Better perceived performance
+- Improved mobile experience
+
+Business impact:
+- Reduced bandwidth costs
+- Better user experience
+- Improved Core Web Vitals
+- Better search rankings
+
+THRESHOLDS
+- Good: ≥ 80% (Most images using modern formats)
+- Needs Improvement: 50-79% (Some modern formats, room for improvement)
+- Poor: ≤ 50% (Few modern formats, significant optimization needed)
+
+Note: 100% may not be achievable if fallbacks are needed for older browsers.
+
+COMMON PITFALLS
+1. Using JPEG/PNG only: Not converting to modern formats
+2. No modern format support: Server or CDN not configured for WebP/AVIF
+3. Unoptimized images: Images not compressed or optimized
+4. Large image files: Images larger than necessary
+5. Missing format fallbacks: Not providing JPEG/PNG fallbacks
+6. No responsive images: Not using srcset with modern formats
+7. Browser compatibility: Not handling browser support properly
+
+OPTIMIZATION STRATEGIES
+1. Convert images to WebP/AVIF: Use conversion tools to create modern formats
+2. Implement format fallbacks: Provide JPEG/PNG fallbacks for older browsers
+3. Use responsive images: Implement srcset with modern formats
+4. Optimize image compression: Use appropriate compression settings
+5. Configure server: Ensure server serves WebP/AVIF when supported
+6. Use CDN: Leverage CDN automatic format conversion
+7. Test browser support: Verify modern formats work in target browsers
+8. Monitor optimization rate: Track percentage over time
+9. Automate conversion: Use build tools to automatically convert images
+10. Use picture element: Implement <picture> with format sources
+
+
+HISTORY
+Resource optimization metrics became critical as web pages grew in complexity. Image optimization techniques evolved from simple compression to modern formats like WebP (2010) and AVIF (2019). Code splitting and tree shaking emerged with modern JavaScript bundlers in the 2010s. Performance budgets became a standard practice as mobile web usage highlighted the importance of resource efficiency.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

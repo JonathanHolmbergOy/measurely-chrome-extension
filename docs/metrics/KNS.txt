@@ -1,0 +1,115 @@
+KNS - Keyboard Navigation Score (composite)
+
+WHAT IT MEASURES
+Composite score (0-100) measuring keyboard accessibility and focus management. This metric evaluates how well users can navigate and interact with a website using only keyboard input (Tab, Enter, Space, Arrow keys, etc.), which is essential for users with motor disabilities, visual impairments, and power users.
+
+The score evaluates:
+- Focusable elements: All interactive elements are keyboard accessible
+- Tab order: Logical and intuitive tab order
+- Focus indicators: Visible and clear focus indicators
+- Keyboard traps: No areas where keyboard users get stuck
+- Keyboard event handlers: Proper keyboard event handling
+- Custom widgets: Custom components are keyboard accessible
+- Skip links: Skip navigation links for efficiency
+
+Keyboard navigation requirements:
+- All interactive elements focusable
+- Logical tab order
+- Visible focus indicators
+- No keyboard traps
+- Proper keyboard event handling
+- WCAG 2.1 Success Criterion 2.1.1 (Keyboard) - Level A
+
+HOW IT'S MEASURED
+Combined analysis of focusable elements, tab order, focus indicators, keyboard traps, and keyboard event handlers. The measurement process:
+
+1. Checks focusable elements:
+   - Verifies all interactive elements are focusable
+   - Identifies missing keyboard support
+   - Tests focusability of custom components
+
+2. Validates tab order:
+   - Checks logical tab sequence
+   - Identifies incorrect tab order
+   - Verifies tabIndex usage
+
+3. Tests focus indicators:
+   - Verifies focus is visible
+   - Checks focus indicator contrast
+   - Identifies missing focus styles
+
+4. Detects keyboard traps:
+   - Identifies areas where keyboard users get stuck
+   - Checks modal and dialog focus management
+   - Verifies escape mechanisms
+
+5. Evaluates keyboard handlers:
+   - Checks keyboard event handling
+   - Verifies proper keyboard shortcuts
+   - Tests custom widget keyboard support
+
+6. Calculates composite score:
+   - Combines scores from all factors
+   - Returns score from 0-100
+
+WHY IT'S IMPORTANT
+Keyboard navigation is essential for users with motor disabilities and power users. Poor keyboard support excludes many users and violates WCAG accessibility requirements.
+
+Accessibility impact:
+- Required for users who cannot use pointing devices
+- Essential for screen reader users
+- Violates WCAG 2.1 Success Criterion 2.1.1 (Keyboard) - Level A
+- Legal compliance issues
+- Exclusion of users with disabilities
+
+User experience:
+- Keyboard users can access all functionality
+- Power users can navigate efficiently
+- Better accessibility for all users
+- Improved usability
+
+THRESHOLDS
+- Good: ≥ 90 (Excellent keyboard accessibility)
+- Needs Improvement: 70-89 (Good but some issues)
+- Poor: ≤ 70 (Significant keyboard accessibility problems)
+
+Note: A score of 100 requires perfect keyboard accessibility with no issues.
+
+COMMON PITFALLS
+1. Missing keyboard support: Interactive elements not keyboard accessible
+2. Keyboard traps: Areas where keyboard users get stuck
+3. Poor focus management: Focus not managed correctly in modals/dialogs
+4. No keyboard shortcuts: Missing keyboard shortcuts for common actions
+5. Inaccessible custom widgets: Custom components not keyboard accessible
+6. Missing skip links: No skip navigation for efficiency
+7. Incorrect tab order: Tab order not logical
+8. Missing focus indicators: Focus not visible
+
+OPTIMIZATION STRATEGIES
+1. Ensure all functionality is keyboard accessible: Make all interactive elements keyboard accessible
+2. Test tab navigation: Navigate entire site using only keyboard
+3. Implement proper focus management: Manage focus in modals, dialogs, dynamic content
+4. Avoid keyboard traps: Ensure users can always navigate away
+5. Provide keyboard shortcuts: Add shortcuts for common actions
+6. Make custom widgets accessible: Ensure custom components support keyboard
+7. Add skip links: Provide skip navigation links
+8. Test with keyboard only: Regularly test with keyboard only
+9. Review tab order: Ensure logical tab sequence
+10. Document keyboard support: Ensure team understands keyboard requirements
+
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, evolving to WCAG 2.0 (2008), WCAG 2.1 (2018), and WCAG 2.2 (2023). ARIA (Accessible Rich Internet Applications) was first published by W3C in 2014 to address accessibility gaps in dynamic web content. The Web Content Accessibility Guidelines have become legal requirements in many jurisdictions, driving adoption of accessibility metrics and testing tools.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

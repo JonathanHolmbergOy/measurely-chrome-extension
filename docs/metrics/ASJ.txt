@@ -1,0 +1,131 @@
+ASJ - Average Scroll Jank
+
+WHAT IT MEASURES
+Average frame delay during scrolling interactions, measured in milliseconds. Scroll jank occurs when frames are delayed beyond the target frame time (16.67ms for 60fps), causing stuttering, choppy scrolling, and poor user experience. This metric quantifies the smoothness of scroll interactions by measuring how often and by how much frames exceed the target frame time.
+
+Scroll jank manifests as:
+- Stuttering during scroll
+- Choppy, non-fluid scrolling motion
+- Delayed visual updates
+- Frame drops during scroll interactions
+- Inconsistent scroll speed
+
+The metric measures:
+- Average delay per frame during scroll events
+- Frequency of frames exceeding target frame time
+- Overall scroll smoothness
+- Performance impact of scroll-related JavaScript
+
+HOW IT'S MEASURED
+requestAnimationFrame monitoring during scroll events, measuring frame timing and calculating average delay. The measurement process:
+
+1. Monitors scroll events using scroll event listeners
+2. Uses requestAnimationFrame to track frame timing:
+   - Records timestamp of each frame
+   - Calculates time between frames
+   - Identifies frames that exceed 16.67ms (60fps target)
+3. Measures frame delays during active scrolling:
+   - Tracks delays when scroll is actively occurring
+   - Ignores idle periods between scrolls
+   - Samples multiple scroll interactions
+4. Calculates average delay:
+   - Sums all frame delays during scroll
+   - Divides by number of frames measured
+   - Returns average delay in milliseconds
+
+Alternative measurement methods:
+- PerformanceObserver API for Long Tasks
+- Chrome DevTools Performance panel
+- requestIdleCallback timing
+- Intersection Observer for scroll-triggered content
+
+Measurement considerations:
+- Device performance affects results
+- Browser differences in scroll handling
+- Network conditions may impact results
+- Page complexity influences measurements
+
+WHY IT'S IMPORTANT
+Scroll jank creates stuttering and poor user experience. Smooth scrolling at 60fps (16.67ms per frame) is essential for perceived performance and user satisfaction.
+
+User experience impact:
+- Stuttering scroll feels unresponsive and unprofessional
+- Choppy scrolling indicates poor performance
+- Frame drops during scroll create visual artifacts
+- Inconsistent scroll speed confuses users
+- Poor scroll performance reduces user engagement
+
+Performance impact:
+- Scroll jank indicates JavaScript performance issues
+- May signal layout thrashing or forced reflows
+- Suggests inefficient event handling
+- Can indicate memory pressure or garbage collection
+- May point to excessive DOM manipulation
+
+Business impact:
+- Poor scroll performance reduces user satisfaction
+- Choppy scrolling reflects poorly on brand quality
+- May increase bounce rates
+- Can reduce conversion rates
+- Affects mobile user experience significantly
+
+THRESHOLDS
+- Good: ≤ 16ms (Maintains 60fps, smooth scrolling)
+- Needs Improvement: 16-50ms (Some jank, noticeable but acceptable)
+- Poor: ≥ 50ms (Significant jank, choppy scrolling, poor experience)
+
+Target frame time:
+- 60fps = 16.67ms per frame
+- 30fps = 33.33ms per frame (minimum acceptable)
+- Below 30fps = Unacceptable user experience
+
+COMMON PITFALLS
+1. Heavy JavaScript during scroll: Expensive operations in scroll handlers block the main thread
+2. Expensive layout calculations: Recalculating layout on every scroll event
+3. Too many scroll listeners: Multiple scroll handlers competing for execution time
+4. Inefficient scroll handlers: Handlers that perform unnecessary work
+5. Layout thrashing: Forced reflows caused by reading and writing layout properties
+6. DOM manipulation during scroll: Adding, removing, or modifying DOM elements
+7. Image loading during scroll: Loading images triggers layout recalculations
+8. CSS animations during scroll: Complex animations competing with scroll rendering
+9. Third-party scripts: Analytics or other scripts executing during scroll
+10. Memory pressure: Garbage collection pauses during scroll
+11. Synchronous operations: Blocking operations in scroll handlers
+12. No debouncing/throttling: Scroll handlers firing too frequently
+
+OPTIMIZATION STRATEGIES
+1. Optimize scroll handlers: Minimize work done in scroll event handlers
+2. Use passive event listeners: Mark scroll listeners as passive to improve performance
+3. Debounce/throttle scroll events: Limit how often scroll handlers execute
+4. Avoid layout thrashing: Batch DOM reads and writes, use CSS transforms
+5. Use CSS transforms: Use transform and opacity for animations (GPU-accelerated)
+6. Virtual scrolling: Only render visible content for long lists
+7. Lazy load images: Defer image loading until needed
+8. Use requestAnimationFrame: Schedule work to align with browser paint cycles
+9. Minimize DOM queries: Cache DOM references, avoid repeated queries
+10. Use Intersection Observer: Replace scroll-based visibility detection
+11. Optimize third-party scripts: Defer or async load non-critical scripts
+12. Reduce scroll listeners: Consolidate multiple handlers into one
+13. Use will-change CSS: Hint browser about upcoming changes
+14. Avoid forced synchronous layout: Don't read layout properties after writing
+15. Profile and measure: Use browser DevTools to identify bottlenecks
+
+
+HISTORY
+User experience metrics emerged as web applications became more interactive. Frame rate monitoring and scroll performance measurement became important as single-page applications and complex interactions became common. Responsive design metrics gained prominence with mobile web usage growth starting around 2010. Modern UX metrics focus on perceived performance and user satisfaction rather than just technical measurements.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

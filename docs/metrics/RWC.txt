@@ -1,0 +1,89 @@
+RWC - Resource Waste Count
+
+WHAT IT MEASURES
+Number of resources exceeding recommended size thresholds. Oversized resources waste bandwidth and slow down page loading unnecessarily. This metric identifies resources that are larger than they should be, indicating optimization opportunities.
+
+Size thresholds (typical):
+- Images: > 500KB (should be optimized)
+- JavaScript: > 300KB (should be split/minified)
+- CSS: > 100KB (should be optimized)
+- Fonts: > 200KB (should be subset)
+- Other resources: Varies by type
+
+The metric counts:
+- Resources exceeding size thresholds
+- Unoptimized large resources
+- Opportunities for optimization
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis identifying resources exceeding size thresholds (images > 500KB, JS > 300KB, etc.). The measurement process:
+
+1. Gets resource sizes:
+   - Uses PerformanceResourceTiming API
+   - Gets decodedBodySize (uncompressed) for resources
+   - May also check transferSize (compressed)
+
+2. Compares to thresholds:
+   - Checks each resource against size thresholds
+   - Identifies resources exceeding limits
+   - Counts oversized resources
+
+3. Returns count:
+   - Total number of oversized resources
+   - May include breakdown by resource type
+
+WHY IT'S IMPORTANT
+Oversized resources waste bandwidth and slow page loads. Optimizing large resources improves performance, especially on mobile devices and slower connections.
+
+Performance impact:
+- Wastes bandwidth
+- Slows page loading
+- Increases data usage
+- Affects mobile performance
+- Delays resource loading
+
+User experience:
+- Slower page loads
+- Higher data usage costs
+- Poor mobile experience
+- Increased frustration
+
+THRESHOLDS
+- Good: 0 errors (No oversized resources)
+- Needs Improvement: 1-2 errors (Some oversized resources)
+- Poor: ≥ 3 errors (Multiple oversized resources, significant waste)
+
+COMMON PITFALLS
+1. Large unoptimized images: Images not compressed or optimized
+2. Oversized JavaScript: JavaScript files too large
+3. Large CSS files: CSS not optimized or split
+4. Unoptimized resources: Resources not optimized
+5. No resource budgets: Missing size limits
+6. Growing resource sizes: Resources growing over time
+
+OPTIMIZATION STRATEGIES
+1. Optimize large resources: Compress and optimize oversized resources
+2. Compress images: Use compression and modern formats
+3. Minify code: Minify JavaScript and CSS
+4. Reduce resource sizes: Minimize resource payloads
+5. Implement resource budgets: Set and enforce size limits
+6. Code splitting: Split large JavaScript files
+7. Monitor resource sizes: Track sizes over time
+8. Set size limits: Enforce maximum resource sizes
+
+
+HISTORY
+Resource optimization metrics became critical as web pages grew in complexity. Image optimization techniques evolved from simple compression to modern formats like WebP (2010) and AVIF (2019). Code splitting and tree shaking emerged with modern JavaScript bundlers in the 2010s. Performance budgets became a standard practice as mobile web usage highlighted the importance of resource efficiency.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

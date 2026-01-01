@@ -1,0 +1,88 @@
+TSM - Target Size (Minimum)
+
+WHAT IT MEASURES
+Count of interactive elements (buttons, links, form controls) smaller than 24×24 CSS pixels. WCAG 2.2 Success Criterion 2.5.8 (Target Size - Minimum) requires touch targets to be at least 24×24 CSS pixels to ensure they are easy to tap, especially on mobile devices.
+
+Touch target requirements:
+- Minimum size: 24×24 CSS pixels
+- Applies to: Buttons, links, form controls, interactive elements
+- WCAG 2.2 Level AA requirement
+- Essential for mobile usability
+
+The metric counts:
+- Interactive elements smaller than 24×24px
+- Elements that are difficult to tap
+- Accessibility barriers
+
+HOW IT'S MEASURED
+DOM analysis checking interactive elements' getBoundingClientRect dimensions, ensuring minimum 24×24 CSS pixels. The measurement process:
+
+1. Identifies interactive elements:
+   - Finds buttons, links, form controls
+   - Identifies all clickable/tappable elements
+   - Checks focusable elements
+
+2. Measures dimensions:
+   - Uses getBoundingClientRect() to get size
+   - Checks width and height
+   - Verifies minimum 24×24 CSS pixels
+
+3. Counts violations:
+   - Counts elements smaller than 24×24px
+   - Returns total count
+
+WHY IT'S IMPORTANT
+Small touch targets are difficult to use, especially on mobile devices. WCAG 2.2 requires minimum 24×24 CSS pixels to ensure elements are easy to tap and don't create usability barriers.
+
+Accessibility impact:
+- Difficult to tap on mobile devices
+- Violates WCAG 2.2 Success Criterion 2.5.8 (Target Size - Minimum) - Level AA
+- Creates usability barriers
+- Increases tap errors
+- Poor mobile experience
+
+User experience:
+- Frustrating on mobile devices
+- Increased tap errors
+- Poor usability
+- Reduced accessibility
+
+THRESHOLDS
+- Good: 0 errors (All targets meet size requirements)
+- Poor: ≥ 1 error (Targets too small, usability barrier)
+
+Even a single small target creates a usability barrier.
+
+COMMON PITFALLS
+1. Small buttons: Buttons smaller than 24×24px
+2. Tiny links: Links too small to tap easily
+3. Insufficient touch target size: Elements not meeting minimum size
+4. Elements smaller than 24×24px: Various interactive elements too small
+5. No padding: Missing padding making targets effectively smaller
+
+OPTIMIZATION STRATEGIES
+1. Ensure all interactive elements are at least 24×24 CSS pixels: Meet minimum size requirement
+2. Increase padding for small elements: Add padding to make targets larger
+3. Test on touch devices: Verify targets are easy to tap
+4. Use adequate spacing: Ensure targets have enough space
+5. Review all interactive elements: Check all buttons, links, controls
+6. Document size requirements: Ensure team understands size needs
+7. Test with users: Get feedback on target sizes
+8. Monitor target sizes: Track sizes over time
+
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, evolving to WCAG 2.0 (2008), WCAG 2.1 (2018), and WCAG 2.2 (2023). ARIA (Accessible Rich Internet Applications) was first published by W3C in 2014 to address accessibility gaps in dynamic web content. The Web Content Accessibility Guidelines have become legal requirements in many jurisdictions, driving adoption of accessibility metrics and testing tools.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

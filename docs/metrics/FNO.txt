@@ -1,0 +1,101 @@
+FNO - Focus Not Obscured (Minimum)
+
+WHAT IT MEASURES
+Count of focus indicators that are obscured by other content (sticky headers, modals, overlays, fixed elements). WCAG 2.2 Success Criterion 2.4.11 (Focus Not Obscured - Minimum) requires that when a keyboard focus indicator is visible, the focused element is not completely hidden by other content.
+
+Focus obscuration occurs when:
+- Sticky/fixed headers cover focused elements
+- Modals or overlays hide focused content
+- Z-index stacking places elements above focus indicators
+- Overlapping elements cover focus
+- Fixed navigation bars hide focused elements
+
+WCAG 2.2 Success Criterion 2.4.11 requires:
+- Focus indicators must not be completely obscured
+- At least part of the focus indicator must be visible
+- Focused element must be at least partially visible
+- Level AA requirement
+
+HOW IT'S MEASURED
+DOM analysis checking if focused elements are visible and not covered by other elements using getBoundingClientRect and z-index analysis. The measurement process:
+
+1. Identifies focused elements:
+   - Finds all elements that can receive focus
+   - Simulates or detects focus state
+   - Identifies elements with visible focus indicators
+
+2. Checks for obscuration:
+   - Uses getBoundingClientRect() to get element positions
+   - Compares focused element position with other elements
+   - Checks for overlapping elements with higher z-index
+   - Identifies sticky/fixed elements that might cover focus
+
+3. Validates visibility:
+   - Ensures focus indicator is at least partially visible
+   - Checks if focused element is completely hidden
+   - Verifies focus indicator is not obscured
+
+4. Counts obscured focus:
+   - Counts focus indicators that are completely hidden
+   - Returns count of obscured focus instances
+
+WHY IT'S IMPORTANT
+WCAG 2.2 requires focus indicators to be visible. Obscured focus prevents keyboard users from seeing where they are, making navigation impossible or extremely difficult.
+
+Accessibility impact:
+- Keyboard users cannot see focus position
+- Navigation becomes impossible
+- Violates WCAG 2.2 Success Criterion 2.4.11 (Level AA)
+- Excludes users who rely on keyboard navigation
+- Legal compliance issues
+
+User experience:
+- Users cannot navigate effectively
+- Frustration and abandonment
+- Forms become unusable
+- Reduced accessibility
+
+THRESHOLDS
+- Good: 0 errors (All focus indicators visible)
+- Poor: ≥ 1 error (Focus obscured, accessibility barrier)
+
+Even a single obscured focus indicator creates a significant barrier. The threshold reflects that focus visibility is critical.
+
+COMMON PITFALLS
+1. Sticky headers covering focus: Fixed headers hiding focused elements below
+2. Modals obscuring focus: Modal overlays hiding focused content
+3. Z-index issues: Elements with high z-index covering focus
+4. Overlapping elements: Content overlapping and hiding focus
+5. Fixed navigation: Fixed nav bars covering focused elements
+6. Cookie banners: Banners covering focused content
+7. Floating elements: Floating buttons or widgets hiding focus
+8. Scroll position: Focused elements scrolled behind fixed elements
+
+OPTIMIZATION STRATEGIES
+1. Ensure focus indicators are visible: Test that focus is never completely hidden
+2. Adjust z-index: Ensure focused elements have appropriate z-index
+3. Test with keyboard navigation: Navigate entire site with keyboard
+4. Fix overlapping elements: Adjust positioning to prevent overlap
+5. Account for fixed elements: Add padding/margin to prevent fixed elements covering focus
+6. Scroll focused elements into view: Ensure focused elements scroll into viewport
+7. Test sticky headers: Verify focus is visible with sticky headers
+8. Check modals: Ensure focus in modals is visible
+9. Review z-index stacking: Understand z-index context and stacking
+10. Test on different viewport sizes: Verify focus visibility across screen sizes
+
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, evolving to WCAG 2.0 (2008), WCAG 2.1 (2018), and WCAG 2.2 (2023). ARIA (Accessible Rich Internet Applications) was first published by W3C in 2014 to address accessibility gaps in dynamic web content. The Web Content Accessibility Guidelines have become legal requirements in many jurisdictions, driving adoption of accessibility metrics and testing tools.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

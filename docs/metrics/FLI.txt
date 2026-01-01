@@ -1,0 +1,106 @@
+FLI - Form Label Issues
+
+WHAT IT MEASURES
+Count of form inputs (input, select, textarea) missing proper labels or ARIA labels. Unlabeled inputs make forms inaccessible to screen reader users because they cannot determine what information to enter in each field.
+
+Proper labeling methods:
+- `<label for="id">` with matching input `id`: Explicit label association
+- Wrapped label: `<label><input></label>` - implicit association
+- `aria-label`: Direct label text on input
+- `aria-labelledby`: Reference to element providing label
+- `title` attribute: Less preferred, but can provide label
+
+Unlabeled inputs:
+- No associated `<label>` element
+- No `aria-label` attribute
+- No `aria-labelledby` reference
+- Placeholder text used as only label (not accessible)
+
+HOW IT'S MEASURED
+DOM analysis checking input, select, and textarea elements for associated label elements or aria-label/aria-labelledby. The measurement process:
+
+1. Identifies form controls:
+   - All `<input>` elements
+   - All `<select>` elements
+   - All `<textarea>` elements
+   - May include other form controls
+
+2. Checks for labels:
+   - Looks for associated `<label>` with `for` attribute matching input `id`
+   - Checks for wrapped `<label>` elements
+   - Verifies `aria-label` attribute presence
+   - Checks `aria-labelledby` references and validates IDs exist
+
+3. Validates label associations:
+   - Ensures `for` attribute IDs match input IDs
+   - Verifies `aria-labelledby` references exist
+   - Checks that labels are not empty
+
+4. Flags unlabeled inputs:
+   - Counts inputs without proper labels
+   - Identifies which labeling method is missing
+   - Returns count of form label issues
+
+WHY IT'S IMPORTANT
+Unlabeled form inputs prevent screen reader users from understanding what information to enter, violating WCAG guidelines and making forms unusable for people with visual impairments.
+
+Accessibility impact:
+- Screen reader users cannot identify input purpose
+- Forms become unusable without labels
+- Violates WCAG 2.1 Success Criterion 3.3.2 (Labels or Instructions) - Level A
+- Violates WCAG 2.1 Success Criterion 4.1.2 (Name, Role, Value) - Level A
+- Legal compliance issues in jurisdictions requiring WCAG
+
+User experience:
+- Users cannot complete forms
+- Increased form abandonment
+- Frustration and exclusion
+- Reduced form completion rates
+
+THRESHOLDS
+- Good: 0 errors (All form inputs properly labeled)
+- Needs Improvement: 1-2 errors (Minor labeling issues)
+- Poor: ≥ 3 errors (Significant form accessibility barriers)
+
+Even a single unlabeled input can prevent form completion. The threshold reflects that proper labeling is critical for form accessibility.
+
+COMMON PITFALLS
+1. Inputs without labels: Form controls missing any label association
+2. Missing aria-label: Custom inputs without aria-label
+3. Broken label associations: `for` attribute pointing to wrong or non-existent ID
+4. Placeholder text used as label: Placeholders disappear when typing, not accessible
+5. Visual-only labels: Labels present visually but not programmatically associated
+6. Missing labels on hidden inputs: Hidden inputs still need labels for screen readers
+7. Select elements without labels: Dropdowns missing label associations
+8. Textarea without labels: Text areas missing proper labeling
+9. Dynamic inputs: Inputs added dynamically without labels
+10. Nested form issues: Labels in nested forms not properly scoped
+
+OPTIMIZATION STRATEGIES
+1. Associate labels with inputs using for/id: Use `<label for="input-id">` with matching input `id`
+2. Use aria-label or aria-labelledby: For inputs where visible labels aren't appropriate
+3. Ensure all form controls have labels: Every input, select, and textarea needs a label
+4. Use wrapped labels: `<label><input></label>` for implicit association
+5. Avoid placeholder-only labels: Placeholders are not sufficient, use proper labels
+6. Test with screen readers: Verify labels are announced correctly
+7. Validate label associations: Ensure `for` attributes match input IDs
+8. Provide descriptive labels: Labels should clearly describe what information is needed
+9. Label hidden inputs: Hidden inputs still need labels for accessibility
+10. Document labeling requirements: Ensure team understands labeling needs
+
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, evolving to WCAG 2.0 (2008), WCAG 2.1 (2018), and WCAG 2.2 (2023). ARIA (Accessible Rich Internet Applications) was first published by W3C in 2014 to address accessibility gaps in dynamic web content. The Web Content Accessibility Guidelines have become legal requirements in many jurisdictions, driving adoption of accessibility metrics and testing tools.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

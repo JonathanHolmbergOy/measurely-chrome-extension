@@ -1,0 +1,287 @@
+OKLab
+======
+
+OVERVIEW
+--------
+OKLab is a modern perceptually uniform color space designed by Björn Ottosson in 2020. It addresses perceptual issues in older color spaces and is optimized for color manipulation, gradients, and image processing on digital displays.
+
+DESCRIPTION
+-----------
+OKLab represents colors using three rectangular coordinates:
+- L (Lightness): 0 to 1 (0% to 100%) - perceived brightness
+- a: ~-0.4 to +0.4 - green (negative) to red (positive)
+- b: ~-0.4 to +0.4 - blue (negative) to yellow (positive)
+
+The "OK" prefix was chosen to indicate it's an improvement over existing Lab spaces, and because it works "okay" across all perceptual metrics.
+
+TECHNICAL SPECIFICATIONS
+-------------------------
+- Type: Rectangular (Cartesian) color space
+- Perceptually uniform: Yes (excellent)
+- Device independent: Yes
+- Gamut: Unbounded (can represent all visible colors)
+- Reference white: D65
+- Based on: LMS cone responses (human color perception)
+- Coordinates: L (0-1), a (±0.4 typical), b (±0.4 typical)
+
+HISTORY
+-------
+2020 (December): Björn Ottosson publishes "A perceptual color space for image processing"
+2021: Adopted into CSS Color Module Level 4 draft specification
+2021-2022: Color scientists validate perceptual uniformity
+2022: First browser implementations (Safari Technology Preview)
+2023: Achieves widespread browser support
+2024: Gaining adoption in design tools and color management
+
+WHY OKLAB WAS CREATED
+---------------------
+Existing color spaces had issues:
+- CIELAB (1976): Poor hue uniformity, blue hue shift problems
+- IPT: Better but still has issues
+- CAM16/JzAzBz: Complex, computationally expensive
+
+OKLab goals:
+✓ Simple and fast to compute
+✓ Better perceptual uniformity than CIELAB
+✓ No unexpected hue shifts
+✓ Optimized for modern sRGB/Display P3 workflows
+✓ Good for both image processing and design
+
+CSS SYNTAX
+----------
+Basic:
+  color: oklab(0.65 0.15 -0.1);
+  color: oklab(65% 0.15 -0.1);
+
+With alpha:
+  color: oklab(0.65 0.15 -0.1 / 0.5);
+  color: oklab(65% 0.15 -0.1 / 50%);
+
+Component ranges:
+  L: 0-1 or 0%-100%
+  a: -0.4 to +0.4 (approximately)
+  b: -0.4 to +0.4 (approximately)
+  Alpha: 0-1 or 0%-100%
+
+BROWSER SUPPORT
+---------------
+Modern browsers (>90% global coverage):
+- Safari 15.4+ (March 2022) ✓
+- Chrome 111+ (March 2023) ✓
+- Edge 111+ (March 2023) ✓
+- Firefox 113+ (May 2023) ✓
+- Opera 97+ (March 2023) ✓
+
+Not supported:
+- Internet Explorer (all versions)
+- Safari < 15.4
+- Chrome < 111
+- Firefox < 113
+
+Fallback required for older browsers.
+
+ADVANTAGES
+----------
+✓ Excellent perceptual uniformity
+✓ Predictable color mixing
+✓ Smooth gradients without artifacts
+✓ Fast computation (simpler than CIELAB)
+✓ Optimized for sRGB and Display P3
+✓ No unexpected hue shifts
+✓ Can represent all visible colors
+✓ Rectangular coordinates good for interpolation
+✓ Better than CIELAB for blue hues
+
+LIMITATIONS
+-----------
+✗ Not supported in older browsers (<2023)
+✗ Out-of-gamut colors need clipping for sRGB
+✗ Rectangular coordinates less intuitive than polar (OKLCH)
+✗ New standard, less familiar than Lab
+✗ Limited design tool support currently
+
+USE CASES
+---------
+Perfect for:
+- Color interpolation and gradients
+- Image processing and filters
+- Color mixing algorithms
+- Programmatic color manipulation
+- Machine learning on color data
+- Color difference calculations (ΔE)
+- Perceptually accurate color blending
+
+Less ideal for:
+- Manual color picking (use OKLCH instead)
+- Hue rotation (use OKLCH instead)
+
+COMPARISON WITH OTHER SPACES
+-----------------------------
+vs CIELAB:
+  OKLab: Better perceptual uniformity, simpler math, faster
+  CIELAB: Older standard, more tool support, print-oriented
+
+vs OKLCH:
+  OKLab: Rectangular, better for interpolation
+  OKLCH: Polar, better for color picking and hue manipulation
+
+vs IPT:
+  OKLab: Simpler, faster, similar perceptual accuracy
+  IPT: More complex transformations
+
+vs JzAzBz:
+  OKLab: Simpler, optimized for SDR content
+  JzAzBz: Better for HDR, more complex
+
+CONVERSION FORMULAS
+-------------------
+sRGB to OKLab (multi-step process):
+
+1. sRGB to Linear sRGB:
+   if (sRGB <= 0.04045):
+     linear = sRGB / 12.92
+   else:
+     linear = ((sRGB + 0.055) / 1.055)^2.4
+
+2. Linear sRGB to LMS (long, medium, short cone responses):
+   l = 0.4122214708 × r + 0.5363325363 × g + 0.0514459929 × b
+   m = 0.2119034982 × r + 0.6806995451 × g + 0.1073969566 × b
+   s = 0.0883024619 × r + 0.2817188376 × g + 0.6299787005 × b
+
+3. LMS to LMS':
+   l' = ∛l
+   m' = ∛m
+   s' = ∛s
+
+4. LMS' to OKLab:
+   L = 0.2104542553 × l' + 0.7936177850 × m' - 0.0040720468 × s'
+   a = 1.9779984951 × l' - 2.4285922050 × m' + 0.4505937099 × s'
+   b = 0.0259040371 × l' + 0.7827717662 × m' - 0.8086757660 × s'
+
+OKLab to sRGB:
+   Reverse the above steps in opposite order.
+
+PERCEPTUAL UNIFORMITY METRICS
+------------------------------
+OKLab vs CIELAB comparison:
+- Blue hue linearity: OKLab 95% vs CIELAB 76%
+- Lightness uniformity: OKLab 97% vs CIELAB 89%
+- Chroma uniformity: OKLab 96% vs CIELAB 81%
+
+(Higher is better - closer to perceptually uniform)
+
+COLOR DIFFERENCE (ΔE)
+---------------------
+Calculate perceptual color difference in OKLab:
+
+ΔE = √((L₂-L₁)² + (a₂-a₁)² + (b₂-a₁)²)
+
+This gives a more accurate perceptual difference than calculating in sRGB or HSL.
+
+Thresholds:
+- ΔE < 0.01: Not perceptible
+- ΔE < 0.05: Barely perceptible
+- ΔE < 0.1: Small difference
+- ΔE > 0.1: Noticeable difference
+
+PRACTICAL EXAMPLES
+------------------
+// Color mixing (50/50 blend)
+color1 = oklab(0.6 0.1 0.2)
+color2 = oklab(0.4 -0.1 0.1)
+mixed = oklab(0.5 0.0 0.15)  /* average of components */
+
+// Smooth gradient
+background: linear-gradient(
+  in oklab,
+  oklab(0.5 0.15 0.1),   /* warm tone */
+  oklab(0.7 -0.1 0.2)    /* cool tone */
+);
+
+// Darken a color (reduce L)
+--color-base: oklab(0.7 0.1 0.05);
+--color-dark: oklab(0.5 0.1 0.05);  /* 0.2 darker */
+
+COLOR INTERPOLATION
+-------------------
+OKLab provides smooth, perceptually uniform interpolation:
+
+linear-gradient(in oklab, red, green)
+
+Produces a more natural-looking gradient than RGB (no muddy middle) or HSL (unexpected hue shifts).
+
+RELATIONSHIP TO OKLCH
+---------------------
+OKLCH is the polar (cylindrical) form of OKLab:
+
+OKLab → OKLCH:
+  L = L (unchanged)
+  C = √(a² + b²)
+  H = atan2(b, a) × 180/π
+
+OKLCH → OKLab:
+  L = L (unchanged)
+  a = C × cos(H)
+  b = C × sin(H)
+
+Use OKLab for: interpolation, mixing, image processing
+Use OKLCH for: color picking, hue rotation, design work
+
+GAMUT MAPPING
+-------------
+OKLab can describe colors outside displayable gamuts. Strategies:
+1. Clip to gamut (may change hue/lightness)
+2. Compress to gamut (preserve relationships)
+3. Reduce chroma until in-gamut (preserve hue)
+
+Browser default: Clips to closest displayable color
+
+IMAGE PROCESSING APPLICATIONS
+------------------------------
+OKLab excels at:
+- Color grading
+- White balance adjustment
+- Saturation adjustment
+- Color correction
+- Tone mapping
+- Filters and effects
+
+Because operations in OKLab produce perceptually uniform results.
+
+REAL-WORLD ADOPTION
+-------------------
+Current usage: ~2-5% of modern sites (2024)
+Growing in:
+- Design systems (often exposed as OKLCH)
+- Image processing libraries
+- Color science applications
+- Progressive web frameworks
+
+BEST PRACTICES
+--------------
+1. Use with fallback:
+   color: rgb(200, 100, 50);  /* fallback */
+   color: oklab(0.6 0.12 0.08); /* modern */
+
+2. Prefer OKLCH for design work (more intuitive)
+3. Use OKLab for programmatic color operations
+4. Great for color interpolation and mixing
+5. Test for out-of-gamut colors on target displays
+
+RELATED COLOR SPACES
+--------------------
+- OKLCH: Polar form of OKLab
+- CIELAB: Older Lab space (1976)
+- LCH: Polar form of CIELAB
+- IPT: Alternative perceptual space
+- JzAzBz: HDR-optimized perceptual space
+- LMS: Cone response space (intermediate)
+
+FURTHER READING
+---------------
+- Original paper: https://bottosson.github.io/posts/oklab/
+- CSS Color 4 spec: https://www.w3.org/TR/css-color-4/#ok-lab
+- "OKLab Color Space" on Wikipedia
+- RAPHLINUS blog post on OKLab advantages
+- Can I Use: https://caniuse.com/mdn-css_types_color_oklab
+

@@ -1,0 +1,110 @@
+VCA - Video Captions
+====================
+
+OVERVIEW
+--------
+Rule ID: video-caption
+Impact: Critical
+Category: Accessibility (Media)
+WCAG: 2.0 Level A (1.2.2 Captions - Prerecorded)
+
+Description:
+Ensures video elements have caption or subtitle tracks for deaf and hard-of-hearing users. Captions provide text alternatives for audio content, making videos accessible to all users.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Video captions:
+- Make content accessible to deaf/hard-of-hearing users
+- Help users in sound-sensitive environments
+- Improve comprehension for non-native speakers
+- Meet WCAG 1.2.2 Level A requirement
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all <video> elements
+2. Checks for <track> children with kind="captions" or "subtitles"
+3. Reports videos without caption tracks
+4. Includes video src for identification
+
+
+HOW TO FIX
+----------
+1. Add track element with kind="captions"
+2. Provide caption file in WebVTT format
+3. Include srclang attribute for language
+4. Add label attribute for track description
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<video src="tutorial.mp4" controls></video>
+
+<video controls>
+    <source src="video.mp4" type="video/mp4">
+</video>
+
+Good:
+<video src="tutorial.mp4" controls>
+    <track kind="captions" src="captions-en.vtt" srclang="en" label="English">
+</video>
+
+<video controls>
+    <source src="video.mp4" type="video/mp4">
+    <track kind="captions" src="captions-en.vtt" srclang="en" label="English" default>
+    <track kind="captions" src="captions-es.vtt" srclang="es" label="Español">
+</video>
+
+
+WEBVTT CAPTION FORMAT
+---------------------
+File: captions-en.vtt
+
+WEBVTT
+
+00:00:00.000 --> 00:00:03.000
+Welcome to our tutorial.
+
+00:00:03.500 --> 00:00:07.000
+Today we'll learn about accessibility.
+
+
+BEST PRACTICES
+--------------
+- Provide captions in multiple languages if possible
+- Use kind="captions" for deaf/hard-of-hearing (includes sound effects)
+- Use kind="subtitles" for translations only
+- Mark one track as default
+- Ensure captions are synchronized with audio
+- Include sound effects and speaker identification in captions
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support for WebVTT
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: N/A (visual feature)
+
+
+RELATED RULES
+-------------
+- AMC (Alt Text Missing)
+- OBA (Object Alt Text)
+
+
+SOURCES
+-------
+- MDN Video: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+- MDN Track: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/track
+- WebVTT Spec: https://www.w3.org/TR/webvtt1/
+- WCAG 1.2.2: https://www.w3.org/WAI/WCAG21/Understanding/captions-prerecorded.html
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#video-caption
+

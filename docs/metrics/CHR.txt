@@ -1,0 +1,125 @@
+CHR - Cache Hit Rate
+
+WHAT IT MEASURES
+Percentage of resources served from browser cache versus downloaded from the network. Cache hit rate measures how effectively resources are cached, with higher rates indicating better caching strategy and faster repeat visits. A cache hit occurs when a resource is served from the browser's cache instead of being downloaded from the server.
+
+The metric calculates:
+- Cache hits: Resources served from cache (transferSize = 0 or very small)
+- Cache misses: Resources downloaded from network (full transferSize)
+- Cache hit rate: (Cache hits / Total resources) × 100
+
+Resources that can be cached include:
+- HTML documents
+- CSS stylesheets
+- JavaScript files
+- Images
+- Fonts
+- Other static assets
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis checking transferSize vs decodedBodySize, identifying cached resources. The measurement process:
+
+1. Collects resource timing data:
+   - Uses PerformanceResourceTiming API
+   - Gathers timing data for all resources loaded
+   - Records transferSize (bytes transferred over network)
+   - Records decodedBodySize (uncompressed size)
+
+2. Identifies cached resources:
+   - transferSize = 0 or very small (< 100 bytes): Likely served from cache
+   - transferSize ≈ decodedBodySize: Downloaded from network
+   - transferSize < decodedBodySize: Compressed download from network
+
+3. Calculates cache hit rate:
+   - Counts resources with transferSize = 0 or very small
+   - Divides by total number of resources
+   - Multiplies by 100 to get percentage
+
+4. Considers cache types:
+   - Browser cache (memory/disk)
+   - HTTP cache (Cache-Control headers)
+   - Service Worker cache
+   - CDN cache
+
+Measurement considerations:
+- First page load will have 0% cache hit rate (expected)
+- Repeat visits should show higher cache hit rates
+- Must account for cache-busting (query strings, versioning)
+- Should measure across multiple page loads
+
+WHY IT'S IMPORTANT
+High cache hit rates mean faster repeat visits and reduced server load. Essential for performance optimization and user experience.
+
+Performance impact:
+- Cached resources load instantly (0ms network time)
+- Reduces bandwidth usage
+- Lowers server load and costs
+- Improves page load times on repeat visits
+- Reduces network congestion
+
+User experience impact:
+- Faster repeat visits improve user satisfaction
+- Reduced data usage benefits mobile users
+- Offline or slow network scenarios benefit from caching
+- Consistent performance across visits
+
+Business impact:
+- Lower bandwidth costs
+- Reduced server load
+- Better user retention
+- Improved conversion rates
+- Better SEO performance (faster load times)
+
+THRESHOLDS
+- Good: ≥ 80% (Most resources cached, excellent caching strategy)
+- Needs Improvement: 50-79% (Some caching, room for improvement)
+- Poor: ≤ 50% (Poor caching, many resources re-downloaded)
+
+Note: First page load will always have 0% cache hit rate. This metric is most meaningful when measured on repeat visits.
+
+COMMON PITFALLS
+1. Missing cache headers: Resources without Cache-Control or Expires headers
+2. Short cache durations: Cache-Control max-age set too low
+3. No caching strategy: No systematic approach to caching
+4. Cache-busting too frequently: Versioning or query strings change too often
+5. Cache-Control: no-cache or no-store: Explicitly preventing caching
+6. Missing ETag or Last-Modified: No cache validation headers
+7. Vary header issues: Incorrect Vary headers preventing caching
+8. Mixed cache strategies: Inconsistent caching across resources
+9. Large resources not cached: Images, fonts not being cached
+10. Dynamic content caching: Attempting to cache content that shouldn't be cached
+11. CDN not configured: Not using CDN caching effectively
+12. Service Worker not caching: Missing Service Worker cache strategy
+
+OPTIMIZATION STRATEGIES
+1. Implement proper cache headers: Set Cache-Control and Expires headers appropriately
+2. Set appropriate cache durations: Use long max-age for static assets (1 year+), shorter for HTML
+3. Use cache-control: Set max-age, public, immutable for static assets
+4. Implement caching strategy: Develop systematic approach to caching different resource types
+5. Use ETag and Last-Modified: Enable cache validation for efficient revalidation
+6. Leverage CDN caching: Use CDN with proper cache headers
+7. Implement Service Worker caching: Cache resources in Service Worker for offline support
+8. Cache static assets long-term: Images, fonts, CSS, JS can be cached for 1 year+
+9. Use versioning for cache-busting: Change filenames or query strings only when content changes
+10. Separate cache strategies: Different strategies for HTML vs static assets
+11. Monitor cache hit rates: Track cache performance over time
+12. Test cache behavior: Verify caching works correctly across browsers
+13. Use HTTP/2 Server Push carefully: Can improve caching for critical resources
+14. Implement stale-while-revalidate: Serve stale content while revalidating in background
+
+
+HISTORY
+Resource optimization metrics became critical as web pages grew in complexity. Image optimization techniques evolved from simple compression to modern formats like WebP (2010) and AVIF (2019). Code splitting and tree shaking emerged with modern JavaScript bundlers in the 2010s. Performance budgets became a standard practice as mobile web usage highlighted the importance of resource efficiency.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

@@ -1,0 +1,185 @@
+DID - Duplicate ID Count
+
+WHAT IT MEASURES
+Count of duplicate ID attributes where multiple elements share the same id value. In HTML, the id attribute must be unique within a document - having multiple elements with the same ID is invalid HTML and breaks functionality that relies on ID references, including form label associations, ARIA relationships, fragment identifiers, and JavaScript selectors.
+
+When IDs are duplicated:
+- Form labels using `for` attributes cannot reliably associate with inputs
+- ARIA relationship attributes (aria-labelledby, aria-describedby, aria-controls) become ambiguous
+- Fragment identifiers in URLs (#section) may not navigate to the correct element
+- JavaScript `getElementById()` may return an unpredictable element
+- CSS selectors using #id may style multiple unintended elements
+
+HOW IT'S MEASURED
+DOM analysis checking for duplicate id attribute values across the page. The measurement process:
+
+1. Scans all elements in the DOM for id attributes
+2. Collects all id values into a map/count structure
+3. Identifies IDs that appear more than once
+4. Counts the number of duplicate ID instances
+5. May also identify which elements share duplicate IDs for reporting
+
+The measurement distinguishes between:
+- Unique IDs: Each ID appears exactly once (valid)
+- Duplicate IDs: Same ID value appears on multiple elements (invalid)
+- Missing IDs: Elements that should have IDs but don't (different issue, tracked by other metrics)
+
+WHY IT'S IMPORTANT
+Duplicate IDs break form label associations, ARIA relationships, and fragment identifiers. IDs must be unique per HTML5 specification, and violating this requirement creates multiple accessibility and functionality issues.
+
+Impact on accessibility:
+- Form labels cannot reliably associate with inputs when IDs are duplicated
+- ARIA relationships become ambiguous - assistive technologies don't know which element is referenced
+- Screen readers may announce incorrect information or skip content
+- Keyboard navigation may not work correctly
+- Violates WCAG 2.1 Success Criterion 4.1.1 (Parsing) when it causes parsing errors
+
+Impact on functionality:
+- JavaScript `getElementById()` behavior is undefined with duplicate IDs (browsers typically return the first match)
+- CSS styling using #id selectors may affect unintended elements
+- Fragment identifiers (#section) in URLs may not navigate correctly
+- Event handlers attached by ID may attach to wrong elements
+
+Technical impact:
+- Invalid HTML per HTML5 specification
+- Browser behavior is unpredictable with duplicate IDs
+- Testing and debugging becomes difficult
+- Code maintainability suffers
+
+THRESHOLDS
+- Good: 0 duplicates (all IDs are unique)
+- Needs Improvement: 1-2 duplicates (minor issues, but still invalid HTML)
+- Poor: ≥ 3 duplicates (significant HTML validity and accessibility issues)
+
+Even a single duplicate ID is invalid HTML and can cause problems. The threshold reflects that any duplicate is a serious issue that should be fixed immediately.
+
+COMMON PITFALLS
+1. Multiple elements with same ID: Copy-paste errors, template reuse without ID changes
+2. Duplicate IDs breaking labels: Form inputs and labels using same ID on multiple forms
+3. IDs used multiple times: Reusing IDs across different sections or components
+4. Template-generated content: Components or templates generating elements with hardcoded IDs
+5. Dynamic content: JavaScript adding elements with IDs that already exist
+6. Component libraries: UI components that don't ensure unique IDs
+7. Server-side rendering: Multiple instances of same component with same IDs
+8. Copy-paste errors: Duplicating HTML blocks without changing IDs
+9. Legacy code: Old code that predates strict ID uniqueness requirements
+10. Third-party widgets: Embedded widgets that use fixed IDs without namespacing
+
+OPTIMIZATION STRATEGIES
+1. Ensure all IDs are unique: Validate that every id attribute value appears only once in the document
+2. Fix duplicate IDs: Rename duplicate IDs to be unique, using descriptive names
+3. Validate HTML: Use HTML validators to catch duplicate IDs
+4. Test form label associations: Verify that labels correctly associate with inputs
+5. Use data attributes: Consider using data-* attributes instead of IDs when uniqueness isn't required
+6. Namespace IDs: Use prefixes or namespaces to ensure uniqueness (e.g., "header-nav", "footer-nav")
+7. Generate unique IDs: Use UUIDs or counters for dynamically generated IDs
+8. Component isolation: Ensure UI components generate unique IDs for their internal elements
+9. Code review: Include ID uniqueness checks in code review process
+10. Automated testing: Add tests to detect duplicate IDs in CI/CD pipeline
+
+
+TECHNICAL DETAILS
+The HTML id attribute has strict uniqueness requirements defined in the HTML specification:
+
+HTML5 specification:
+- The id attribute must be unique within a document
+- IDs are case-sensitive
+- IDs must start with a letter and can contain letters, digits, hyphens, underscores, colons, and periods
+- Multiple elements with the same ID is invalid HTML
+
+Browser behavior with duplicate IDs:
+- `getElementById()` typically returns the first element with the matching ID
+- CSS selectors using #id may match multiple elements (behavior varies)
+- Fragment identifiers may navigate to the first matching element
+- Behavior is undefined and unreliable
+
+Impact on different technologies:
+- Form labels: `for` attribute may associate with wrong input
+- ARIA: aria-labelledby, aria-describedby become ambiguous
+- JavaScript: getElementById() returns unpredictable element
+- CSS: #id selectors may style unintended elements
+- URLs: Fragment identifiers may not work correctly
+
+HISTORY
+The requirement for unique IDs has been part of HTML since early versions:
+
+1995: HTML 2.0 (RFC 1866) introduced the id attribute. While not explicitly requiring uniqueness in the earliest specs, the practical need for uniqueness was recognized.
+
+1999: HTML 4.01 specification made ID uniqueness a formal requirement. The specification stated that IDs must be unique within a document.
+
+2000s: As web applications became more complex and JavaScript usage increased, the importance of unique IDs became more critical. Form label associations and fragment identifiers relied on unique IDs.
+
+2008: HTML5 draft specification reinforced the uniqueness requirement, making it explicit that duplicate IDs are invalid HTML.
+
+2014: HTML5 became a W3C Recommendation, formalizing the unique ID requirement. WCAG 2.0 Success Criterion 4.1.1 (Parsing) required valid HTML, which includes unique IDs.
+
+2018: WCAG 2.1 maintained the parsing requirement. Accessibility testing tools began specifically checking for duplicate IDs as a common issue.
+
+2023: WCAG 2.2 continued to require valid HTML. Modern development practices and component-based architectures made duplicate IDs a more common issue, leading to increased focus on detection and prevention.
+
+The importance of detecting duplicate IDs grew as:
+- Component-based frameworks became popular (increasing risk of duplicate IDs)
+- Accessibility requirements became more strict
+- Automated testing tools improved their ability to detect HTML validity issues
+- Legal requirements for accessibility compliance increased
+
+INDUSTRY STANDARDS
+This metric aligns with W3C HTML specifications and WCAG 2.1/2.2 accessibility guidelines. Duplicate ID detection is implemented in major accessibility and HTML validation tools including:
+
+- HTML Validator: W3C Markup Validation Service flags duplicate IDs as errors
+- axe-core: Open-source accessibility testing engine with duplicate-id rule
+- WAVE (Web Accessibility Evaluation Tool): Flags duplicate IDs
+- Lighthouse: Google's automated auditing tool includes HTML validity checks
+- Pa11y: Command-line accessibility testing tool that detects duplicate IDs
+- Accessibility Insights: Microsoft's accessibility testing tool with ID validation
+- Browser DevTools: Modern browsers flag duplicate IDs in console warnings
+
+Legal requirements:
+- Section 508 (United States): Requires WCAG 2.0 Level AA compliance
+- EN 301 549 (European Union): Requires WCAG 2.1 Level AA compliance
+- AODA (Ontario, Canada): Requires WCAG 2.0 Level AA compliance
+- WCAG 2.1 Success Criterion 4.1.1 (Level A) requires valid HTML
+
+Industry guidelines:
+- W3C HTML5 specification requires unique IDs
+- WCAG 2.1 Success Criterion 4.1.1 (Parsing) requires valid HTML
+- HTML validators flag duplicate IDs as errors
+
+Thresholds are based on HTML validity requirements where zero duplicates is required for valid HTML. Even a single duplicate ID makes the HTML invalid and can cause functionality issues.
+
+RELATED METRICS
+Duplicate ID Count is part of a comprehensive accessibility measurement framework. Related metrics include:
+
+- ARS (ARIA Relationship Errors): Duplicate IDs break ARIA relationships (aria-labelledby, aria-describedby)
+- FLI (Form Label Issues): Duplicate IDs break form label associations
+- AEC (ARIA Errors): May overlap when duplicate IDs prevent proper ARIA labeling
+- ASC (Accessibility Score): Composite score including HTML validity issues
+
+Together, these metrics identify different types of HTML validity and accessibility issues that prevent proper element identification and relationships.
+
+MEASUREMENT LIMITATIONS
+Client-side duplicate ID detection has several limitations:
+
+1. Dynamic content: IDs may be duplicated after content is dynamically added, but appear unique during initial scan
+2. JavaScript-generated content: Elements created by frameworks may not be immediately available for testing
+3. Shadow DOM: IDs within Shadow DOM are scoped, so duplicates may not be detected across shadow boundaries
+4. Iframe content: Cross-origin iframes cannot be fully analyzed due to security restrictions
+5. Timing issues: Duplicates may be introduced after initial page load
+6. Component instances: Multiple instances of components may have duplicate IDs that are technically valid within their scope but problematic globally
+
+Automated testing should be supplemented with:
+- HTML validation using W3C validator
+- Manual review of ID usage in code
+- Testing with screen readers to verify relationships work
+- Code review to prevent duplicate IDs in templates and components
+
+Measurements are most accurate when performed on fully rendered pages with all dynamic content loaded and after user interactions that may reveal additional elements with duplicate IDs.
+
+
+SOURCES
+- W3C HTML5 specification: https://html.spec.whatwg.org/multipage/dom.html#the-id-attribute
+- MDN id attribute: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/id
+- WCAG 2.1 Success Criterion 4.1.1: https://www.w3.org/WAI/WCAG21/Understanding/parsing.html
+- axe-core duplicate-id rule: https://www.deque.com/axe/developer-tools/api-documentation/#rules-duplicate-id
+- W3C HTML Validator: https://validator.w3.org/
+- See metrics.txt for additional sources

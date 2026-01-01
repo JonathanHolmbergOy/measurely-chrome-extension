@@ -1,0 +1,127 @@
+UCD - Unused CSS Bytes
+
+WHAT IT MEASURES
+Amount of CSS downloaded but not actually used on the page. Unused CSS bytes represent wasted bandwidth from stylesheet rules that don't match any elements on the current page, increasing load time without providing value.
+
+The metric calculates:
+- Total CSS bytes downloaded across all stylesheets
+- Number of CSS rules used vs unused
+- Usage rate percentage for each stylesheet
+- Total unused bytes across all files
+- Files with >5KB of unused CSS
+
+HOW IT'S MEASURED
+Analysis of all stylesheets and their CSS rules against the current DOM. The measurement process:
+
+1. Iterates through document.styleSheets
+2. For each stylesheet with cssRules:
+   - Counts total CSS rules
+   - Tests each selector with document.querySelectorAll(selector)
+   - Counts rules that match elements (used rules)
+   - Calculates usage rate: usedRules / totalRules
+3. Gets file size from Resource Timing API
+4. Calculates unused bytes: fileSize × (1 - usageRate)
+5. Reports files with >5KB unused CSS
+
+Usage calculation:
+- usageRate = usedRules / totalRules
+- unusedBytes = fileSize × (1 - usageRate)
+- Reports total unused bytes and per-file breakdown
+
+WHY IT'S IMPORTANT
+Unused CSS wastes bandwidth, delays rendering, and increases parse time. Every byte of CSS must be downloaded, parsed, and processed even if never used, impacting First Contentful Paint (FCP) and performance.
+
+Performance impact:
+- Wasted bandwidth downloading unused styles
+- Longer CSS parse time
+- Delayed First Contentful Paint (FCP)
+- Render-blocking impact
+- Increased memory usage
+
+User experience:
+- Slower initial page loads
+- Poor mobile experience
+- Higher data costs for users
+- Blank screen duration extended
+
+SEO impact:
+- Affects Core Web Vitals (FCP)
+- Search ranking penalties
+- Mobile-first indexing disadvantage
+
+THRESHOLDS
+- Good: < 20KB unused CSS
+- Needs Improvement: 20-50KB unused
+- Poor: > 50KB unused CSS
+
+Best practice is to minimize unused CSS through code splitting, critical CSS extraction, and removing unused styles.
+
+COMMON PITFALLS
+1. Single monolithic stylesheet: One file for entire site
+2. CSS frameworks: Importing entire Bootstrap/Tailwind
+3. Legacy styles: Old CSS never removed
+4. Copy-paste CSS: Duplicated rules from templates
+5. No code splitting: Loading all CSS upfront
+6. Third-party widgets: External CSS for unused features
+7. CMS themes: Theme CSS for unused components
+8. Print stylesheets: Large print styles loaded initially
+9. Responsive CSS: Desktop styles on mobile
+10. Component libraries: Importing full library CSS
+
+OPTIMIZATION STRATEGIES
+1. Extract critical CSS: Inline above-the-fold CSS
+2. Code split CSS: Load only needed styles per page
+3. Remove unused rules: Use PurgeCSS, UnCSS
+4. Tree shake CSS: Remove unused framework components
+5. Use CSS-in-JS: Automatic unused style removal
+6. Lazy load non-critical CSS: Defer below-fold styles
+7. Audit regularly: Check for unused styles
+8. Modular CSS: Component-based stylesheets
+9. Use modern CSS: Replace frameworks with native CSS
+10. Minify and compress: Gzip/Brotli compression
+
+TECHNICAL DETAILS
+The metric uses the CSSOM (CSS Object Model) to analyze stylesheet rules and the Resource Timing API to measure file sizes.
+
+Analysis process:
+1. Access document.styleSheets (all stylesheets)
+2. Filter external stylesheets (with href property)
+3. Iterate sheet.cssRules (all rules in stylesheet)
+4. Test CSSStyleRule selectors: document.querySelectorAll(selectorText)
+5. Count matching rules as "used"
+6. Handle invalid selectors (catch errors, count as used)
+7. Calculate usage rate from used/total ratio
+8. Match stylesheet href to Resource Timing entry
+9. Get transferSize (compressed size)
+10. Calculate unused bytes
+
+Limitations:
+- Tests current page only (not entire site)
+- Cannot detect dynamically added styles
+- Pseudo-classes (:hover, :focus) may appear unused
+- Media queries may not match current viewport
+- JavaScript-dependent selectors may fail
+
+THRESHOLDS
+- Good: < 20,000 bytes (20KB)
+- Poor: > 50,000 bytes (50KB)
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support the CSSOM and Resource Timing APIs required for this measurement.
+
+INDUSTRY STANDARDS
+This metric aligns with web performance best practices and is reported by tools like Lighthouse, WebPageTest, and Chrome DevTools Coverage panel.
+
+RELATED METRICS
+- CSB (CSS Budget): Total CSS size
+- RBR (Render-Blocking Resources): Blocking CSS
+- FCP (First Contentful Paint): Rendering performance
+- TPW (Total Page Weight): Page size
+
+MEASUREMENT LIMITATIONS
+Only analyzes current page state. Dynamically generated content or interaction-based styles may be incorrectly flagged as unused. Best used in conjunction with multi-page analysis.
+
+SOURCES
+- Web.dev: https://web.dev/unused-css-rules/
+- MDN CSSOM: https://developer.mozilla.org/en-US/docs/Web/API/CSS_Object_Model
+

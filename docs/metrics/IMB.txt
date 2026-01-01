@@ -1,0 +1,100 @@
+IMB - Image Budget
+
+WHAT IT MEASURES
+Total image size compared to recommended performance budget (varies by page type, typically 500KB-2MB). Image budgets help maintain reasonable total image sizes to ensure fast page loads, especially on mobile devices and slower connections.
+
+The metric calculates:
+- Total image size: Sum of all image resource sizes (uncompressed)
+- Budget comparison: Compares total size to recommended budget
+- Budget threshold: Varies by page type (e.g., 1MB for content pages, 2MB for image galleries)
+
+Image size impact:
+- Large images significantly impact load times
+- Affects mobile users on limited bandwidth
+- Increases data usage costs
+- Delays Largest Contentful Paint (LCP)
+- Affects Time to Interactive (TTI)
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis summing all image resource sizes and comparing to budget. The measurement process:
+
+1. Identifies image resources:
+   - Uses PerformanceResourceTiming API
+   - Filters resources by type (image/*)
+   - Identifies <img> elements and CSS background images
+
+2. Calculates total image size:
+   - Sums decodedBodySize (uncompressed) for all images
+   - May also consider transferSize (compressed) for network impact
+   - Accounts for all images on the page
+
+3. Compares to budget:
+   - Compares total size to recommended budget
+   - Calculates percentage over/under budget
+   - Flags if exceeds threshold
+
+4. Returns size value:
+   - Total image size in bytes or kilobytes
+   - Comparison to budget threshold
+
+WHY IT'S IMPORTANT
+Image budgets prevent pages from becoming too heavy. Large images significantly impact load times, especially on mobile devices and slower connections.
+
+Performance impact:
+- Large images delay page load
+- Increases bandwidth usage
+- Affects mobile performance significantly
+- Delays LCP (Largest Contentful Paint)
+- Increases Time to Interactive
+
+User experience:
+- Slower page loads on slow connections
+- Higher data usage costs for mobile users
+- Poor mobile experience
+- Increased bounce rates
+
+THRESHOLDS
+- Good: ≤ 1MB (Reasonable image size, good performance)
+- Needs Improvement: 1-2MB (Large but manageable)
+- Poor: ≥ 2MB (Excessive images, performance issues)
+
+Note: Budgets vary by page type. Image galleries may have higher budgets than content pages.
+
+COMMON PITFALLS
+1. Exceeding image budget: Total image size over recommended limits
+2. Large unoptimized images: Images not compressed or optimized
+3. Too many images: Excessive number of images on page
+4. No image optimization: Missing compression, format optimization
+5. High-resolution images: Images larger than needed for display
+6. Missing responsive images: Not using srcset for different sizes
+7. No lazy loading: All images loaded upfront
+8. Unoptimized formats: Using JPEG/PNG instead of WebP/AVIF
+
+OPTIMIZATION STRATEGIES
+1. Set image budgets: Establish and enforce image size limits
+2. Optimize images: Compress and optimize all images
+3. Use modern formats: Convert to WebP or AVIF
+4. Implement lazy loading: Defer loading of below-the-fold images
+5. Compress images: Use compression tools to reduce file size
+6. Use responsive images: Implement srcset for different viewport sizes
+7. Serve appropriate sizes: Serve images sized for display, not larger
+8. Use CDN: Serve images from CDN for better performance
+9. Monitor image sizes: Track image sizes over time
+10. Remove unused images: Eliminate images that aren't displayed
+
+
+HISTORY
+Resource optimization metrics became critical as web pages grew in complexity. Image optimization techniques evolved from simple compression to modern formats like WebP (2010) and AVIF (2019). Code splitting and tree shaking emerged with modern JavaScript bundlers in the 2010s. Performance budgets became a standard practice as mobile web usage highlighted the importance of resource efficiency.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

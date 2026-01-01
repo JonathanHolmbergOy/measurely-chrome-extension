@@ -1,0 +1,87 @@
+RT - Render Time
+
+WHAT IT MEASURES
+Average time to render each frame. Measures rendering performance and smoothness, targeting 60fps for optimal experience.
+
+HOW IT'S MEASURED
+requestAnimationFrame API and frame timing, measuring time between frames. 16.67ms per frame equals 60fps
+
+WHY IT'S IMPORTANT
+Frame drops below 60fps cause visible stuttering and jank. Critical for smooth scrolling and animations
+
+THRESHOLDS
+Good ≤ 16ms, Poor ≥ 50ms
+
+COMMON PITFALLS
+Complex CSS, expensive layout calculations, too many DOM elements, inefficient animations, forced synchronous layouts
+
+OPTIMIZATION STRATEGIES
+Optimize CSS, reduce layout thrashing, use transform/opacity for animations, minimize DOM manipulation, use will-change property, optimize selectors
+
+
+HISTORY
+Render Time measurement has evolved alongside browser rendering engines and our understanding of the rendering process:
+
+1990s-Early 2000s: Browser rendering was a "black box" for developers. There was no API to measure when rendering occurred. Developers could only measure when scripts finished executing (window.onload), not when content actually appeared on screen.
+
+2005-2010: As web applications became more complex, rendering performance became a bottleneck. Browser vendors (Chrome, Firefox, Safari, IE) competed to improve rendering speed, but developers still had limited visibility into the rendering process. The lack of measurement APIs made optimization difficult.
+
+2010: Google began researching rendering performance as part of their broader web performance initiative. They recognized that rendering (layout calculation, painting) was a major source of performance issues, especially on mobile devices.
+
+2012: W3C published the Performance Timeline specification, which laid groundwork for measuring various performance aspects. However, rendering-specific metrics weren't yet included. The Navigation Timing API provided timing for overall page load but not rendering details.
+
+2013: Chrome DevTools began exposing rendering performance in the Timeline (later Performance) panel. Developers could see Layout, Paint, and Composite operations, but this was only available through manual DevTools profiling, not programmatically.
+
+2014-2016: The concept of "render-blocking resources" became widely understood. CSS and synchronous JavaScript can delay rendering, causing blank screens even though the HTML has been downloaded. Optimizing Critical Rendering Path became a key performance practice.
+
+2017: The Paint Timing API (W3C) was introduced, providing First Paint (FP) and First Contentful Paint (FCP). These measured WHEN rendering occurred but not HOW LONG rendering took. This was a step forward but didn't directly measure render time.
+
+2018-2020: As frame rate and animation smoothness became important (60fps for smooth animations = 16.67ms per frame), render time measurement gained significance. The concept of "jank" (stuttering animations) was directly related to slow rendering.
+
+The PerformanceObserver API and Navigation Timing Level 2 provided more granular timing data, but render time still required calculation from various metrics:
+- domComplete - domInteractive approximates rendering time
+- loadEventStart - domContentLoadedEventEnd can indicate render activity
+
+2020-Present: Render Time is measured indirectly through various APIs:
+- domComplete - domInteractive gives a rough render time estimate
+- Paint Timing API (FCP) marks when rendering produces visible results
+- Long Tasks API can indicate rendering tasks blocking the main thread
+- Chrome DevTools Timeline shows detailed render operations
+
+Modern render performance considerations:
+- Layout (Reflow): Computing element positions and dimensions (most expensive)
+- Paint: Drawing pixels for text, colors, images
+- Composite: Combining painted layers
+- CSS transforms and opacity use GPU compositing (faster than layout/paint)
+
+Render optimization techniques:
+- Minimize layout thrashing (reading layout properties, then writing, repeatedly)
+- Use CSS transforms/opacity instead of properties that trigger layout
+- Batch DOM changes to minimize reflows
+- Use will-change CSS property to hint at future changes
+- Implement virtual scrolling for long lists
+- Debounce/throttle expensive render operations
+
+Render time is particularly important for:
+- Smooth animations (must render within 16.67ms for 60fps)
+- Scroll performance
+- User interface responsiveness during interactions
+- Progressive rendering of large pages
+
+While there's no single "Render Time" metric in modern standards, rendering performance is measured through a combination of Paint Timing, Navigation Timing, and Long Tasks API. Framework-level tools (React DevTools, Vue DevTools) also provide render profiling for component-based applications.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

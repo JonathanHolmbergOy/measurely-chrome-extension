@@ -1,0 +1,118 @@
+AMN - ARIA Meter Name
+=====================
+
+OVERVIEW
+--------
+Rule ID: aria-meter-name
+Impact: Serious
+Category: Accessibility (ARIA Validation)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Ensures meter elements and elements with role="meter" have accessible names via aria-label or aria-labelledby. Meters without names cannot convey their purpose to screen reader users.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Accessible meter names:
+- Identify what measurement the meter represents
+- Enable screen readers to announce meter purpose
+- Provide context for meter values
+- Meet WCAG 4.1.2 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds <meter> elements and elements with role="meter"
+2. Checks for aria-label or aria-labelledby
+3. Reports meters without accessible names
+4. Includes element ID for fixing
+
+
+HOW TO FIX
+----------
+1. Add aria-label describing the meter
+2. Use aria-labelledby to reference label element
+3. Include measurement context in label
+4. Ensure meter has required ARIA attributes
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<meter value="0.6"></meter>
+<div role="meter" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+
+Good:
+<meter value="0.6" aria-label="Disk usage: 60%"></meter>
+
+<label id="storage-label">Storage used</label>
+<meter value="0.6" aria-labelledby="storage-label"></meter>
+
+<div role="meter" aria-label="Battery level" 
+     aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+    75%
+</div>
+
+
+COMPLETE METER EXAMPLES
+------------------------
+Disk Usage:
+<label id="disk-label">Disk Usage</label>
+<meter id="disk" aria-labelledby="disk-label"
+       min="0" max="100" value="65" optimum="50" high="80" low="20">
+    65%
+</meter>
+
+Battery Level:
+<meter aria-label="Battery level" 
+       value="0.85" optimum="1" high="0.6" low="0.2">
+    85%
+</meter>
+
+Performance Score:
+<div role="meter" aria-label="Performance score"
+     aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"
+     aria-valuetext="92 out of 100">
+    92/100
+</div>
+
+
+WITH VISUAL LABEL
+------------------
+<div class="meter-group">
+    <label for="cpu-meter">CPU Usage</label>
+    <meter id="cpu-meter" aria-label="CPU usage at 45 percent"
+           value="0.45" max="1">
+        45%
+    </meter>
+</div>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Native <meter> support
+- Firefox: Native <meter> support
+- Safari: Native <meter> support
+- Screen Readers: Announce meter with value
+
+
+RELATED RULES
+-------------
+- APN (ARIA Progressbar Name)
+- ARA (ARIA Required Attributes)
+- ARV (ARIA Roles Valid)
+
+
+SOURCES
+-------
+- MDN Meter: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter
+- W3C Meter Pattern: https://www.w3.org/WAI/ARIA/apg/patterns/meter/
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#aria-meter-name
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

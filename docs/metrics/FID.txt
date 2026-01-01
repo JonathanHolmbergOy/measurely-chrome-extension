@@ -1,0 +1,151 @@
+FID - First Input Delay
+
+WHAT IT MEASURES
+Delay between a user's first interaction (click, tap, key press) and when the browser can begin processing event handlers. FID is a Core Web Vital that measures interactivity and responsiveness by quantifying how long the main thread is blocked when a user first tries to interact with the page.
+
+FID measures:
+- Time from user interaction to event handler execution
+- Main thread blocking time during first interaction
+- Responsiveness of the page to user input
+- JavaScript execution blocking user interactions
+
+Key characteristics:
+- Only measures the FIRST user interaction
+- Requires actual user input (not programmatic)
+- Measures delay, not total processing time
+- Indicates main thread blocking
+
+HOW IT'S MEASURED
+PerformanceObserver API with 'first-input' entry type. Requires actual user interaction - programmatic clicks do not trigger FID events. The measurement process:
+
+1. Observes first input:
+   - Uses PerformanceObserver with 'first-input' entry type
+   - Waits for first real user interaction (click, tap, keypress)
+   - Records interaction type and target element
+
+2. Calculates delay:
+   - Measures time from interaction to event handler start
+   - Calculates processingStart - startTime
+   - Returns delay in milliseconds
+
+3. Returns FID value:
+   - Delay time in milliseconds
+   - null if no user interaction occurred
+   - Only measured once (first interaction only)
+
+Measurement considerations:
+- Requires real user interaction (cannot be automated)
+- Only measures first interaction
+- May be null if user doesn't interact
+- Being replaced by INP (Interaction to Next Paint) in 2024
+
+WHY IT'S IMPORTANT
+Measures interactivity. High FID indicates JavaScript blocking the main thread, causing unresponsive interfaces and poor user experience.
+
+User experience impact:
+- High FID = unresponsive page
+- Users perceive page as broken or slow
+- Frustrating interaction delays
+- Poor perceived performance
+- Increased bounce rates
+
+Performance impact:
+- Indicates main thread blocking
+- Suggests JavaScript performance issues
+- Points to long tasks blocking interactions
+- Affects Core Web Vitals score
+- Impacts search rankings (Google ranking factor)
+
+Business impact:
+- FID is a Core Web Vital and Google ranking factor
+- Poor FID reduces search visibility
+- Affects user engagement and conversions
+- Reflects poorly on brand quality
+
+THRESHOLDS
+- Good: ≤ 100ms (Responsive, good interactivity)
+- Needs Improvement: 100-300ms (Some delay, noticeable)
+- Poor: ≥ 300ms (Significant delay, poor responsiveness)
+
+Note: FID is being replaced by INP (Interaction to Next Paint) in 2024, which measures all interactions, not just the first.
+
+COMMON PITFALLS
+1. Long JavaScript tasks: Tasks > 50ms blocking main thread
+2. Heavy main thread work: Expensive operations on main thread
+3. Large JavaScript bundles: Large scripts taking time to parse/execute
+4. Synchronous operations: Blocking operations preventing event handling
+5. Third-party scripts: External scripts blocking interactions
+6. Render-blocking JavaScript: Scripts blocking main thread
+7. Inefficient event handlers: Slow event handler execution
+8. No code splitting: All JavaScript loaded upfront
+9. Missing async/defer: Scripts blocking without async/defer
+10. Excessive DOM manipulation: Heavy DOM work blocking interactions
+
+OPTIMIZATION STRATEGIES
+1. Code splitting: Split JavaScript into smaller chunks
+2. Deferring non-critical JavaScript: Load non-critical code later
+3. Optimizing long tasks: Break up tasks > 50ms
+4. Using web workers: Move heavy computation off main thread
+5. Reducing JavaScript execution time: Minimize and optimize JavaScript
+6. Use async/defer: Load scripts asynchronously
+7. Minimize main thread work: Reduce work on main thread
+8. Optimize event handlers: Make event handlers fast
+9. Lazy load third-party scripts: Defer external scripts
+10. Monitor long tasks: Use Long Tasks API to identify blockers
+11. Use requestIdleCallback: Schedule non-critical work during idle time
+12. Optimize bundle size: Reduce JavaScript bundle size
+13. Test with throttling: Simulate slower devices
+14. Profile performance: Use DevTools to find bottlenecks
+
+
+TECHNICAL IMPLEMENTATION
+FID measures the delay between a user's first interaction (click, tap, key press) and when the browser can begin processing event handlers. It only measures the first interaction and requires real user input - programmatic interactions don't count.
+
+HISTORY
+First Input Delay (FID) was developed to measure interactivity and responsiveness to user input:
+
+Early 2010s: As web applications became more JavaScript-heavy, users increasingly experienced delays when trying to interact with pages. Clicking buttons or typing in forms would have noticeable delays, creating frustration. However, there was no standardized metric to quantify this problem.
+
+2015-2018: Google's Chrome team researched metrics to measure interactivity. They found that the delay between user interaction and the browser's response was a critical factor in perceived performance. Users expect immediate feedback (< 100ms) when they interact with UI elements.
+
+2019: Google introduced First Input Delay (FID) as part of the Web Vitals initiative. FID specifically measures the delay before the browser can process the first user interaction. The metric was designed to capture main thread blocking caused by JavaScript execution.
+
+The Event Timing API was proposed to W3C to support FID measurement. The API uses PerformanceObserver with 'first-input' entry type to track the first user interaction and measure the delay before event handlers can execute.
+
+May 2020: FID was designated as one of three Core Web Vitals alongside LCP and CLS. The thresholds were set based on user experience research:
+- Good: ≤ 100ms (imperceptible delay)
+- Needs Improvement: 100-300ms (noticeable delay)
+- Poor: ≥ 300ms (frustrating delay)
+
+These thresholds reflect human perception research showing that delays under 100ms feel instantaneous, while delays over 300ms feel sluggish.
+
+June 2021: Core Web Vitals (including FID) became a Google search ranking factor. This gave FID significant importance, as poor responsiveness could negatively impact search rankings.
+
+2021-2023: Developers optimized for FID by:
+- Breaking up long JavaScript tasks (> 50ms)
+- Using code splitting to reduce initial JavaScript
+- Deferring non-critical JavaScript
+- Using web workers for heavy computation
+- Optimizing third-party scripts
+
+May 2023: Google announced that FID would be replaced by INP (Interaction to Next Paint) in 2024. FID's limitation was that it only measured the FIRST interaction, missing subsequent interactions that might be slow. INP measures all interactions throughout the page lifecycle, providing a more comprehensive view of responsiveness.
+
+March 2024: INP officially replaced FID as a Core Web Vital. While FID is still measured by browsers and monitoring tools, INP is now the primary interactivity metric. FID remains useful as an early indicator of main thread blocking during page load.
+
+Present: FID is still supported in monitoring tools and provides value for understanding first-interaction responsiveness. However, developers are increasingly focusing on INP optimization, which addresses responsiveness throughout the entire user session.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

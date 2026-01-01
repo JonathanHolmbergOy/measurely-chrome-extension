@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Measurely - Settings</title>
+    <link rel="stylesheet" href="../public/global.css">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header>
+      <svg class="measurely-logo" width="64" height="64" viewBox="0 0 450 450" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Measurely logo">
+        <circle id="bg-circle" class="bg-circle" cx="147.591" cy="147.591" r="147.591" transform="matrix(1 8.74228e-08 8.74228e-08 -1 77.4141 370.727)" fill="#476EFF" aria-hidden="true" />
+        <path id="measurely-logo" class="logo-shape"
+          d="M161 286.562V172.938L222.018 314.125L237.837 142L289.25 286.562V172.938" stroke="white" stroke-width="30"
+          aria-hidden="true" />
+      </svg>
+      <h1>Measurely - Settings</h1>
+    </header>
+    <main>
+      <section class="settings-description">
+        <p class="description">Configure which metrics to measure in the Measurely Web Metrics Harvester. You can turn of individual metrics or entire categories.</p>
+        <p>
+          <span id="enabledCount">0</span>
+          <span> / </span>
+          <span id="totalCount">0</span>
+          metrics enabled.
+        </p>
+      </section>
+      <nav>
+        <section class="settings-toolbar">
+          <div class="search-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+            <search>
+              <form role="search">
+                <input id="searchInput" type="search" placeholder="Search metrics..." aria-label="Search metrics">
+              </form>
+            </search>
+          </div>
+          <button id="enableAll" class="measurely-text-button settings-button">Enable All</button>
+          <button id="disableAll" class="measurely-text-button settings-button">Disable All</button>
+        </section>
+      </nav>
+      <article class="categories-grid" id="categoriesGrid">
+        <!-- Categories will be inserted here by JavaScript -->
+      </article>
+    </main>
+     <!-- Template for category card -->
+  <template id="categoryTemplate">
+    <details class="category-card">
+      <summary>
+        <div class="category-header-left">
+          <svg class="category-icon" height="18" width="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <!-- Icon path will be inserted by JavaScript -->
+          </svg>
+          <div class="category-info">
+            <h2 class="category-name"></h2>
+            <p class="category-description"></p>
+          </div>
+        </div>
+        <input type="checkbox" class="category-checkbox" />
+      </summary>
+      <ul class="metrics-list">
+        <!-- Metrics will be inserted here -->
+      </ul>
+    </details>
+  </template>
+
+  <!-- Template for metric item -->
+  <template id="metricTemplate">
+    <li class="metric-item">
+      <label>
+        <div class="metric-info">
+          <div class="metric-title">
+            <span class="metric-code"></span>
+            -
+            <span class="metric-name"></span>
+          </div>
+          <span class="metric-description"></span>
+        </div>
+        <input type="checkbox" class="metric-checkbox" />
+      </label>
+    </li>
+  </template>
+
+  <script src="main.js"></script>
+  </body>
+</html>

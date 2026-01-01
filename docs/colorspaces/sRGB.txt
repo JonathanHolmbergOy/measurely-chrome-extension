@@ -1,0 +1,147 @@
+sRGB (Standard RGB)
+===================
+
+OVERVIEW
+--------
+sRGB (Standard Red Green Blue) is the default color space for the web and most digital displays. It was created cooperatively by HP and Microsoft in 1996 to standardize color representation across different devices, monitors, and printers.
+
+DESCRIPTION
+-----------
+sRGB is a RGB color space that uses three primary colors (red, green, blue) to create all other colors through additive color mixing. Each channel has 256 possible values (0-255), allowing for approximately 16.7 million different colors (256³).
+
+The color space is designed to match the capabilities of typical CRT monitors from the late 1990s, which had more limited color reproduction than modern displays. Despite this, it remains the standard due to its universal compatibility.
+
+TECHNICAL SPECIFICATIONS
+-------------------------
+- Gamut: Covers approximately 35% of visible colors (CIE 1931 color space)
+- White Point: D65 (daylight, 6500K)
+- Gamma: 2.2 (with a linear segment near black)
+- Primaries:
+  * Red: x=0.64, y=0.33
+  * Green: x=0.30, y=0.60
+  * Blue: x=0.15, y=0.06
+- Transfer Function: Piece-wise function combining linear and power curves
+
+HISTORY
+-------
+1996: Created by HP and Microsoft for use with monitors, printers, and the internet
+1996: Standardized as IEC 61966-2-1
+1999: Adopted by W3C as the default color space for CSS and HTML
+2000s: Became the de facto standard for digital imaging
+Present: Still the default color space for web content, though newer wide-gamut spaces are emerging
+
+CSS SYNTAX
+----------
+Hexadecimal:
+  color: #ff0000;
+  color: #f00;
+
+RGB Function:
+  color: rgb(255, 0, 0);
+  color: rgb(100%, 0%, 0%);
+  color: rgb(255 0 0 / 0.5);    /* with alpha */
+
+RGBA Function:
+  color: rgba(255, 0, 0, 0.5);
+
+color() Function:
+  color: color(srgb 1 0 0);
+  color: color(srgb 1 0 0 / 0.5);
+
+BROWSER SUPPORT
+---------------
+All browsers: 100% (since the beginning of the web)
+- Internet Explorer 3+ (1996)
+- Firefox 1.0+ (2004)
+- Safari 1.0+ (2003)
+- Chrome 1.0+ (2008)
+- Opera 3.5+ (1998)
+
+The color() function syntax specifically:
+- Safari 15.0+ (September 2021)
+- Chrome 111+ (March 2023)
+- Firefox 113+ (May 2023)
+- Edge 111+ (March 2023)
+
+ADVANTAGES
+----------
+✓ Universal compatibility - works on all devices and browsers
+✓ Well-understood and documented
+✓ Consistent rendering across devices
+✓ Optimal for web delivery (smaller file sizes)
+✓ Matches most display capabilities
+✓ Industry standard for web content
+
+LIMITATIONS
+-----------
+✗ Limited gamut - cannot represent vivid greens, cyans, and some reds
+✗ Not perceptually uniform - equal numeric changes don't equal perceptual changes
+✗ Cannot utilize full capabilities of modern wide-gamut displays
+✗ Interpolation between colors can produce unexpected results
+✗ Poor for color manipulation and gradients
+
+USE CASES
+---------
+Best for:
+- Standard web content
+- Maximum compatibility requirements
+- Older device support
+- Email templates
+- Social media graphics
+- General-purpose design
+
+Consider alternatives for:
+- High-end photography (use Display P3 or Adobe RGB)
+- Professional print work (use Adobe RGB or ProPhoto RGB)
+- HDR content (use Rec. 2020)
+- Perceptually uniform gradients (use OKLCH or OKLab)
+
+COMPARISON WITH OTHER SPACES
+-----------------------------
+vs Display P3: P3 has ~25% larger gamut, supports more vivid colors
+vs Adobe RGB: Adobe RGB has wider gamut, especially in cyan-green range
+vs OKLCH: OKLCH is perceptually uniform, better for color manipulation
+vs Lab: Lab is device-independent and perceptually uniform
+vs Rec. 2020: Rec. 2020 covers nearly all visible colors
+
+CONVERSION FORMULAS
+-------------------
+Linear RGB to sRGB (gamma correction):
+  if (linear <= 0.0031308):
+    sRGB = 12.92 × linear
+  else:
+    sRGB = 1.055 × linear^(1/2.4) - 0.055
+
+sRGB to Linear RGB:
+  if (sRGB <= 0.04045):
+    linear = sRGB / 12.92
+  else:
+    linear = ((sRGB + 0.055) / 1.055)^2.4
+
+RELATED COLOR SPACES
+--------------------
+- HSL: Cylindrical representation of sRGB (hue, saturation, lightness)
+- HSV/HSB: Alternative cylindrical representation (hue, saturation, value/brightness)
+- HWB: Another cylindrical representation (hue, whiteness, blackness)
+- sRGB-linear: sRGB without gamma encoding
+
+REAL-WORLD USAGE
+----------------
+Current Usage: ~95% of all web content (2024)
+Declining slightly as modern color spaces gain adoption, but will remain dominant for foreseeable future due to compatibility requirements.
+
+WCAG AND ACCESSIBILITY
+----------------------
+All WCAG contrast ratio calculations are defined for sRGB. When using other color spaces, colors must be converted to sRGB before calculating contrast ratios for accessibility compliance.
+
+Minimum contrast ratios:
+- Normal text: 4.5:1 (AA), 7:1 (AAA)
+- Large text: 3:1 (AA), 4.5:1 (AAA)
+
+FURTHER READING
+---------------
+- IEC 61966-2-1 specification
+- W3C CSS Color Module Level 4: https://www.w3.org/TR/css-color-4/
+- sRGB on Wikipedia: https://en.wikipedia.org/wiki/SRGB
+- Understanding Color Spaces: https://developer.mozilla.org/en-US/docs/Glossary/Color_space
+

@@ -1,0 +1,122 @@
+SVA - SVG Accessibility
+=======================
+
+OVERVIEW
+--------
+Rule ID: svg-img-alt
+Impact: Serious
+Category: Accessibility (Graphics)
+WCAG: 2.0 Level A (1.1.1 Non-text Content)
+
+Description:
+Ensures SVG elements with role="img", role="graphics-document", or role="graphics-symbol" have accessible text via aria-label, aria-labelledby, or <title> element. Without accessible names, screen readers cannot describe SVG graphics to users.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+SVG accessibility:
+- Provides text alternatives for vector graphics
+- Enables screen readers to describe images
+- Meets WCAG 1.1.1 non-text content requirements
+- Makes icons and illustrations understandable
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds SVG elements with img/graphics roles
+2. Checks for aria-label, aria-labelledby, or <title>
+3. Reports SVGs without accessible text
+4. Includes role and ID for fixing
+
+
+HOW TO FIX
+----------
+1. Add <title> element as first child of SVG (preferred)
+2. Use aria-label for simple descriptions
+3. Use aria-labelledby to reference title element
+4. Add role="img" if not present
+5. Use aria-hidden="true" for decorative SVGs
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<svg role="img" width="24" height="24">
+    <path d="M12 2L2 7..."/>
+</svg>
+
+<svg>
+    <use href="#icon-home"/>
+</svg>
+
+Good:
+<svg role="img" aria-label="Home icon">
+    <path d="M12 2L2 7..."/>
+</svg>
+
+<svg role="img">
+    <title>Company Logo</title>
+    <path d="M12 2L2 7..."/>
+</svg>
+
+<svg role="img" aria-labelledby="logo-title">
+    <title id="logo-title">Acme Corporation</title>
+    <path d="M12 2L2 7..."/>
+</svg>
+
+Decorative:
+<svg aria-hidden="true" focusable="false">
+    <path d="M12 2L2 7..."/>
+</svg>
+
+
+ICON SYSTEMS
+------------
+Font Awesome/Icon Libraries:
+
+<svg role="img" aria-label="Edit">
+    <use href="#icon-edit"/>
+</svg>
+
+Inline Icons:
+<button>
+    <svg role="img" aria-label="Save">
+        <path d="..."/>
+    </svg>
+    Save Document
+</button>
+
+Note: If button has text, SVG can be decorative:
+<button>
+    <svg aria-hidden="true"><path d="..."/></svg>
+    Save Document
+</button>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: JAWS, NVDA, VoiceOver all support SVG titles
+
+
+RELATED RULES
+-------------
+- AMC (Alt Text Missing)
+- OBA (Object Alt Text)
+- AAT (Area Alt Text)
+
+
+SOURCES
+-------
+- MDN SVG Accessibility: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/img_role
+- W3C SVG: https://www.w3.org/TR/SVG2/
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#svg-img-alt
+- WCAG 1.1.1: https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html
+

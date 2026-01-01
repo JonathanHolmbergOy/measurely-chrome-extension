@@ -1,0 +1,107 @@
+ARA - ARIA Required Attributes
+===============================
+
+OVERVIEW
+--------
+Rule ID: aria-required-attr
+Impact: Critical
+Category: Accessibility (ARIA Validation)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Ensures elements with ARIA roles have all required ARIA attributes for that role. Missing required attributes prevent assistive technologies from properly conveying element state and properties to users.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Required ARIA attributes are essential for:
+- Conveying element state (checked, expanded, selected)
+- Providing value information (valuenow, valuemin, valuemax)
+- Maintaining proper relationships (controls, owns)
+- Meeting WCAG 4.1.2 requirements
+
+
+REQUIRED ATTRIBUTES BY ROLE
+----------------------------
+- checkbox: aria-checked
+- combobox: aria-expanded, aria-controls
+- radio: aria-checked
+- scrollbar: aria-valuenow, aria-valuemin, aria-valuemax
+- slider: aria-valuenow, aria-valuemin, aria-valuemax
+- spinbutton: aria-valuenow, aria-valuemin, aria-valuemax
+- switch: aria-checked
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all elements with ARIA roles
+2. Checks if role has required attributes
+3. Validates presence of each required attribute
+4. Reports missing attributes by role
+
+
+HOW TO FIX
+----------
+1. Identify the element's role
+2. Add all required attributes for that role
+3. Set appropriate initial values
+4. Update values dynamically as state changes
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<div role="checkbox">Accept terms</div>
+<div role="slider">Volume</div>
+<div role="combobox">Select country</div>
+
+Good:
+<div role="checkbox" aria-checked="false">Accept terms</div>
+<div role="slider" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Volume</div>
+<div role="combobox" aria-expanded="false" aria-controls="country-list">Select country</div>
+
+
+JAVASCRIPT EXAMPLE
+------------------
+// Update slider value
+const slider = document.querySelector('[role="slider"]');
+slider.addEventListener('input', (e) => {
+    slider.setAttribute('aria-valuenow', e.target.value);
+    slider.setAttribute('aria-valuetext', `${e.target.value}%`);
+});
+
+// Update checkbox state
+const checkbox = document.querySelector('[role="checkbox"]');
+checkbox.addEventListener('click', () => {
+    const checked = checkbox.getAttribute('aria-checked') === 'true';
+    checkbox.setAttribute('aria-checked', !checked);
+});
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: Critical for proper functionality
+
+
+RELATED RULES
+-------------
+- AAA (ARIA Allowed Attributes)
+- ARC (ARIA Required Children)
+- ARP (ARIA Required Parent)
+
+
+SOURCES
+-------
+- W3C ARIA Roles: https://www.w3.org/TR/wai-aria-1.2/#role_definitions
+- MDN ARIA Roles: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#aria-required-attr
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

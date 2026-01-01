@@ -1,0 +1,85 @@
+SRIQ - SRI Hash Strength
+
+WHAT IT MEASURES
+Percentage of Subresource Integrity (SRI) attributes using strong hash algorithms. SHA-256 is the minimum, but SHA-384 and SHA-512 provide better security against future cryptographic attacks.
+
+Hash algorithm strength:
+- SHA-1: Deprecated, insecure, should not be used
+- SHA-256: Minimum acceptable, widely supported
+- SHA-384: Recommended, good security
+- SHA-512: Strongest, best security
+
+The metric calculates:
+- Strong hashes: Count of SHA-256, SHA-384, SHA-512
+- Total SRI attributes: Count of all integrity attributes
+- Strength percentage: (Strong hashes / Total) × 100
+
+HOW IT'S MEASURED
+DOM analysis checking integrity attributes for hash algorithm strength. Returns not-measurable when no SRI attributes found. The measurement process:
+
+1. Identifies SRI attributes:
+   - Finds elements with `integrity` attributes
+   - Parses integrity values
+   - Extracts hash algorithm
+
+2. Evaluates hash strength:
+   - Checks algorithm (sha1, sha256, sha384, sha512)
+   - Flags weak algorithms (SHA-1)
+   - Counts strong algorithms
+
+3. Calculates percentage:
+   - Counts strong hashes (SHA-256+)
+   - Counts total SRI attributes
+   - Calculates percentage
+
+4. Returns result:
+   - Percentage using strong hashes
+   - null if no SRI attributes found
+
+WHY IT'S IMPORTANT
+Stronger hash algorithms provide better security. SHA-384/SHA-512 are more secure than SHA-256 against future attacks and provide better protection against collision attacks.
+
+Security benefits:
+- Better protection against attacks
+- Future-proof against cryptographic advances
+- Reduced risk of hash collisions
+- Enhanced overall security
+- Industry best practice
+
+THRESHOLDS
+- Good: ≥ 80% (Most SRI using strong hashes)
+- Needs Improvement: 50-79% (Some strong hashes, room for improvement)
+- Poor: ≤ 50% (Few strong hashes, security risk)
+
+Note: SHA-1 should never be used. SHA-256 is minimum, SHA-384/SHA-512 preferred.
+
+COMMON PITFALLS
+1. Weak hash algorithms: Using SHA-1 or weaker
+2. SHA-1 usage: SHA-1 is deprecated and insecure
+3. Missing SRI attributes: No SRI implementation
+4. No SRI implementation: SRI not implemented at all
+5. Mixed hash algorithms: Using different algorithms inconsistently
+
+OPTIMIZATION STRATEGIES
+1. Use SHA-384 or SHA-512 for SRI: Prefer stronger hash algorithms
+2. Avoid SHA-1: Never use SHA-1, it's insecure
+3. Implement SRI for all external resources: Add SRI with strong hashes
+4. Generate strong hashes: Use SHA-384 or SHA-512 when generating hashes
+5. Standardize on strong algorithms: Use consistent strong algorithms
+6. Update weak hashes: Replace SHA-1 or weak hashes
+7. Test SRI: Verify strong hashes work correctly
+8. Document hash requirements: Ensure team uses strong hashes
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

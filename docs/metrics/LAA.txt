@@ -1,0 +1,87 @@
+LAA - Language Attributes
+
+WHAT IT MEASURES
+Whether the HTML document and elements with different languages have proper lang attributes. The lang attribute specifies the language of the content, ensuring screen readers pronounce text correctly and browsers provide proper language-specific features.
+
+Language attribute requirements:
+- HTML element: Must have lang attribute for page language
+- Elements with different languages: Should have lang attribute when language differs
+- Language codes: Must use valid ISO 639-1 language codes (e.g., "en", "es", "fr")
+
+Benefits of lang attributes:
+- Screen reader pronunciation: Correct pronunciation by screen readers
+- Browser features: Language-specific features (spell check, translation)
+- Search engines: Better content understanding
+- Accessibility: WCAG 2.1 Success Criterion 3.1.1 (Level A)
+
+HOW IT'S MEASURED
+DOM analysis checking html element for lang attribute, and elements with different languages for lang attributes. The measurement process:
+
+1. Checks HTML element:
+   - Verifies <html> element has lang attribute
+   - Validates language code format
+   - Checks for valid ISO 639-1 codes
+
+2. Checks nested elements:
+   - Identifies elements with different languages
+   - Verifies lang attributes on language changes
+   - Validates language code format
+
+3. Returns boolean result:
+   - true: Proper lang attributes present
+   - false: Missing or incorrect lang attributes
+
+WHY IT'S IMPORTANT
+Language attributes ensure screen readers pronounce text correctly and help browsers provide proper language-specific features. Missing lang attributes create accessibility barriers and reduce functionality.
+
+Accessibility impact:
+- Screen readers cannot pronounce text correctly
+- Violates WCAG 2.1 Success Criterion 3.1.1 (Language of Page) - Level A
+- Creates barriers for screen reader users
+- Reduces content comprehension
+
+Browser functionality:
+- Spell check may not work correctly
+- Translation features may not work
+- Language-specific features unavailable
+- Search engines may not understand content
+
+THRESHOLDS
+- Good: true (Proper lang attributes present)
+- Poor: false (Missing or incorrect lang attributes)
+
+Note: HTML lang attribute is required. Element-level lang attributes are recommended when language changes.
+
+COMMON PITFALLS
+1. Missing html lang attribute: <html> element without lang attribute
+2. Elements with different languages without lang: Language changes not marked
+3. Incorrect language codes: Invalid or malformed language codes
+4. Missing regional variants: Not specifying regional variants (e.g., "en-US" vs "en-GB")
+5. No lang on foreign text: Foreign words/phrases not marked with lang
+
+OPTIMIZATION STRATEGIES
+1. Add lang attribute to html element: Set lang on <html> (e.g., <html lang="en">)
+2. Specify lang for elements with different languages: Mark language changes with lang
+3. Use correct language codes: Use valid ISO 639-1 codes
+4. Include regional variants: Use regional codes when appropriate (e.g., "en-US", "en-GB")
+5. Mark foreign text: Add lang to foreign words/phrases
+6. Test with screen readers: Verify pronunciation is correct
+7. Validate language codes: Ensure codes are valid
+8. Document language requirements: Ensure team understands lang attribute needs
+
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, evolving to WCAG 2.0 (2008), WCAG 2.1 (2018), and WCAG 2.2 (2023). ARIA (Accessible Rich Internet Applications) was first published by W3C in 2014 to address accessibility gaps in dynamic web content. The Web Content Accessibility Guidelines have become legal requirements in many jurisdictions, driving adoption of accessibility metrics and testing tools.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

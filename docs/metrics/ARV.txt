@@ -1,0 +1,128 @@
+ARV - ARIA Roles Valid
+=======================
+
+OVERVIEW
+--------
+Rule ID: aria-roles
+Impact: Critical
+Category: Accessibility (ARIA Validation)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Ensures all role attribute values are valid according to the ARIA specification. Invalid roles are ignored by assistive technologies, causing elements to lose their semantic meaning.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Valid ARIA roles ensure:
+- Screen readers announce element type correctly
+- Keyboard navigation patterns work as expected
+- Element semantics preserved
+- WCAG 4.1.2 compliance
+
+
+VALID ARIA ROLES (ARIA 1.2)
+----------------------------
+Document Structure:
+- article, cell, columnheader, definition, directory, document, feed
+- figure, group, heading, img, list, listitem, math, none, note, presentation
+- row, rowgroup, rowheader, separator, table, term, toolbar, tooltip
+
+Landmark:
+- banner, complementary, contentinfo, form, main, navigation, region, search
+
+Widget:
+- button, checkbox, gridcell, link, menuitem, menuitemcheckbox
+- menuitemradio, option, progressbar, radio, scrollbar, searchbox, slider
+- spinbutton, switch, tab, tabpanel, textbox, treeitem
+
+Composite:
+- combobox, grid, listbox, menu, menubar, radiogroup, tablist, tree, treegrid
+
+Live Region:
+- alert, log, marquee, status, timer
+
+Window:
+- alertdialog, dialog
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all elements with role attribute
+2. Validates against ARIA specification roles list
+3. Reports invalid role values
+4. Suggests alternatives or removal
+
+
+HOW TO FIX
+----------
+1. Check ARIA specification for correct role name
+2. Fix typos in role values
+3. Remove invalid/custom roles
+4. Use semantic HTML when possible instead of ARIA
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<div role="navitem">Link</div>
+<span role="btn">Click</span>
+<div role="heading1">Title</div>
+<section role="content">Content</section>
+
+Good:
+<nav><a href="#">Link</a></nav>
+<button>Click</button>
+<div role="heading" aria-level="1">Title</div>
+<main>Content</main>
+
+
+SEMANTIC HTML VS ARIA
+----------------------
+Prefer semantic HTML:
+Bad: <div role="button" tabindex="0">Click</div>
+Good: <button>Click</button>
+
+Bad: <div role="navigation"><div role="list">...</div></div>
+Good: <nav><ul>...</ul></nav>
+
+Bad: <span role="link" tabindex="0">Link</span>
+Good: <a href="#">Link</a>
+
+
+CUSTOM ROLES
+------------
+Note: Custom roles are not valid ARIA:
+<div role="my-custom-widget">  <!-- Invalid -->
+
+Instead, use data attributes:
+<div role="button" data-widget-type="custom">  <!-- Valid -->
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Invalid roles ignored
+- Firefox: Invalid roles ignored
+- Safari: Invalid roles ignored
+- Screen Readers: Invalid roles not recognized
+
+
+RELATED RULES
+-------------
+- ADR (ARIA Deprecated Roles)
+- AAA (ARIA Allowed Attributes)
+- ARA (ARIA Required Attributes)
+
+
+SOURCES
+-------
+- W3C ARIA Roles: https://www.w3.org/TR/wai-aria-1.2/#role_definitions
+- MDN ARIA Roles: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#aria-roles
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

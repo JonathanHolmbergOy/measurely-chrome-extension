@@ -1,0 +1,103 @@
+COEP - Cross-Origin-Embedder-Policy
+
+WHAT IT MEASURES
+Whether the Cross-Origin-Embedder-Policy (COEP) HTTP header is configured to enable cross-origin isolation. COEP is a security header that restricts which cross-origin resources can be embedded in a document, enabling powerful features like SharedArrayBuffer, high-resolution timers, and other APIs that require cross-origin isolation for security.
+
+COEP values:
+- require-corp: Only allows resources that explicitly opt-in via Cross-Origin-Resource-Policy (CORP)
+- credentialless: Allows cross-origin resources but without credentials (cookies, authorization headers)
+- unsafe-none: Allows all cross-origin resources (not recommended, disables isolation)
+
+Cross-origin isolation requires:
+- COEP header set to require-corp or credentialless
+- COOP (Cross-Origin-Opener-Policy) header set to same-origin or same-origin-allow-popups
+- Both headers must be present for isolation to be enabled
+
+HOW IT'S MEASURED
+HTTP header analysis checking for Cross-Origin-Embedder-Policy header. The measurement process:
+
+1. Checks HTTP response headers:
+   - Looks for Cross-Origin-Embedder-Policy header
+   - Reads header value (require-corp, credentialless, or unsafe-none)
+   - Verifies header is present and correctly formatted
+
+2. Validates cross-origin isolation:
+   - Checks if COEP is set (require-corp or credentialless)
+   - Verifies COOP header is also present (required for isolation)
+   - Determines if cross-origin isolation is actually enabled
+
+3. Returns boolean result:
+   - true: COEP header is present and configured correctly
+   - false: COEP header is missing or misconfigured
+
+Measurement considerations:
+- Must check actual HTTP headers (not just meta tags)
+- Requires server-side header configuration
+- May need to check multiple responses (HTML, iframe, etc.)
+
+WHY IT'S IMPORTANT
+Enables SharedArrayBuffer and other powerful features while maintaining security through cross-origin isolation. COEP is essential for modern web applications that need high-performance features.
+
+Security benefits:
+- Enables cross-origin isolation to prevent Spectre-style attacks
+- Allows use of SharedArrayBuffer for high-performance computing
+- Enables high-resolution timers (performance.now() with better precision)
+- Required for features like WebAssembly threads
+- Protects against cross-origin information leakage
+
+Feature enablement:
+- SharedArrayBuffer: Required for shared memory between threads
+- High-resolution timers: Better precision for performance.now()
+- WebAssembly threads: Multi-threaded WebAssembly execution
+- Other isolation-required APIs: Various advanced web APIs
+
+Performance benefits:
+- SharedArrayBuffer enables efficient multi-threaded JavaScript
+- Better performance for compute-intensive applications
+- Enables advanced web applications (e.g., video editors, games)
+
+THRESHOLDS
+- Good: true (COEP header present and correctly configured)
+- Poor: false (COEP header missing or misconfigured)
+
+Note: COEP alone doesn't enable isolation - COOP must also be set. Both headers are required.
+
+COMMON PITFALLS
+1. Missing COEP header: Header not set on server responses
+2. Incorrect COEP configuration: Wrong value or syntax error
+3. Cross-origin isolation not enabled: COEP set but COOP missing
+4. Resources not opting in: Third-party resources need CORP header
+5. Mixed content issues: Some resources can't be loaded with require-corp
+6. Credentialless limitations: credentialless mode doesn't send credentials
+7. Iframe isolation: Nested iframes also need COEP headers
+8. CDN configuration: CDN not forwarding or setting COEP header
+9. Development vs production: Different configurations between environments
+10. Legacy browser support: Older browsers may not support COEP
+
+OPTIMIZATION STRATEGIES
+1. Implement COEP header: Set Cross-Origin-Embedder-Policy on all responses
+2. Configure for require-corp: Use require-corp for maximum security
+3. Use credentialless if needed: Use credentialless if require-corp breaks resources
+4. Ensure cross-origin isolation: Set both COEP and COOP headers
+5. Configure CORP on resources: Ensure third-party resources have CORP header
+6. Test cross-origin resources: Verify all embedded resources work with COEP
+7. Update third-party integrations: Work with vendors to add CORP support
+8. Use same-origin resources: Prefer same-origin resources when possible
+9. Document COEP requirements: Ensure team understands isolation requirements
+10. Monitor for errors: Watch for COEP-related loading failures
+11. Gradual rollout: Test COEP in staging before production
+12. Fallback strategies: Have plan for resources that can't support COEP
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

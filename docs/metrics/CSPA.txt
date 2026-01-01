@@ -1,0 +1,111 @@
+CSPA - CSP Analysis Score
+
+WHAT IT MEASURES
+Quality score (0-100) of Content Security Policy based on directive coverage and restrictiveness. This composite score evaluates how well a site's CSP protects against XSS (Cross-Site Scripting) and injection attacks by analyzing which directives are present, how restrictive they are, and whether they follow security best practices.
+
+The score considers:
+- Directive coverage: Which CSP directives are implemented
+- Restrictiveness: How strict each directive is (penalizes unsafe-inline, unsafe-eval, wildcards)
+- Best practices: Whether nonces, hashes, or strict source lists are used
+- Completeness: Whether all necessary directives are present
+
+Higher scores indicate:
+- Better protection against XSS attacks
+- More restrictive and secure policies
+- Following CSP best practices
+- Comprehensive directive coverage
+
+HOW IT'S MEASURED
+Fetch API to retrieve CSP header, analysis of directive coverage and restrictiveness. May be unavailable due to CORS restrictions. The measurement process:
+
+1. Retrieves CSP header:
+   - Uses fetch API or checks response headers
+   - Looks for Content-Security-Policy header
+   - May be limited by CORS restrictions (cross-origin requests)
+
+2. Parses CSP directives:
+   - Extracts all CSP directives (default-src, script-src, style-src, etc.)
+   - Analyzes source lists for each directive
+   - Identifies policy structure
+
+3. Evaluates coverage:
+   - Checks which directives are present
+   - Identifies missing important directives
+   - Scores based on directive completeness
+
+4. Evaluates restrictiveness:
+   - Penalizes unsafe-inline and unsafe-eval
+   - Penalizes wildcards (*) in source lists
+   - Rewards nonces, hashes, and specific sources
+   - Scores based on how restrictive policies are
+
+5. Calculates composite score:
+   - Combines coverage and restrictiveness scores
+   - Applies weights to different factors
+   - Returns score from 0-100
+
+WHY IT'S IMPORTANT
+CSP quality indicates how well the site is protected against XSS and injection attacks. Higher scores mean better security and protection against common web vulnerabilities.
+
+Security benefits:
+- Protects against XSS attacks
+- Prevents code injection
+- Controls resource loading
+- Reduces attack surface
+- Enhances overall security posture
+
+Attack prevention:
+- Blocks inline script execution (with proper CSP)
+- Prevents eval() usage (with proper CSP)
+- Controls which sources can load resources
+- Prevents data exfiltration
+- Mitigates clickjacking (with frame-ancestors)
+
+THRESHOLDS
+- Good: ≥ 80 (Strong CSP, good security)
+- Needs Improvement: 60-79 (Moderate CSP, some improvements needed)
+- Poor: ≤ 60 (Weak CSP, significant security gaps)
+
+Note: A score of 100 is difficult to achieve and may not be practical for all sites. Focus on eliminating unsafe-inline and unsafe-eval first.
+
+COMMON PITFALLS
+1. Weak CSP directives: Permissive source lists allowing too many sources
+2. unsafe-inline/unsafe-eval: Using unsafe directives that bypass CSP protection
+3. Wildcards: Using * in source lists allows any source
+4. Missing directives: Important directives not implemented
+5. Overly permissive policies: Policies that don't provide real protection
+6. No CSP header: Missing CSP entirely
+7. Report-only mode: Using report-only without enforcing policy
+8. Inconsistent policies: Different CSP on different pages
+9. No nonces or hashes: Relying on unsafe-inline instead of nonces/hashes
+10. Missing frame-ancestors: Not protecting against clickjacking
+
+OPTIMIZATION STRATEGIES
+1. Use strict CSP: Implement restrictive policies with specific sources
+2. Eliminate unsafe-inline: Replace with nonces or hashes for inline scripts/styles
+3. Remove unsafe-eval: Avoid eval() and similar functions
+4. Use nonces or hashes: Implement nonce-based or hash-based CSP
+5. Implement comprehensive directives: Cover all resource types
+6. Test with CSP evaluator: Use tools to evaluate and improve CSP
+7. Start with report-only: Test policies in report-only mode first
+8. Gradually tighten policy: Start permissive and tighten over time
+9. Monitor CSP reports: Use report-uri to identify issues
+10. Document CSP requirements: Ensure team understands CSP needs
+11. Use strict-dynamic: Leverage strict-dynamic for better security
+12. Avoid wildcards: Use specific source lists instead
+13. Implement frame-ancestors: Protect against clickjacking
+14. Regular CSP audits: Review and update CSP regularly
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

@@ -1,0 +1,168 @@
+VLG - Valid Lang Attributes
+===========================
+
+OVERVIEW
+--------
+Rule ID: valid-lang
+Impact: Serious
+Category: Accessibility (Language)
+WCAG: 2.0 Level AA (3.1.2 Language of Parts)
+
+Description:
+Ensures all elements with lang attributes use valid language codes in proper format. Invalid lang values prevent screen readers from switching pronunciation rules, causing incorrect text reading.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Valid lang attributes on elements:
+- Enable correct pronunciation for mixed-language content
+- Support multilingual documents
+- Help screen readers switch languages correctly
+- Meet WCAG 3.1.2 Level AA requirement
+
+
+VALID FORMAT
+------------
+Pattern: [a-z]{2,3}(-[A-Z]{2})?
+
+Valid:
+- en, es, fr, de, ja, zh
+- en-US, es-MX, zh-CN
+
+Invalid:
+- English (use "en")
+- EN (must be lowercase)
+- eng (use 2-letter code)
+- en_US (use hyphen, not underscore)
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all elements with lang attribute
+2. Validates format against ISO 639-1 standard
+3. Reports elements with invalid lang values
+4. Suggests correct alternatives
+
+
+HOW TO FIX
+----------
+1. Use valid ISO 639-1 language codes
+2. Use lowercase for language code
+3. Use uppercase for region code
+4. Fix typos and invalid formats
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<p lang="english">Content</p>
+<div lang="EN">Content</div>
+<span lang="eng">Content</span>
+<blockquote lang="en_US">Quote</blockquote>
+<div lang="japanese">Content</div>
+
+Good:
+<p lang="en">Content</p>
+<div lang="en">Content</div>
+<span lang="en">Content</span>
+<blockquote lang="en-US">Quote</blockquote>
+<div lang="ja">Content</div>
+
+
+MULTILINGUAL CONTENT
+--------------------
+<html lang="en">
+<body>
+    <h1>International Greetings</h1>
+    
+    <p>Hello and welcome!</p>
+    
+    <p lang="es">¡Hola y bienvenido!</p>
+    
+    <p lang="fr">Bonjour et bienvenue!</p>
+    
+    <p lang="de">Hallo und willkommen!</p>
+    
+    <p lang="ja">こんにちは、ようこそ!</p>
+</body>
+</html>
+
+
+QUOTES AND CITATIONS
+--------------------
+<article lang="en">
+    <h1>Essay on French Literature</h1>
+    
+    <p>Victor Hugo once said:</p>
+    
+    <blockquote lang="fr">
+        <p>La vie est une fleur dont l'amour est le miel.</p>
+    </blockquote>
+    
+    <p>This translates to: "Life is a flower of which love is the honey."</p>
+</article>
+
+
+MIXED LANGUAGE LISTS
+--------------------
+<ul lang="en">
+    <li>English term</li>
+    <li lang="es">Término español</li>
+    <li lang="fr">Terme français</li>
+    <li lang="de">Deutscher Begriff</li>
+</ul>
+
+
+LANGUAGE SWITCHER
+-----------------
+<nav aria-label="Language selection">
+    <ul>
+        <li><a href="/en" lang="en">English</a></li>
+        <li><a href="/es" lang="es">Español</a></li>
+        <li><a href="/fr" lang="fr">Français</a></li>
+        <li><a href="/de" lang="de">Deutsch</a></li>
+    </ul>
+</nav>
+
+
+COMMON CORRECTIONS
+------------------
+English → en
+English-US → en-US
+spanish → es
+FRENCH → fr
+japanese → ja
+chinese → zh
+German → de
+EN_US → en-US
+en_gb → en-GB
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Uses lang for translation and hyphenation
+- Firefox: Uses lang for translation and hyphenation
+- Safari: Uses lang for translation and hyphenation
+- Screen Readers: Critical for pronunciation
+
+
+RELATED RULES
+-------------
+- HLV (HTML Lang Valid)
+- LAA (Language Attributes)
+
+
+SOURCES
+-------
+- MDN lang attribute: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/lang
+- WCAG 3.1.2: https://www.w3.org/WAI/WCAG21/Understanding/language-of-parts.html
+- WCAG H58: https://www.w3.org/WAI/WCAG21/Techniques/html/H58
+- ISO 639-1 Codes: https://www.loc.gov/standards/iso639-2/php/code_list.php
+- BCP 47: https://www.rfc-editor.org/rfc/bcp/bcp47.txt
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#valid-lang
+

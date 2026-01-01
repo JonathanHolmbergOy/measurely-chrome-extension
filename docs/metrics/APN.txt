@@ -1,0 +1,147 @@
+APN - ARIA Progressbar Name
+===========================
+
+OVERVIEW
+--------
+Rule ID: aria-progressbar-name
+Impact: Serious
+Category: Accessibility (ARIA Validation)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Ensures progress elements and elements with role="progressbar" have accessible names via aria-label or aria-labelledby. Progress bars without names cannot convey their purpose to screen reader users.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Accessible progressbar names:
+- Identify what process is being tracked
+- Enable screen readers to announce progress purpose
+- Provide context for progress values
+- Meet WCAG 4.1.2 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds <progress> elements and elements with role="progressbar"
+2. Checks for aria-label or aria-labelledby
+3. Reports progress bars without accessible names
+4. Includes element ID for fixing
+
+
+HOW TO FIX
+----------
+1. Add aria-label describing the progress
+2. Use aria-labelledby to reference label element
+3. Include process context in label
+4. Update aria-valuetext with current status
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<progress value="50" max="100"></progress>
+<div role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+
+Good:
+<progress value="50" max="100" aria-label="File upload progress"></progress>
+
+<label id="upload-label">Uploading file</label>
+<progress value="50" max="100" aria-labelledby="upload-label"></progress>
+
+<div role="progressbar" aria-label="Installation progress"
+     aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
+     aria-valuetext="Step 3 of 4">
+    75%
+</div>
+
+
+COMPLETE PROGRESSBAR EXAMPLES
+------------------------------
+File Upload:
+<div class="upload-progress">
+    <label id="upload">File upload</label>
+    <progress id="file-upload" aria-labelledby="upload"
+              value="65" max="100">
+        65%
+    </progress>
+    <span>65% complete</span>
+</div>
+
+Installation:
+<div role="progressbar" aria-label="Software installation"
+     aria-valuenow="2" aria-valuemin="0" aria-valuemax="5"
+     aria-valuetext="Installing dependencies (step 2 of 5)">
+    Step 2 of 5
+</div>
+
+Loading Spinner:
+<div role="progressbar" aria-label="Loading content" 
+     aria-busy="true">
+    <svg class="spinner">...</svg>
+</div>
+
+
+INDETERMINATE PROGRESS
+-----------------------
+<progress aria-label="Loading..."></progress>
+
+<div role="progressbar" aria-label="Processing"
+     aria-valuetext="Please wait">
+    <div class="spinner"></div>
+</div>
+
+
+DYNAMIC UPDATES
+---------------
+const progressbar = document.getElementById('progress');
+let value = 0;
+
+setInterval(() => {
+    value += 10;
+    progressbar.setAttribute('aria-valuenow', value);
+    progressbar.setAttribute('aria-valuetext', `${value}% complete`);
+    progressbar.value = value;
+    
+    if (value >= 100) {
+        progressbar.setAttribute('aria-label', 'Upload complete');
+    }
+}, 1000);
+
+
+LIVE REGION ANNOUNCEMENTS
+--------------------------
+<div role="progressbar" aria-label="File download"
+     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"
+     aria-live="polite" aria-atomic="true">
+    50% complete
+</div>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Native <progress> support
+- Firefox: Native <progress> support
+- Safari: Native <progress> support
+- Screen Readers: Announce progress with value
+
+
+RELATED RULES
+-------------
+- AMN (ARIA Meter Name)
+- ARA (ARIA Required Attributes)
+- ARV (ARIA Roles Valid)
+
+
+SOURCES
+-------
+- MDN Progress: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress
+- W3C Progressbar Pattern: https://www.w3.org/WAI/ARIA/apg/patterns/meter/
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#aria-progressbar-name
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

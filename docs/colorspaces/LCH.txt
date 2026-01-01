@@ -1,0 +1,374 @@
+CIE LCH (L*C*h°)
+=================
+
+OVERVIEW
+--------
+CIE LCH (Lightness, Chroma, Hue) is the polar (cylindrical) representation of the CIE Lab color space.
+It was designed to make color selection and manipulation more intuitive by
+using hue angles and chroma (colorfulness) instead of rectangular a* and b* coordinates.
+
+DESCRIPTION
+-----------
+LCH represents colors using three cylindrical coordinates:
+- L* (Lightness): 0 to 100 - perceived brightness (0 = black, 100 = white)
+- C* (Chroma): 0 to ~230 - colorfulness/saturation (unbounded, but typically 0-150)
+- h° (Hue): 0 to 360 degrees - color angle
+  * 0° = Red/magenta
+  * 90° = Yellow
+  * 180° = Cyan/green
+  * 270° = Blue
+
+LCH is mathematically equivalent to Lab - it's just a different coordinate system
+for expressing the same colors.
+
+TECHNICAL SPECIFICATIONS
+-------------------------
+- Type: Polar (cylindrical) color space
+- Based on: CIE Lab (1976)
+- Perceptually uniform: Yes (same as Lab)
+- Device independent: Yes
+- Gamut: Unbounded (can represent all visible colors)
+- Reference white: D50 (horizon daylight) or D65 (noon daylight)
+- Conversion: Direct polar transformation of Lab
+
+HISTORY
+-------
+1976: CIE Lab created, LCH implicit as polar form
+1980s: LCH notation and usage becomes common in color science
+1990s: Adopted in professional color management software
+2000s: Used in Photoshop, Illustrator, and print workflows
+2021: Added to CSS Color Module Level 4
+2023: Achieved widespread browser support
+
+WHY LCH EXISTS
+--------------
+Lab's rectangular (a*, b*) coordinates are not intuitive:
+- Hard to predict what changing a* or b* will do to a color
+- Difficult to adjust hue while keeping lightness/saturation constant
+- Not human-friendly for color picking
+
+LCH solves this by using:
+✓ Hue angle (intuitive color wheel)
+✓ Chroma (direct control of colorfulness)
+✓ Lightness (same as Lab)
+
+CSS SYNTAX
+----------
+Basic:
+  color: lch(50 50 180);
+  color: lch(50% 50 180deg);
+
+With alpha:
+  color: lch(50 50 180 / 0.5);
+  color: lch(50% 50 180deg / 50%);
+
+Component ranges:
+  L*: 0-100 (or 0%-100%)
+  C*: 0-150 (typically, but unbounded)
+  h°: 0-360 (degrees)
+  Alpha: 0-1 or 0%-100%
+
+BROWSER SUPPORT
+---------------
+Modern browsers (>90% global coverage):
+- Safari 15.0+ (September 2021) ✓
+- Chrome 111+ (March 2023) ✓
+- Edge 111+ (March 2023) ✓
+- Firefox 113+ (May 2023) ✓
+- Opera 97+ (March 2023) ✓
+
+Not supported:
+- Internet Explorer (all versions)
+- Safari < 15.0
+- Chrome < 111
+- Firefox < 113
+
+Fallback required for older browsers.
+
+ADVANTAGES
+----------
+✓ Intuitive hue adjustment (rotate around color wheel)
+✓ Easy to increase/decrease colorfulness (adjust C*)
+✓ Perceptually uniform (inherited from Lab)
+✓ Device-independent
+✓ Perfect for color harmonies (complementary, analogous, etc.)
+✓ Industry standard for print and color management
+✓ Can represent all visible colors
+✓ Better than HSL for perceptual uniformity
+
+LIMITATIONS
+-----------
+✗ Not as perceptually uniform as OKLCH
+✗ Hue shifts when adjusting lightness (less than HSL, but still present)
+✗ Out-of-gamut colors common for sRGB displays
+✗ D50 vs D65 reference white confusion
+✗ Limited browser support (pre-2023)
+✗ Chroma values less intuitive than saturation percentage
+
+USE CASES
+---------
+Perfect for:
+- Color picking and palette creation
+- Hue rotation and color harmonies
+- Adjusting saturation/colorfulness
+- Print color workflows
+- Professional color grading
+- Creating tints and shades with consistent hue
+
+Less ideal for:
+- Color interpolation (use Lab instead)
+- Digital-only workflows (consider OKLCH)
+- Programmatic color mixing (use Lab's rectangular form)
+
+COMPARISON WITH OTHER SPACES
+-----------------------------
+vs Lab:
+  LCH: Polar, intuitive for color selection
+  Lab: Rectangular, better for color mixing/interpolation
+
+vs OKLCH:
+  LCH: Older standard, print-oriented
+  OKLCH: Better perceptual uniformity, digital-optimized
+
+vs HSL:
+  LCH: Perceptually uniform, device-independent
+  HSL: Not uniform, sRGB-bound, but simpler
+
+vs OKLCH hue angles:
+  LCH: Different hue angles for same perceived color
+  OKLCH: More perceptually uniform hue progression
+
+CONVERSION FORMULAS
+-------------------
+Lab to LCH:
+  L* = L* (unchanged)
+  C* = √(a*² + b*²)
+  h° = atan2(b*, a*) × 180/π
+
+LCH to Lab:
+  L* = L* (unchanged)
+  a* = C* × cos(h°)
+  b* = C* × sin(h°)
+
+For sRGB conversion:
+  LCH → Lab → XYZ → sRGB
+
+PRACTICAL EXAMPLES
+------------------
+// Pure red
+color: lch(50 100 40);
+
+// Pure cyan
+color: lch(70 50 180);
+
+// Desaturated blue (low chroma)
+color: lch(40 20 270);
+
+// Bright yellow
+color: lch(90 90 100);
+
+// Color harmony - complementary colors (180° apart)
+--primary: lch(60 80 30);
+--complement: lch(60 80 210);
+
+// Analogous colors (30° apart)
+--color-1: lch(60 70 180);
+--color-2: lch(60 70 210);
+--color-3: lch(60 70 150);
+
+// Tints (increase lightness, same hue and chroma)
+--base: lch(50 60 260);
+--light: lch(70 60 260);
+--lighter: lch(85 60 260);
+
+// Adjust saturation (change chroma)
+--saturated: lch(60 90 120);
+--normal: lch(60 50 120);
+--muted: lch(60 20 120);
+
+HUE ANGLES
+----------
+Approximate hue angles for common colors:
+- 0° - 30°: Red → Orange-red
+- 30° - 60°: Orange → Yellow-orange
+- 60° - 90°: Yellow-orange → Yellow
+- 90° - 120°: Yellow → Yellow-green
+- 120° - 150°: Yellow-green → Green
+- 150° - 180°: Green → Cyan-green
+- 180° - 210°: Cyan → Blue-cyan
+- 210° - 240°: Blue-cyan → Blue
+- 240° - 270°: Blue → Blue-magenta
+- 270° - 300°: Blue-magenta → Magenta
+- 300° - 330°: Magenta → Red-magenta
+- 330° - 360°: Red-magenta → Red
+
+COLOR HARMONIES
+---------------
+Easy to create with LCH using hue angles:
+
+**Complementary** (opposite on color wheel):
+  Base: lch(60 50 180)
+  Complement: lch(60 50 0)  /* Add/subtract 180° */
+
+**Triadic** (120° apart):
+  Color 1: lch(60 50 0)
+  Color 2: lch(60 50 120)
+  Color 3: lch(60 50 240)
+
+**Analogous** (adjacent on color wheel):
+  Base: lch(60 50 180)
+  Analog 1: lch(60 50 150)  /* -30° */
+  Analog 2: lch(60 50 210)  /* +30° */
+
+**Split-complementary**:
+  Base: lch(60 50 180)
+  Split 1: lch(60 50 330)  /* 180 - 30 */
+  Split 2: lch(60 50 30)   /* 180 + 30 */
+
+CHROMA GUIDANCE
+---------------
+Typical chroma values by use case:
+- 0-10: Very desaturated, nearly gray
+- 10-30: Subtle, muted colors (good for backgrounds)
+- 30-60: Moderate saturation (good for UI)
+- 60-90: Vibrant, saturated colors (good for accents)
+- 90-130: Highly saturated (may be out of sRGB gamut)
+- 130+: Extreme saturation (likely out of gamut)
+
+GAMUT MAPPING
+-------------
+LCH can describe colors outside displayable gamuts:
+1. Colors with very high chroma often exceed sRGB
+2. Browser clips to nearest displayable color
+3. May cause unexpected hue shifts
+4. Consider using gamut-mapping media queries
+
+Example out-of-gamut:
+  lch(70 150 120)  /* Very saturated green, likely out of sRGB */
+
+Check if display supports wider gamut:
+```css
+@media (color-gamut: p3) {
+  --accent: lch(70 100 280);  /* More saturated for P3 displays */
+}
+
+@media not all and (color-gamut: p3) {
+  --accent: lch(70 60 280);   /* Reduce chroma for sRGB */
+}
+```
+
+PERCEPTUAL UNIFORMITY
+---------------------
+LCH inherits Lab's perceptual properties:
+- Equal changes in L* = equal perceived lightness changes
+- Equal changes in C* = roughly equal perceived saturation changes
+- Equal changes in h° = roughly equal perceived hue changes
+
+However, not perfect:
+- Blue hues less uniform than other hues
+- Some hue shifts when adjusting lightness
+- OKLCH addresses these issues
+
+PRINT WORKFLOWS
+---------------
+LCH is standard in professional printing:
+1. **Spot color matching**: Define exact hue and chroma
+2. **Color proofing**: Consistent across devices
+3. **Pantone approximation**: Match spot colors in CMYK
+4. **Cross-media consistency**: Same perceived color in print and digital
+
+ACCESSIBILITY CONSIDERATIONS
+-----------------------------
+While LCH is perceptually uniform, WCAG contrast calculations require sRGB:
+1. Convert LCH → Lab → XYZ → sRGB
+2. Calculate relative luminance in sRGB
+3. Apply WCAG contrast formula
+
+Lightness (L*) in LCH correlates with WCAG luminance but is not identical.
+
+GRADIENTS
+---------
+LCH produces smoother gradients than RGB or HSL:
+
+```css
+/* Hue rotation gradient */
+background: linear-gradient(
+  in lch,
+  lch(60 50 0),    /* Red */
+  lch(60 50 120),  /* Green */
+  lch(60 50 240)   /* Blue */
+);
+
+/* Chroma gradient (desaturation) */
+background: linear-gradient(
+  in lch,
+  lch(60 80 180),  /* Vibrant */
+  lch(60 0 180)    /* Gray */
+);
+```
+
+ISSUES WITH LCH
+---------------
+Known problems (addressed by OKLCH):
+1. **Hue shift**: Adjusting lightness can shift perceived hue
+2. **Blue non-uniformity**: Blues behave differently than other hues
+3. **Chroma scaling**: Not perfectly perceptually linear
+4. **D50/D65 confusion**: Different reference whites in different contexts
+
+REAL-WORLD ADOPTION
+-------------------
+Print industry: ~90% usage (industry standard)
+Web development: ~3-5% (2024) - growing, OKLCH gaining more traction
+Professional photo editing: ~70% (Photoshop, Capture One, etc.)
+Color science: Universal standard alongside Lab
+
+BEST PRACTICES
+--------------
+1. **Use with fallback:**
+   ```css
+   color: rgb(100, 150, 200);  /* Fallback */
+   color: lch(60 40 260);      /* Modern */
+   ```
+
+2. **Consider OKLCH for digital-only:**
+   - Better perceptual uniformity
+   - Optimized for displays
+
+3. **Use for color harmonies:**
+   - Hue angles make relationships obvious
+   - Easy to maintain consistent L* and C*
+
+4. **Keep chroma reasonable for sRGB:**
+   - Stay under C* = 80 for safe sRGB compatibility
+   - Test on actual displays
+
+5. **Use Lab for interpolation:**
+   - Rectangular coordinates better for color mixing
+   - Convert back to LCH for display
+
+DESIGN TOOLS SUPPORT
+--------------------
+✓ Adobe Photoshop: Full LCH support in color picker
+✓ Adobe Illustrator: LCH color mode available
+✓ Capture One: LCH-based color grading
+✓ GIMP: LCH color space in color tools
+✓ CSS: Native support (2023+)
+✓ Color management systems: Universal support
+
+RELATED COLOR SPACES
+--------------------
+- Lab: Rectangular form of LCH
+- OKLCH: Modern successor optimized for digital
+- OKLab: Rectangular form of OKLCH
+- HSL: Similar polar structure but not perceptually uniform
+- HSV/HSB: Another polar space, not perceptually uniform
+
+FURTHER READING
+---------------
+- CIE 1976 L*C*h° specification
+- CSS Color Module Level 4: https://www.w3.org/TR/css-color-4/
+- "LCH Colors in CSS" guide
+- Bruce Lindbloom's color calculators: http://brucelindbloom.com/
+- Can I Use: https://caniuse.com/mdn-css_types_color_lch
+- "Understanding LCH" by Lea Verou
+

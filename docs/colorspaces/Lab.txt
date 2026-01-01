@@ -1,0 +1,362 @@
+CIE Lab (L*a*b*)
+================
+
+OVERVIEW
+--------
+CIE Lab (also written as CIELAB or L*a*b*) is a device-independent color space 
+created by the International Commission on Illumination (CIE) in 1976.
+It was designed to be perceptually uniform, meaning equal numeric changes correspond
+to equal perceived color differences.
+
+DESCRIPTION
+-----------
+Lab represents colors using three components:
+- L* (Lightness): 0 to 100 - perceived brightness (0 = black, 100 = white)
+- a*: ~-128 to +128 - green (negative) to red (positive)
+- b*: ~-128 to +128 - blue (negative) to yellow (positive)
+
+Lab is based on opponent color theory - colors are represented as opposing pairs (red/green, blue/yellow) with a lightness axis, matching how human vision processes color.
+
+TECHNICAL SPECIFICATIONS
+-------------------------
+- Type: Rectangular (Cartesian) color space
+- Perceptually uniform: Yes (designed for this purpose)
+- Device independent: Yes
+- Gamut: Unbounded (can represent all visible colors)
+- Reference white: D50 (horizon daylight) or D65 (noon daylight)
+- Based on: CIE XYZ color space
+- Standard: CIE 1976 (L*a*b*)
+
+HISTORY
+-------
+1931: CIE creates XYZ color space (foundation)
+1942: Richard Hunter creates Hunter Lab (precursor)
+1976: CIE defines CIELAB (L*a*b*) for improved uniformity
+1980s-1990s: Becomes standard in print and color management
+2000s: Adopted in Photoshop and professional tools
+2021: Added to CSS Color Module Level 4
+2023: Achieved widespread browser support
+
+WHY LAB WAS CREATED
+-------------------
+Before Lab, color spaces like XYZ and RGB were:
+- Device-dependent (different on each display)
+- Not perceptually uniform
+- Difficult for color difference calculations
+
+Lab goals:
+✓ Device-independent color representation
+✓ Perceptually uniform (equal changes = equal perception)
+✓ Enable accurate color difference measurements
+✓ Match human color perception
+✓ Work for both digital and print
+
+CSS SYNTAX
+----------
+Basic:
+  color: lab(50 30 -20);
+  color: lab(50% 30 -20);
+
+With alpha:
+  color: lab(50 30 -20 / 0.5);
+  color: lab(50% 30 -20 / 50%);
+
+Component ranges:
+  L*: 0-100 (or 0%-100%)
+  a*: -125 to +125 (approximately)
+  b*: -125 to +125 (approximately)
+  Alpha: 0-1 or 0%-100%
+
+BROWSER SUPPORT
+---------------
+Modern browsers (>90% global coverage):
+- Safari 15.0+ (September 2021) ✓
+- Chrome 111+ (March 2023) ✓
+- Edge 111+ (March 2023) ✓
+- Firefox 113+ (May 2023) ✓
+- Opera 97+ (March 2023) ✓
+
+Not supported:
+- Internet Explorer (all versions)
+- Safari < 15.0
+- Chrome < 111
+- Firefox < 113
+
+Fallback required for older browsers.
+
+ADVANTAGES
+----------
+✓ Device-independent (same values = same perceived color)
+✓ Perceptually uniform (good for color differences)
+✓ Industry standard for color management
+✓ Excellent for print workflows
+✓ Can represent all visible colors
+✓ Well-understood and documented
+✓ Supported in professional software (Photoshop, etc.)
+✓ Good for color correction
+
+LIMITATIONS
+-----------
+✗ Not perfect perceptual uniformity (especially in blues)
+✗ Less uniform than OKLab for digital workflows
+✗ Rectangular coordinates less intuitive than polar (use LCH)
+✗ Different reference whites (D50 vs D65) cause confusion
+✗ Out-of-gamut colors common for sRGB displays
+✗ Limited browser support (pre-2023)
+✗ Unexpected hue shifts in some cases
+
+USE CASES
+---------
+Perfect for:
+- Print color management (CMYK conversions)
+- Color difference measurements (ΔE*)
+- Cross-device color matching
+- Professional photography workflows
+- Color quality control
+- Image analysis
+- Medical imaging
+
+Less ideal for:
+- Digital-only workflows (consider OKLab)
+- Color picking (use LCH or OKLCH)
+- Hue manipulation (use polar form: LCH)
+
+COMPARISON WITH OTHER SPACES
+-----------------------------
+vs OKLab:
+  Lab: Print-oriented, older standard
+  OKLab: Digital-optimized, better uniformity
+
+vs LCH:
+  Lab: Rectangular coordinates
+  LCH: Polar form of Lab (easier for hue work)
+
+vs sRGB:
+  Lab: Device-independent, perceptually uniform
+  sRGB: Device-dependent, not uniform
+
+vs XYZ:
+  Lab: Perceptually uniform
+  XYZ: Linear, matches human eye sensitivity
+
+CONVERSION FORMULAS
+-------------------
+sRGB to Lab (D65 reference white):
+
+1. sRGB to Linear sRGB:
+   if (sRGB <= 0.04045):
+     linear = sRGB / 12.92
+   else:
+     linear = ((sRGB + 0.055) / 1.055)^2.4
+
+2. Linear sRGB to XYZ (D65):
+   X = 0.4124564 × R + 0.3575761 × G + 0.1804375 × B
+   Y = 0.2126729 × R + 0.7151522 × G + 0.0721750 × B
+   Z = 0.0193339 × R + 0.1191920 × G + 0.9503041 × B
+
+3. XYZ D65 to XYZ D50 (chromatic adaptation):
+   [Bradford transformation matrix]
+
+4. XYZ to Lab:
+   // Normalize by D50 white point
+   xr = X / 0.9642
+   yr = Y / 1.0000
+   zr = Z / 0.8251
+   
+   // Apply Lab function
+   f(t) = t^(1/3) if t > (6/29)³
+        = (29/6)² × (1/3) × t + 4/29 otherwise
+   
+   L* = 116 × f(yr) - 16
+   a* = 500 × (f(xr) - f(yr))
+   b* = 200 × (f(yr) - f(zr))
+
+PERCEPTUAL UNIFORMITY
+---------------------
+Lab was designed so that ΔE* (Euclidean distance) approximates perceived color difference:
+
+ΔE* = √((L₂*-L₁*)² + (a₂*-a₁*)² + (b₂*-b₁*)²)
+
+However, research showed Lab isn't perfectly uniform, leading to improved formulas:
+- ΔE*94 (1994)
+- ΔE*00 (2000)
+- ΔE*ITP (2016)
+And ultimately new color spaces like OKLab (2020)
+
+COLOR DIFFERENCE (ΔE*) THRESHOLDS
+---------------------------------
+For CIE ΔE*76 (Euclidean distance):
+- ΔE* < 1: Not perceptible to human eye
+- ΔE* 1-2: Perceptible through close observation
+- ΔE* 2-10: Noticeable at a glance
+- ΔE* 11-49: Colors look different
+- ΔE* > 50: Colors appear as opposite
+
+Industry tolerances:
+- Commercial print: ΔE* < 5
+- High-end print: ΔE* < 3
+- Critical matching: ΔE* < 1
+
+PRACTICAL EXAMPLES
+------------------
+// Neutral gray at 50% lightness
+color: lab(50 0 0);
+
+// Warm red
+color: lab(50 50 30);
+
+// Cool blue
+color: lab(50 0 -50);
+
+// Vibrant green
+color: lab(50 -50 50);
+
+// With alpha
+color: lab(70 20 40 / 0.8);
+
+// Gradient
+background: linear-gradient(
+  in lab,
+  lab(30 50 -20),
+  lab(70 -30 40)
+);
+
+RELATIONSHIP TO LCH
+-------------------
+LCH (Lightness, Chroma, Hue) is the polar form of Lab:
+
+Lab → LCH:
+  L = L* (unchanged)
+  C = √(a*² + b*²)
+  H = atan2(b*, a*) × 180/π
+
+LCH → Lab:
+  L* = L (unchanged)
+  a* = C × cos(H)
+  b* = C × sin(H)
+
+Use Lab for: color mixing, interpolation
+Use LCH for: color picking, hue rotation
+
+REFERENCE WHITE CONFUSION
+--------------------------
+Two common reference whites in Lab:
+- D50: Used in ICC profiles, print workflows
+- D65: Used in sRGB, video, web
+
+CSS Lab uses D50 by default (matching ICC profiles).
+
+When converting sRGB (D65) to Lab (D50):
+1. sRGB → XYZ (D65)
+2. XYZ (D65) → XYZ (D50) [chromatic adaptation]
+3. XYZ (D50) → Lab (D50)
+
+This matters for color accuracy!
+
+GAMUT MAPPING
+-------------
+Lab can represent colors outside sRGB gamut. When displaying:
+1. Browsers clip to displayable gamut
+2. May cause unexpected hue or lightness shifts
+3. More apparent than with OKLab
+
+Example out-of-gamut color:
+  lab(50 100 100)  /* Very saturated, likely unprintable/undisplayable */
+
+COLOR CORRECTION USE CASE
+--------------------------
+Lab excels at targeted adjustments:
+- L* only: Adjust brightness without affecting color
+- a* only: Shift red/green balance
+- b* only: Shift blue/yellow balance (e.g., white balance)
+
+Example: Correcting yellow cast:
+  Original: lab(70 10 30)
+  Corrected: lab(70 10 15)  /* Reduce b* to remove yellow */
+
+PRINT WORKFLOWS
+---------------
+Lab is standard in print industry:
+1. Input: RGB/CMYK → Lab
+2. Processing: All edits in Lab (device-independent)
+3. Proofing: Lab → Target RGB/CMYK
+4. Output: Final Lab → Press CMYK
+
+Benefits:
+- Consistent across different printers
+- Accurate color matching
+- Predictable color behavior
+
+IMAGE PROCESSING
+----------------
+Common Lab operations:
+- **Sharpening:** Only on L* channel (preserves colors)
+- **Contrast:** Adjust L* curve
+- **Color grading:** Modify a* and b* curves
+- **Noise reduction:** Separate L* (luminance) and a*b* (chrominance)
+
+ISSUES WITH LAB
+---------------
+Known problems:
+1. Blue hue shift when adjusting lightness
+2. Not perfectly perceptually uniform
+3. D50 vs D65 confusion
+4. Out-of-gamut colors common
+5. Complex conversions
+
+These led to development of OKLab (2020) for digital workflows.
+
+REAL-WORLD ADOPTION
+-------------------
+Print industry: ~95% usage (industry standard)
+Web development: ~2-3% (2024) - limited, OKLab preferred
+Professional photo editing: ~80% (Photoshop, Lightroom, etc.)
+Color science: Universal standard for measurements
+
+BEST PRACTICES
+--------------
+1. **Use with fallback:**
+   ```css
+   color: rgb(200, 100, 50);  /* Fallback */
+   color: lab(50 30 20);       /* Modern */
+   ```
+
+2. **Consider OKLab for digital-only work:**
+   - Better perceptual uniformity
+   - Optimized for displays
+
+3. **Use LCH for color picking:**
+   - More intuitive than rectangular coordinates
+
+4. **Be aware of D50/D65 differences:**
+   - May cause slight color shifts
+
+5. **Test for out-of-gamut colors:**
+   - Lab can specify undisplayable colors
+
+TOOLS AND SOFTWARE
+------------------
+✓ Adobe Photoshop: Full Lab support since 1990s
+✓ GIMP: Lab color space available
+✓ ColorSync (Mac): Lab conversions
+✓ ICC profiles: Use Lab as interchange space
+✓ CSS: Native support (2023+)
+✓ JavaScript libraries: d3-color, colorjs.io
+
+RELATED COLOR SPACES
+--------------------
+- LCH: Polar (cylindrical) form of Lab
+- OKLab: Modern successor optimized for digital
+- OKLCH: Polar form of OKLab
+- XYZ: Foundation color space
+- Hunter Lab: Precursor to CIELAB
+
+FURTHER READING
+---------------
+- CIE 1976 L*a*b* specification
+- CSS Color Module Level 4: https://www.w3.org/TR/css-color-4/
+- "Understanding the Lab Color Space" (Cambridge in Colour)
+- Lab on Wikipedia: https://en.wikipedia.org/wiki/CIELAB_color_space
+- Bruce Lindbloom's color math: http://brucelindbloom.com/
+- Can I Use: https://caniuse.com/mdn-css_types_color_lab
+

@@ -1,0 +1,91 @@
+VSS - Visual Stability Score (composite)
+
+WHAT IT MEASURES
+Composite score (0-100) based on layout shift measurements and visual stability indicators. This metric measures how stable the page layout remains during loading, preventing user frustration from unexpected layout shifts.
+
+Visual stability factors:
+- Cumulative Layout Shift (CLS): Core Web Vital measuring layout shifts
+- Layout shift frequency: Number of layout shift events
+- Shift severity: Magnitude of layout shifts
+- Visual stability indicators: Overall stability metrics
+
+The score evaluates:
+- CLS measurements
+- Layout shift events
+- Visual stability during load
+- Overall layout stability
+
+HOW IT'S MEASURED
+Combined analysis of CLS measurements and layout shift events, calculating overall visual stability. The measurement process:
+
+1. Measures CLS:
+   - Uses PerformanceObserver for layout shifts
+   - Calculates Cumulative Layout Shift
+   - Tracks layout shift score
+
+2. Analyzes layout shifts:
+   - Counts layout shift events
+   - Evaluates shift severity
+   - Tracks stability over time
+
+3. Calculates score:
+   - Combines CLS and shift metrics
+   - Returns stability score 0-100
+
+WHY IT'S IMPORTANT
+Visual stability prevents user frustration from unexpected layout shifts. Stable layouts provide better user experience and are a Core Web Vital (CLS) used by Google for search rankings.
+
+User experience impact:
+- Prevents frustration from shifts
+- Better perceived performance
+- Improved usability
+- Higher engagement
+- Better user satisfaction
+
+SEO impact:
+- CLS is a Core Web Vital
+- Affects search rankings
+- Google ranking factor
+- Impacts Core Web Vitals score
+
+THRESHOLDS
+- Good: ≥ 90 (Excellent stability, minimal shifts)
+- Needs Improvement: 70-89 (Moderate stability)
+- Poor: ≤ 70 (Poor stability, significant shifts)
+
+COMMON PITFALLS
+1. High CLS: Significant layout shifts
+2. Layout shifts: Unexpected layout changes
+3. Images without dimensions: Images causing shifts when loaded
+4. Dynamic content insertion: Content added causing shifts
+5. Font loading issues: Fonts causing layout shifts
+
+OPTIMIZATION STRATEGIES
+1. Set image dimensions: Add width and height to images
+2. Reserve space for ads: Allocate space for dynamic content
+3. Use font-display: swap: Prevent font loading shifts
+4. Avoid inserting content above existing content: Insert below fold
+5. Set sizes for embeds: Specify sizes for iframes, videos
+6. Monitor CLS: Track layout shifts over time
+7. Test visual stability: Verify layouts remain stable
+8. Profile layout shifts: Use DevTools to identify shift causes
+
+
+HISTORY
+User experience metrics emerged as web applications became more interactive. Frame rate monitoring and scroll performance measurement became important as single-page applications and complex interactions became common. Responsive design metrics gained prominence with mobile web usage growth starting around 2010. Modern UX metrics focus on perceived performance and user satisfaction rather than just technical measurements.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

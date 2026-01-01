@@ -1,0 +1,117 @@
+FDC - Frame Drops Count
+
+WHAT IT MEASURES
+Number of frames that exceeded the 60fps target (16.67ms per frame) during page operation, causing visible stuttering and degraded user experience. Frame drops occur when the browser cannot render a new frame within the target time, resulting in dropped frames, choppy animations, and stuttering scrolling.
+
+The metric counts:
+- Frames exceeding 16.67ms: Frames that take longer than the 60fps target
+- Dropped frames: Frames that are skipped entirely
+- Stuttering periods: Extended periods of frame drops
+
+Frame rate targets:
+- 60fps = 16.67ms per frame (smooth, ideal)
+- 30fps = 33.33ms per frame (acceptable minimum)
+- Below 30fps = Visible stuttering, poor experience
+
+HOW IT'S MEASURED
+requestAnimationFrame monitoring comparing actual frame time to 16.67ms target, counting frames exceeding threshold. The measurement process:
+
+1. Monitors frame timing:
+   - Uses requestAnimationFrame to track each frame
+   - Records timestamp of each frame
+   - Calculates time between frames
+
+2. Identifies frame drops:
+   - Compares frame time to 16.67ms target (60fps)
+   - Flags frames exceeding threshold
+   - Counts dropped frames (frames that take too long)
+
+3. Tracks during page operation:
+   - Monitors during scrolling
+   - Tracks during animations
+   - Measures during user interactions
+   - Samples over time period
+
+4. Returns drop count:
+   - Total number of frames exceeding threshold
+   - May include percentage of dropped frames
+   - Identifies periods of poor performance
+
+WHY IT'S IMPORTANT
+Frame drops below 60fps cause visible stuttering. Consistent 60fps is essential for smooth animations and scrolling, providing a polished user experience.
+
+User experience impact:
+- Visible stuttering and choppiness
+- Poor animation quality
+- Choppy scrolling
+- Unresponsive feeling
+- Reduced user satisfaction
+
+Performance impact:
+- Indicates JavaScript performance issues
+- Suggests rendering bottlenecks
+- May signal layout thrashing
+- Points to inefficient rendering
+- Affects perceived performance
+
+Business impact:
+- Poor user experience reduces engagement
+- Stuttering reflects poorly on brand quality
+- May increase bounce rates
+- Affects mobile user experience significantly
+
+THRESHOLDS
+- Good: 0 drops (Consistent 60fps, smooth experience)
+- Needs Improvement: 1-4 drops (Occasional drops, mostly smooth)
+- Poor: ≥ 5 drops (Frequent drops, visible stuttering)
+
+Note: Some frame drops may be acceptable, but consistent 60fps is the goal.
+
+COMMON PITFALLS
+1. Heavy JavaScript: Expensive JavaScript operations blocking main thread
+2. Expensive CSS: Complex CSS causing slow rendering
+3. Layout thrashing: Forced reflows from reading/writing layout properties
+4. Too many DOM updates: Excessive DOM manipulation causing reflows
+5. Inefficient rendering: Poor rendering optimizations
+6. Synchronous operations: Blocking operations during frame rendering
+7. Large repaints: Repainting large areas of the screen
+8. Complex animations: Animations triggering layout or paint
+9. Third-party scripts: External scripts causing performance issues
+10. Memory pressure: Garbage collection pauses during rendering
+
+OPTIMIZATION STRATEGIES
+1. Optimize JavaScript execution: Minimize work in each frame
+2. Use CSS transforms: GPU-accelerated transforms instead of position changes
+3. Reduce layout calculations: Batch DOM reads and writes
+4. Minimize DOM updates: Batch DOM changes, use DocumentFragment
+5. Use will-change: Hint browser about upcoming changes
+6. Avoid forced synchronous layout: Don't read layout after writing
+7. Use requestAnimationFrame: Align work with browser paint cycles
+8. Optimize animations: Use transform and opacity for animations
+9. Defer non-critical work: Move work off main thread when possible
+10. Profile performance: Use DevTools to identify bottlenecks
+11. Use web workers: Offload heavy computation
+12. Minimize repaints: Reduce areas that need repainting
+13. Optimize third-party scripts: Defer or async load external scripts
+14. Monitor frame rate: Track frame drops over time
+15. Test on low-end devices: Verify performance on slower devices
+
+
+HISTORY
+User experience metrics emerged as web applications became more interactive. Frame rate monitoring and scroll performance measurement became important as single-page applications and complex interactions became common. Responsive design metrics gained prominence with mobile web usage growth starting around 2010. Modern UX metrics focus on perceived performance and user satisfaction rather than just technical measurements.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

@@ -1,0 +1,88 @@
+CORP - Cross-Origin-Resource-Policy
+
+WHAT IT MEASURES
+Whether the Cross-Origin-Resource-Policy (CORP) HTTP header is configured to control which origins can load a resource. CORP prevents cross-origin sites from loading your resources, protecting against timing attacks, unauthorized resource access, and information leakage.
+
+CORP values:
+- same-origin: Only same-origin requests can load the resource
+- same-site: Same-site requests can load (same eTLD+1)
+- cross-origin: Any origin can load (default, not recommended for sensitive resources)
+
+Use cases:
+- Protecting images from being embedded on other sites
+- Preventing cross-origin loading of sensitive resources
+- Required for COEP require-corp mode
+- Protecting against timing attacks
+
+HOW IT'S MEASURED
+HTTP header analysis checking for Cross-Origin-Resource-Policy header. The measurement process:
+
+1. Checks HTTP response headers:
+   - Looks for Cross-Origin-Resource-Policy header
+   - Reads header value (same-origin, same-site, or cross-origin)
+   - Verifies header is present and correctly formatted
+
+2. Validates resource protection:
+   - Checks if CORP is set appropriately for resource sensitivity
+   - Verifies header value matches security requirements
+   - Determines if resources are protected from cross-origin access
+
+3. Returns boolean result:
+   - true: CORP header is present and configured correctly
+   - false: CORP header is missing or misconfigured
+
+WHY IT'S IMPORTANT
+Prevents cross-origin resource loading, protecting against timing attacks and unauthorized resource access. CORP is essential for security, especially when using COEP require-corp mode.
+
+Security benefits:
+- Prevents cross-origin sites from loading your resources
+- Protects against timing attacks (measuring load times)
+- Prevents unauthorized resource access
+- Required for COEP require-corp mode
+- Protects sensitive resources (images, documents, etc.)
+
+Privacy benefits:
+- Prevents cross-origin sites from detecting resource access
+- Protects against information leakage
+- Prevents tracking through resource loading
+
+THRESHOLDS
+- Good: true (CORP header present and correctly configured)
+- Poor: false (CORP header missing or misconfigured)
+
+Note: For COEP require-corp, all cross-origin resources must have CORP header set.
+
+COMMON PITFALLS
+1. Missing CORP header: Header not set on resource responses
+2. Incorrect CORP configuration: Wrong value for resource sensitivity
+3. COEP require-corp failures: Resources without CORP break COEP
+4. Third-party resources: External resources may not have CORP
+5. CDN configuration: CDN not forwarding or setting CORP header
+6. Image hotlinking: Images can still be hotlinked without CORP
+7. Development vs production: Different configurations between environments
+
+OPTIMIZATION STRATEGIES
+1. Implement CORP header: Set Cross-Origin-Resource-Policy on all resources
+2. Use same-origin: Maximum security for sensitive resources
+3. Use same-site: If resources need to be shared within site
+4. Configure for COEP: Ensure all resources have CORP for require-corp mode
+5. Update third-party resources: Work with vendors to add CORP support
+6. Test resource loading: Verify resources load correctly with CORP
+7. Document CORP requirements: Ensure team understands protection requirements
+8. Monitor for errors: Watch for CORP-related loading failures
+9. Gradual rollout: Test CORP in staging before production
+10. Use CDN support: Ensure CDN can set CORP headers
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

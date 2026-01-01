@@ -1,0 +1,168 @@
+MRF - Meta Refresh
+==================
+
+OVERVIEW
+--------
+Rule ID: meta-refresh
+Impact: Serious
+Category: Accessibility (Page Behavior)
+WCAG: 2.0 Level A (2.2.1 Timing Adjustable, 3.2.5 Change on Request)
+
+Description:
+Detects meta refresh tags that automatically refresh or redirect pages after a delay. Automatic refreshes disorient users, interrupt screen readers, and prevent users from controlling page behavior.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Meta refresh causes:
+- Disorientation for screen reader users
+- Loss of reading position
+- Inability to control page timing
+- Confusion about page changes
+- Violates WCAG 2.2.1 and 3.2.5
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds meta[http-equiv="refresh"] elements
+2. Checks for non-zero delay values
+3. Reports refresh/redirect violations
+4. Includes delay time and target URL
+
+
+HOW TO FIX
+----------
+1. Remove meta refresh tags
+2. Use server-side 301/302 redirects instead
+3. Provide manual refresh button for updates
+4. Use JavaScript with user control
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<meta http-equiv="refresh" content="30">
+<meta http-equiv="refresh" content="5; url=https://example.com">
+<meta http-equiv="refresh" content="10; URL=newpage.html">
+
+Good (Immediate redirect, 0 delay):
+<meta http-equiv="refresh" content="0; url=https://example.com">
+
+Better (Server-side redirect):
+<!-- Server returns HTTP 301/302 status -->
+
+Best (User-controlled):
+<p>This page has moved. 
+   <a href="https://example.com">Click here to continue</a>
+</p>
+
+
+SERVER-SIDE REDIRECTS
+---------------------
+Instead of meta refresh, use:
+
+Apache (.htaccess):
+Redirect 301 /old-page.html /new-page.html
+
+Nginx:
+location /old-page {
+    return 301 /new-page;
+}
+
+PHP:
+<?php
+header('Location: /new-page.html', true, 301);
+exit;
+?>
+
+Node.js/Express:
+res.redirect(301, '/new-page');
+
+
+AUTO-REFRESH ALTERNATIVE
+-------------------------
+For pages that need updates:
+
+Bad:
+<meta http-equiv="refresh" content="60">
+
+Good:
+<div>
+    <p>Last updated: <time id="last-update"></time></p>
+    <button onclick="refreshContent()">Refresh Now</button>
+</div>
+
+<script>
+function refreshContent() {
+    // Fetch new content via AJAX
+    fetch('/api/updates')
+        .then(response => response.json())
+        .then(data => {
+            // Update page content
+            updateUI(data);
+        });
+}
+
+// Optional: Prompt user before auto-refresh
+let autoRefreshTimer;
+function startAutoRefresh() {
+    autoRefreshTimer = setTimeout(() => {
+        if (confirm('New content available. Refresh now?')) {
+            refreshContent();
+        }
+    }, 60000);
+}
+</script>
+
+
+POLLING PATTERN
+---------------
+For live data updates:
+
+<div role="region" aria-live="polite" aria-atomic="true">
+    <p id="status">Current status: <span id="data"></span></p>
+</div>
+
+<button onclick="togglePolling()">Pause Updates</button>
+
+<script>
+let polling = true;
+setInterval(() => {
+    if (polling) {
+        fetchUpdates();
+    }
+}, 5000);
+
+function togglePolling() {
+    polling = !polling;
+}
+</script>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Meta refresh supported but discouraged
+- Firefox: Meta refresh supported but discouraged
+- Safari: Meta refresh supported but discouraged
+- Screen Readers: Interrupted by automatic refreshes
+
+
+RELATED RULES
+-------------
+- BLK (Blink Elements)
+- MRQ (Marquee Elements)
+
+
+SOURCES
+-------
+- MDN Meta Refresh: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#attr-http-equiv
+- WCAG 2.2.1: https://www.w3.org/WAI/WCAG21/Understanding/timing-adjustable.html
+- WCAG 3.2.5: https://www.w3.org/WAI/WCAG21/Understanding/change-on-request.html
+- WCAG F40: https://www.w3.org/WAI/WCAG21/Techniques/failures/F40
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#meta-refresh
+

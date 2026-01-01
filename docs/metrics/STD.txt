@@ -1,0 +1,310 @@
+STD - Structured Data
+
+WHAT IT MEASURES
+JSON-LD structured data present on the page. Structured data uses schema.org vocabulary to provide explicit information about page content to search engines, enabling rich results (rich snippets, knowledge panels, carousels) in search engine results pages.
+
+Structured data can describe:
+- Articles and blog posts
+- Products and offers
+- Reviews and ratings
+- Events and tickets
+- Recipes
+- Organizations and businesses
+- People and professionals
+- FAQs and Q&A
+- Videos
+- Breadcrumbs
+- Local businesses
+
+JSON-LD (JavaScript Object Notation for Linked Data) is the recommended format by Google and is placed in <script type="application/ld+json"> tags.
+
+HOW IT'S MEASURED
+DOM analysis checking for JSON-LD structured data scripts. The measurement process:
+
+1. Queries for JSON-LD script elements:
+   - Checks for <script type="application/ld+json">
+   - Validates JSON structure
+   - May parse schema.org types
+
+2. Validates structured data:
+   - Checks if valid JSON
+   - May verify schema.org vocabulary
+   - May check for required properties
+   - Counts types of structured data present
+
+3. Returns configuration:
+   - May return boolean (true if structured data present)
+   - May return count of JSON-LD blocks
+   - May identify schema types used
+
+The measurement uses:
+- document.querySelectorAll('script[type="application/ld+json"]')
+- JSON.parse() to validate structure
+- Schema.org type identification
+
+WHY IT'S IMPORTANT
+Structured data enables rich results in search engines, which significantly improve click-through rates, visibility, and provide better user experiences in search results.
+
+SEO benefits:
+- Enables rich snippets (star ratings, prices, availability)
+- Improves visibility in search results
+- Increases click-through rate (CTR)
+- Helps search engines understand content
+- Enables specialized search features
+- May improve rankings indirectly through CTR
+
+Rich result types:
+- Product rich results (price, availability, reviews)
+- Recipe cards (ingredients, cooking time, ratings)
+- Article previews (author, date, image)
+- Event listings (date, location, ticket info)
+- FAQ accordions (questions expand in search results)
+- Review stars and ratings
+- Breadcrumb navigation
+- Video previews
+- Job postings
+
+User experience:
+- Users get more information before clicking
+- Rich results stand out visually
+- Reduces need to visit multiple pages
+- Improves search result quality
+
+Business impact:
+- Higher CTR from rich results
+- Better qualified traffic (users know what to expect)
+- Increased visibility and brand presence
+- Competitive advantage in search results
+- Better conversions from informed visitors
+
+THRESHOLDS
+- Good: true (valid structured data present)
+- Poor: false (missing structured data)
+
+Pages that can benefit from structured data should have it implemented. Not all page types require structured data.
+
+COMMON PITFALLS
+1. Invalid JSON syntax: Broken JSON that can't be parsed
+2. Missing required properties: Schema types require certain fields
+3. Wrong schema type: Using inappropriate schema for content
+4. Hidden content in structured data: Describing content not visible on page
+5. Incorrect values: Prices, dates, or other data that don't match visible content
+6. Missing @context: Not including schema.org context
+7. Multiple conflicting schemas: Same type defined multiple times with different data
+8. Using microdata instead of JSON-LD: Google prefers JSON-LD
+9. Overly complex nested structures: Hard to maintain and validate
+10. Not updating data: Structured data becomes stale (especially prices, availability)
+
+OPTIMIZATION STRATEGIES
+1. Use JSON-LD format: Preferred by Google, easier to implement and maintain
+2. Implement relevant schema types: Match schema to your content type
+3. Include all required properties: Check schema.org documentation
+4. Add recommended properties: Enhance eligibility for rich results
+5. Validate structured data: Use Google Rich Results Test
+6. Match visible content: Structured data must match what users see
+7. Keep data current: Update prices, availability, dates regularly
+8. Use multiple types when appropriate: Combine schemas (Article + FAQPage)
+9. Test in Search Console: Monitor rich result status and errors
+10. Follow Google guidelines: Check specific rich result requirements
+
+JSON-LD implementation examples:
+
+Article:
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Article Title",
+  "author": {
+    "@type": "Person",
+    "name": "Author Name"
+  },
+  "datePublished": "2024-01-15",
+  "image": "https://example.com/image.jpg"
+}
+</script>
+```
+
+Product:
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Product Name",
+  "image": "https://example.com/product.jpg",
+  "description": "Product description",
+  "offers": {
+    "@type": "Offer",
+    "price": "29.99",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.5",
+    "reviewCount": "89"
+  }
+}
+</script>
+```
+
+Local Business:
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Business Name",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "123 Main St",
+    "addressLocality": "City",
+    "addressRegion": "State",
+    "postalCode": "12345"
+  },
+  "telephone": "+1-555-555-5555",
+  "openingHours": "Mo-Fr 09:00-17:00"
+}
+</script>
+```
+
+TECHNICAL DETAILS
+Structured data uses schema.org vocabulary to mark up content in machine-readable format.
+
+JSON-LD characteristics:
+- JavaScript Object Notation for Linked Data
+- Placed in <script type="application/ld+json"> tags
+- Located in <head> or <body> (both work)
+- Valid JSON syntax
+- Uses @context and @type properties
+
+Schema.org vocabulary:
+- @context: Usually "https://schema.org"
+- @type: The schema type (Article, Product, Event, etc.)
+- Properties: Type-specific properties (name, price, date, etc.)
+- Nested objects: Complex structures with related entities
+
+Alternative formats (less preferred):
+- Microdata: HTML attributes (itemscope, itemprop)
+- RDFa: Resource Description Framework in attributes
+- JSON-LD is Google's recommended format
+
+Accessing structured data:
+- JavaScript: document.querySelectorAll('script[type="application/ld+json"]')
+- Parse with JSON.parse()
+- Can be added dynamically
+- Search engines prefer static implementation
+
+Schema.org types (common):
+- Creative works: Article, BlogPosting, NewsArticle, VideoObject
+- Products: Product, Offer, AggregateOffer
+- Events: Event, EventSchedule
+- Organizations: Organization, LocalBusiness, Restaurant
+- People: Person
+- Actions: SearchAction, ReviewAction
+- Q&A: FAQPage, Question, Answer
+- Reviews: Review, AggregateRating
+- Recipes: Recipe
+- Jobs: JobPosting
+
+HISTORY
+Structured data has evolved to meet search engines' need to understand web content:
+
+2011: Schema.org launched as a collaborative project by Google, Microsoft (Bing), and Yahoo (later joined by Yandex). It provided a unified vocabulary for structured data markup.
+
+2011-2013: Microdata and RDFa were the primary implementation methods. JSON-LD existed but wasn't widely adopted yet.
+
+2013: Google began showing rich snippets for structured data (review stars, recipe cards, event info), incentivizing adoption.
+
+2014-2016: JSON-LD format gained popularity. Google began recommending JSON-LD as the preferred format due to its ease of implementation and maintenance.
+
+2016: Google formally recommended JSON-LD over microdata and RDFa. Major CMSs and frameworks began adding JSON-LD support.
+
+2017: Rich result types expanded significantly (FAQs, How-tos, Carousels). Structured data became essential for search visibility.
+
+2018: Google introduced structured data testing tools and Search Console reports for rich results. Mobile-first indexing increased importance of structured data for mobile search.
+
+2019: Google launched the Rich Results Test, replacing the Structured Data Testing Tool. More rich result types added (Q&A, Job postings, Learning videos).
+
+2020-2021: COVID-19 led to new structured data types (SpecialAnnouncement). E-commerce structured data became critical during pandemic online shopping surge.
+
+2022-present: Structured data is now standard for SEO. Google continually adds new rich result types and requirements. Search Console provides detailed monitoring and error reporting for structured data.
+
+Present: JSON-LD structured data is a fundamental SEO practice. Most modern CMSs, e-commerce platforms, and SEO plugins include automatic structured data generation. Rich results significantly impact search visibility and CTR.
+
+BROWSER SUPPORT
+Structured data is for search engines, not browsers:
+
+- Browsers parse but don't display structured data
+- Search engine crawlers extract and use structured data
+- Google, Bing, Yandex, and others support schema.org
+- No browser-specific features required
+
+INDUSTRY STANDARDS
+This metric aligns with schema.org and search engine guidelines:
+
+Specifications:
+- Schema.org: Official structured data vocabulary
+- JSON-LD: W3C standard for linked data
+- Jointly supported by Google, Microsoft, Yandex, others
+
+SEO guidelines:
+- Google Search Central: Comprehensive structured data documentation
+- Google Rich Results Guidelines: Specific requirements per type
+- Bing Webmaster: Structured data support documentation
+
+Tools that validate structured data:
+- Google Rich Results Test: Tests and previews rich results
+- Google Search Console: Rich result status and error reports
+- Schema.org Validator: Validates schema markup
+- Bing Markup Validator: Bing's structured data tool
+- Screaming Frog: Extracts and analyzes structured data
+- Structured Data Linter: Validates JSON-LD, Microdata, RDFa
+
+Common CMS implementations:
+- WordPress (Yoast, Rank Math, Schema Pro): Automatic JSON-LD
+- Shopify: Built-in product structured data
+- Wix, Squarespace: Automatic structured data
+- Most modern CMSs include structured data generators
+
+RELATED METRICS
+Structured Data is part of comprehensive SEO:
+
+- DTL (Document Title): Should match structured data headline
+- MD (Meta Description): Should align with structured data description
+- OG (Open Graph): Social media structured data
+- TWC (Twitter Cards): Twitter-specific structured data
+- All SEO metrics work together for search optimization
+
+MEASUREMENT LIMITATIONS
+Structured data measurement limitations:
+
+1. Can't validate quality: Presence doesn't mean correct implementation
+2. Can't verify rich result eligibility: Google has additional requirements beyond valid JSON
+3. Complex validation: Full validation requires parsing and schema.org knowledge
+4. Can't predict rich results: Google decides which pages get rich results
+5. Dynamic data: JavaScript may inject structured data after load
+6. Multiple schemas: Complex pages may have multiple JSON-LD blocks
+7. No impact guarantee: Valid structured data doesn't guarantee rich results
+
+Manual review needed for:
+- Using Rich Results Test to validate eligibility
+- Checking Search Console for structured data errors and rich result status
+- Verifying data matches visible page content
+- Testing different schema types for appropriateness
+- Monitoring actual rich result appearances
+- Updating data to stay current (prices, dates, availability)
+
+
+SOURCES
+- Schema.org: https://schema.org/
+- Google Structured Data: https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data
+- Google Rich Results Test: https://search.google.com/test/rich-results
+- JSON-LD: https://json-ld.org/
+- W3C JSON-LD: https://www.w3.org/TR/json-ld11/
+- Google Search Central Schema Markup: https://developers.google.com/search/docs/appearance/structured-data/search-gallery
+- Bing Webmaster Structured Data: https://www.bing.com/webmasters/help/marking-up-your-site-with-structured-data-3a93e731
+
+

@@ -1,0 +1,112 @@
+CSB - CSS Budget
+
+WHAT IT MEASURES
+Total CSS size compared to recommended performance budget (typically 50-100KB uncompressed). CSS budgets help maintain reasonable stylesheet sizes to ensure fast page rendering. Large CSS files block rendering, delaying First Contentful Paint (FCP) and increasing Time to Interactive (TTI).
+
+The metric calculates:
+- Total CSS size: Sum of all CSS resource sizes (uncompressed)
+- Budget comparison: Compares total size to recommended budget
+- Budget threshold: Typically 50-100KB for initial CSS, 200KB+ is problematic
+
+CSS size impact:
+- Blocks rendering until CSS is parsed
+- Increases initial page load time
+- Affects mobile users on slow connections
+- Impacts First Contentful Paint (FCP)
+- Delays Time to Interactive (TTI)
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis summing all CSS resource sizes and comparing to budget. The measurement process:
+
+1. Identifies CSS resources:
+   - Uses PerformanceResourceTiming API
+   - Filters resources by type (text/css)
+   - Identifies <link rel="stylesheet"> and @import
+
+2. Calculates total CSS size:
+   - Sums decodedBodySize (uncompressed) for all CSS resources
+   - Accounts for inline styles if measured
+   - May also consider transferSize (compressed) for network impact
+
+3. Compares to budget:
+   - Compares total size to recommended budget (e.g., 100KB)
+   - Calculates percentage over/under budget
+   - Flags if exceeds threshold
+
+4. Returns size value:
+   - Total CSS size in bytes or kilobytes
+   - Comparison to budget threshold
+
+WHY IT'S IMPORTANT
+Large CSS files delay rendering. CSS budgets help maintain reasonable CSS sizes for performance and ensure fast page loads.
+
+Performance impact:
+- CSS blocks rendering until parsed
+- Large CSS delays First Contentful Paint
+- Increases Time to Interactive
+- Slows down page load on slow connections
+- Affects mobile performance significantly
+
+User experience:
+- Slower perceived page load
+- Delayed visual feedback
+- Poor mobile experience
+- Increased bounce rates
+
+Best practices:
+- Keep initial CSS under 100KB
+- Use critical CSS inlining
+- Lazy load non-critical CSS
+- Remove unused CSS
+
+THRESHOLDS
+- Good: ≤ 100KB (Reasonable CSS size, good performance)
+- Needs Improvement: 100-200KB (Large but manageable)
+- Poor: ≥ 200KB (Excessive CSS, performance issues)
+
+Note: These thresholds are for uncompressed CSS. Compressed CSS (gzip/brotli) will be smaller but still impacts parse time.
+
+COMMON PITFALLS
+1. Exceeding CSS budget: Total CSS size over recommended limits
+2. Large stylesheets: Single large CSS file instead of splitting
+3. Unused CSS: Dead code not removed from stylesheets
+4. No CSS optimization: Missing minification and compression
+5. Framework bloat: Including entire CSS frameworks when only parts needed
+6. Duplicate CSS: Same styles loaded multiple times
+7. Inline styles: Large inline style blocks not accounted for
+8. @import chains: Nested @import creating blocking chains
+9. No critical CSS: All CSS loaded before first paint
+10. Missing CSS splitting: Not splitting CSS by route or component
+
+OPTIMIZATION STRATEGIES
+1. Set CSS budgets: Establish and enforce CSS size limits
+2. Remove unused CSS: Use tools like PurgeCSS to eliminate dead code
+3. Optimize stylesheets: Minify and compress CSS
+4. Critical CSS inlining: Inline above-the-fold CSS in <head>
+5. Minimize CSS: Remove whitespace, comments, and optimize
+6. Split CSS by route: Load only CSS needed for current route
+7. Lazy load CSS: Defer non-critical CSS loading
+8. Use CSS frameworks wisely: Only include needed components
+9. Eliminate duplicate CSS: Consolidate duplicate styles
+10. Avoid @import: Use <link> tags instead of @import
+11. Use modern CSS: Leverage CSS features to reduce code
+12. Monitor CSS size: Track CSS size over time
+13. Use build tools: Automate CSS optimization in build process
+14. Test with throttling: Verify performance on slow connections
+
+
+HISTORY
+Resource optimization metrics became critical as web pages grew in complexity. Image optimization techniques evolved from simple compression to modern formats like WebP (2010) and AVIF (2019). Code splitting and tree shaking emerged with modern JavaScript bundlers in the 2010s. Performance budgets became a standard practice as mobile web usage highlighted the importance of resource efficiency.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

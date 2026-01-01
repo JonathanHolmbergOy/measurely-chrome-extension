@@ -1,0 +1,95 @@
+SDC - Shadow DOM Coverage
+
+WHAT IT MEASURES
+Percentage of Shadow DOM components tested for accessibility and performance issues. Shadow DOM (used in Web Components) encapsulates component internals, making it important to test shadow trees for proper ARIA labels, alt text, semantic structure, and other accessibility features.
+
+Shadow DOM characteristics:
+- Encapsulated DOM trees
+- Isolated from main document
+- Used in Web Components
+- Requires special testing approach
+- Can have accessibility issues
+
+Accessibility checks in Shadow DOM:
+- ARIA labels and roles
+- Alt text for images
+- Semantic HTML structure
+- Keyboard navigation
+- Focus management
+- Form labels
+
+HOW IT'S MEASURED
+Recursive DOM traversal checking Shadow DOM roots, testing elements within shadow trees for accessibility issues. The measurement process:
+
+1. Identifies Shadow DOM roots:
+   - Finds elements with shadowRoot
+   - Traverses shadow trees recursively
+   - Identifies all shadow DOM components
+
+2. Tests shadow tree elements:
+   - Checks for ARIA labels
+   - Verifies alt text
+   - Tests semantic structure
+   - Validates accessibility features
+
+3. Calculates coverage:
+   - Counts tested shadow components
+   - Counts total shadow components
+   - Calculates percentage
+
+WHY IT'S IMPORTANT
+Shadow DOM components can have accessibility issues if not properly tested. Web components need the same accessibility standards as regular HTML elements, but shadow DOM encapsulation can hide accessibility problems.
+
+Accessibility impact:
+- Shadow DOM can hide accessibility issues
+- Web components need accessibility testing
+- Missing ARIA in shadow trees creates barriers
+- Violates WCAG if not accessible
+- Reduces overall accessibility
+
+User experience:
+- Inaccessible web components
+- Poor experience for assistive technology users
+- Reduced usability
+- Accessibility barriers
+
+THRESHOLDS
+- Good: ≥ 90% (Most shadow components tested)
+- Needs Improvement: 60-89% (Some coverage, room for improvement)
+- Poor: ≤ 60% (Low coverage, significant gaps)
+
+COMMON PITFALLS
+1. Untested Shadow DOM: Shadow trees not tested for accessibility
+2. Missing ARIA in shadow trees: No ARIA labels in shadow DOM
+3. Inaccessible web components: Components not accessible
+4. No shadow tree traversal: Testing doesn't check shadow trees
+5. Encapsulation hiding issues: Shadow DOM hiding accessibility problems
+
+OPTIMIZATION STRATEGIES
+1. Test Shadow DOM components: Recursively test shadow trees
+2. Ensure ARIA labels in shadow trees: Add ARIA to shadow DOM elements
+3. Validate web component accessibility: Test all web components
+4. Traverse shadow trees: Recursively check shadow DOM
+5. Document shadow DOM testing: Ensure team understands shadow DOM testing
+6. Use accessibility tools: Leverage tools that support shadow DOM
+7. Test with screen readers: Verify shadow DOM accessibility
+
+
+HISTORY
+User experience metrics emerged as web applications became more interactive. Frame rate monitoring and scroll performance measurement became important as single-page applications and complex interactions became common. Responsive design metrics gained prominence with mobile web usage growth starting around 2010. Modern UX metrics focus on perceived performance and user satisfaction rather than just technical measurements.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

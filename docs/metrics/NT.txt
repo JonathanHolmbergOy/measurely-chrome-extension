@@ -1,0 +1,120 @@
+NT - Network Time
+
+WHAT IT MEASURES
+Average duration of network requests for data fetching. Measures network efficiency and API response times.
+
+HOW IT'S MEASURED
+PerformanceResourceTiming API, calculating average of responseEnd - requestStart for fetch/XHR requests
+
+WHY IT'S IMPORTANT
+Slow network requests delay content updates and user interactions. Critical for dynamic web applications
+
+THRESHOLDS
+Good ≤ 200ms, Poor ≥ 1000ms
+
+COMMON PITFALLS
+Slow API responses, large payloads, network latency, inefficient data formats, no request optimization
+
+OPTIMIZATION STRATEGIES
+Optimize API endpoints, reduce payload sizes, use efficient data formats (JSON over XML), implement request batching, use CDN for API calls
+
+
+HISTORY
+Network time measurement has evolved from basic estimates to detailed, standardized APIs:
+
+1990s-Early 2000s: Network performance was the dominant factor in web page load times. With dial-up connections (28.8-56k modems), downloading resources took seconds or minutes. However, developers had no way to measure network time programmatically. The only feedback was how long the page took to load overall.
+
+2004-2008: Broadband adoption improved connection speeds, but network time remained a critical performance factor. AJAX applications made network requests more visible to users - a slow request would leave the UI frozen or show a loading spinner. Developers manually timed requests using Date objects before and after XMLHttpRequest calls.
+
+2008-2010: Browser DevTools added Network panels showing resource loading waterfalls. Developers could see network timing visually (DNS, connection, waiting, receiving), but this required manual inspection and wasn't available programmatically.
+
+2010-2012: Mobile browsing grew rapidly, reintroducing network constraints similar to early dial-up (3G connections were often slower than wired broadband). Network time became critical again, especially for mobile users. However, measurement APIs were still limited.
+
+2012: W3C standardized the Navigation Timing API and Resource Timing API, revolutionizing network time measurement. For the first time, developers could programmatically measure detailed network timing:
+
+Navigation Timing provided:
+- DNS lookup: domainLookupEnd - domainLookupStart
+- TCP connection: connectEnd - connectStart
+- TLS negotiation: connectEnd - secureConnectionStart (for HTTPS)
+- Request/response: responseEnd - requestStart
+- Total network time: responseEnd - fetchStart
+
+Resource Timing extended this to all resources (images, scripts, stylesheets), not just the main navigation.
+
+2013-2015: Armed with timing APIs, developers could now optimize network performance systematically:
+- Identify slow DNS lookups
+- Detect connection establishment delays
+- Measure Time to First Byte (TTFB)
+- Quantify download time for resources
+
+CDN adoption accelerated as developers could measure the impact of edge caching on network time. Resource hints (dns-prefetch, preconnect) were introduced to reduce connection time.
+
+2015: HTTP/2 was standardized (RFC 7540), dramatically changing network performance:
+- Multiplexing: Multiple requests over one TCP connection
+- Header compression: Reduced overhead
+- Server push: Send resources before requested
+- Connection reuse reduced DNS/TCP/TLS time
+
+Network time measurement became more complex because multiple resources could load simultaneously over one connection. The Resource Timing API tracked connection reuse through the nextHopProtocol property.
+
+2016-2020: Network time optimization became sophisticated:
+- Resource bundling to reduce request count
+- Image optimization and modern formats (WebP, AVIF)
+- Compression (gzip, Brotli)
+- Adaptive loading based on network speed (Network Information API)
+- Service Workers for offline and cache-first strategies
+
+The Resource Timing API added more details:
+- transferSize: Actual bytes transferred (accounting for compression and cache)
+- serverTiming: Server-side timing information (Server-Timing header)
+
+2020: Google's Core Web Vitals emphasized user-centric metrics over raw network time. However, network time remained foundational because it directly affects:
+- TTFB (Time to First Byte) - pure network/server metric
+- LCP (Largest Contentful Paint) - often delayed by slow image downloads
+- Total page load time
+
+2022: HTTP/3 with QUIC protocol was standardized (RFC 9114), further improving network performance:
+- Faster connection establishment (one round-trip vs. TCP's multiple)
+- Better loss recovery
+- Connection migration (changing networks without reconnecting)
+
+Present: Network time measurement is comprehensive through the Resource Timing API, used by all major monitoring tools. Key network time components:
+
+1. DNS lookup time (domainLookupEnd - domainLookupStart)
+2. TCP connection time (connectEnd - connectStart)
+3. TLS negotiation time (connectEnd - secureConnectionStart)
+4. Request time (responseStart - requestStart) - includes TTFB
+5. Response time (responseEnd - responseStart) - download time
+
+Modern network optimization:
+- Use CDNs to reduce geographic distance
+- Implement HTTP/2 or HTTP/3
+- Minimize number of requests (bundling, sprites)
+- Optimize resource size (compression, minification)
+- Use resource hints (dns-prefetch, preconnect, preload)
+- Implement effective caching
+- Consider offline-first architectures with Service Workers
+
+Network time remains critical despite faster connections because:
+- Mobile networks can still be slow (especially 3G in many regions)
+- High-latency connections (satellite, international) add significant time
+- First visit (uncached) experiences depend heavily on network time
+- Core Web Vitals are strongly affected by network performance
+
+The Resource Timing API has made network time measurable, debuggable, and optimizable, enabling the modern high-performance web.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

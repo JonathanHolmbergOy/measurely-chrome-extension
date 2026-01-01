@@ -1,0 +1,181 @@
+AEC - ARIA Errors
+
+WHAT IT MEASURES
+Count of elements with ARIA roles missing required accessible names.
+ARIA (Accessible Rich Internet Applications) roles provide semantic meaning to elements, but without accessible names,
+screen readers cannot properly describe interactive elements to users.
+An accessible name is the text that assistive technologies announce when encountering an element.
+
+Accessible names can be provided through:
+- aria-label attribute (direct text label)
+- aria-labelledby attribute (reference to another element's ID)
+- Native HTML labels (e.g., <label> element for form inputs)
+- Element text content (for certain element types)
+
+Elements with ARIA roles that require accessible names include buttons, links, form controls, landmarks, and custom interactive widgets.
+Missing accessible names create barriers for screen reader users who cannot understand the purpose or function of interactive elements.
+
+HOW IT'S MEASURED
+DOM analysis checking elements with ARIA roles for missing accessible names. The measurement process:
+
+1. Identifies all elements with ARIA roles (role attribute or implicit roles)
+2. Checks for accessible name using the Accessible Name Calculation algorithm:
+   - First checks for aria-labelledby (highest priority)
+   - Then checks for aria-label
+   - Then checks for native label associations (<label> for="id")
+   - Then checks for element text content
+   - Then checks for aria-describedby (for description, not name)
+   - Finally checks for title attribute (fallback, not recommended)
+
+3. Validates that the accessible name is not empty or only whitespace
+4. Counts elements with roles but no valid accessible name
+
+The Accessible Name Calculation follows the W3C Accessible Name and Description Computation specification,
+ensuring consistent behavior across assistive technologies.
+
+WHY IT'S IMPORTANT
+Missing ARIA labels make interactive elements inaccessible to screen reader users,
+violating WCAG 2.1 Success Criterion 4.1.2 (Name, Role, Value).
+This is a Level A requirement, meaning it's essential for basic accessibility compliance.
+
+Impact on users:
+- Screen reader users cannot understand what interactive elements do
+- Keyboard navigation becomes confusing without context
+- Form submissions fail when users don't know what fields require
+- Navigation becomes impossible when links and buttons have no labels
+- Legal compliance issues in jurisdictions requiring WCAG compliance
+
+ARIA errors directly affect:
+- Screen reader users (estimated 2-4% of web users)
+- Voice control users who rely on accessible names
+- Cognitive accessibility (clear labels help all users)
+- Automated testing and compliance auditing
+
+THRESHOLDS
+- Good: 0 errors (all ARIA elements have accessible names)
+- Needs Improvement: 1-4 errors (minor accessibility issues)
+- Poor: ≥ 5 errors (significant accessibility barriers)
+
+The threshold of 5 errors is based on WCAG compliance requirements where multiple violations
+indicate systemic accessibility issues that need immediate attention.
+
+COMMON PITFALLS
+1. Elements with roles but no labels: Adding role="button" or role="link" without providing an accessible name
+2. Missing aria-label attributes: Interactive elements that need explicit labels but rely only on visual text
+3. Broken aria-labelledby references: References pointing to non-existent element IDs
+4. Empty accessible names: aria-label="" or aria-labelledby pointing to empty elements
+5. Icon-only buttons: Buttons with only icons and no text or aria-label
+6. Decorative elements with roles: Elements marked as decorative (role="presentation") but still interactive
+7. Custom widgets without names: Complex custom components missing accessible names
+8. Dynamic content without labels: JavaScript-generated content that doesn't include accessible names
+9. Form controls without labels: Inputs, selects, and textareas missing associated <label> or aria-label
+10. Navigation landmarks without names: Navigation regions without aria-label or aria-labelledby
+
+OPTIMIZATION STRATEGIES
+1. Add aria-label to all interactive elements: Provide explicit labels for buttons, links, and custom widgets
+2. Use aria-labelledby for complex labels: Reference other elements when labels are composed of multiple parts
+3. Associate form controls with labels: Use <label for="id"> or wrap inputs in <label> elements
+4. Test with screen readers: Use NVDA, JAWS, VoiceOver, or TalkBack to verify accessible names
+5. Use automated testing tools: Tools like axe-core, WAVE, or Lighthouse can detect missing accessible names
+6. Validate aria-labelledby references: Ensure all referenced IDs exist in the DOM
+7. Provide fallback text: Include visible text when possible, with aria-label as enhancement
+8. Review custom components: Ensure all custom widgets follow ARIA authoring practices
+9. Audit dynamic content: Verify JavaScript-generated content includes accessible names
+10. Follow ARIA naming patterns: Use established patterns from W3C ARIA Authoring Practices Guide
+
+TECHNICAL DETAILS
+The Accessible Name Calculation algorithm (defined in W3C Accessible Name and Description Computation 1.2)
+determines the accessible name in a specific order:
+
+1. aria-labelledby: If present, concatenates text from all referenced elements
+2. aria-label: Direct text label (overrides native labeling)
+3. Native labeling: <label> element, title attribute, or placeholder (for certain contexts)
+4. Element content: Text content of the element itself
+5. aria-describedby: Used for description, not name (but may be announced)
+6. title attribute: Fallback, not recommended for primary labeling
+
+Certain ARIA roles require accessible names:
+- Interactive roles: button, link, menuitem, tab, etc.
+- Landmark roles: navigation, main, complementary, etc. (should have names for clarity)
+- Form roles: textbox, combobox, checkbox, radio, etc.
+- Widget roles: dialog, alert, tooltip, etc.
+
+Some roles do not require names:
+- Structural roles: presentation, none (when used correctly)
+- Generic roles: generic (div, span without semantic meaning)
+
+The accessible name must be non-empty and meaningful. Empty strings, whitespace-only strings, or references to empty elements
+do not satisfy the requirement.
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, providing basic guidelines for accessible web content.
+However, WCAG 1.0 focused primarily on static HTML and did not address the accessibility challenges of dynamic, JavaScript-driven web applications.
+
+2008: WCAG 2.0 was published, introducing the "Name, Role, Value" requirement (Success Criterion 4.1.2). This required that all user interface components have accessible names, roles, and values that can be programmatically determined.
+2014: W3C published WAI-ARIA 1.0 (Web Accessibility Initiative - Accessible Rich Internet Applications), the first version of the ARIA specification. ARIA was developed to bridge the accessibility gap for dynamic web content, providing roles, states, and properties that could be added to HTML to make custom widgets accessible. The specification included detailed requirements for accessible names.
+2017: WAI-ARIA 1.1 was published, refining the specification with additional roles, properties, and states. The Accessible Name and Description Computation 1.1 specification was also published, standardizing how assistive technologies calculate accessible names.
+2018: WCAG 2.1 was published, maintaining the 4.1.2 requirement and adding new success criteria. ARIA became the standard solution for making dynamic content accessible.
+2021: WAI-ARIA 1.2 was published, further refining the specification. The Accessible Name and Description Computation 1.2 provided updated algorithms for name calculation.
+2023: WCAG 2.2 was published, continuing to emphasize the importance of accessible names through Success Criterion 4.1.2.
+
+The evolution of ARIA and accessible name requirements reflects the growing complexity of web applications and the need for standardized accessibility solutions. Today, ARIA errors are one of the most common accessibility issues found in web audits, highlighting the importance of proper implementation.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C WAI-ARIA specifications and WCAG 2.1/2.2 accessibility guidelines. ARIA error detection is implemented in major accessibility testing tools including:
+
+- axe-core: Open-source accessibility testing engine used by many tools
+- WAVE (Web Accessibility Evaluation Tool): Browser extension and online tool
+- Lighthouse: Google's automated auditing tool (accessibility audit)
+- Pa11y: Command-line accessibility testing tool
+- Accessibility Insights: Microsoft's accessibility testing tool
+- W3C HTML Validator: Can detect some ARIA implementation issues
+
+Legal requirements:
+- Section 508 (United States): Requires WCAG 2.0 Level AA compliance
+- EN 301 549 (European Union): Requires WCAG 2.1 Level AA compliance
+- AODA (Ontario, Canada): Requires WCAG 2.0 Level AA compliance
+- Many other jurisdictions have similar requirements
+
+Thresholds are based on WCAG compliance requirements where zero errors is the target for full compliance. Multiple errors indicate systemic issues that need remediation.
+
+RELATED METRICS
+ARIA Errors are part of a comprehensive accessibility measurement framework. Related metrics include:
+
+- AIV (ARIA Invalid Combinations): Elements with incorrect ARIA role/attribute combinations
+- ARS (ARIA Relationship Errors): Broken ARIA relationships (aria-labelledby, aria-describedby)
+- FLI (Form Label Issues): Form inputs missing labels (overlaps with AEC)
+- AMC (Alt Text Missing): Images missing alternative text (similar accessibility issue)
+- ASC (Accessibility Score): Composite score including ARIA errors
+
+Together, these metrics provide a comprehensive view of accessibility compliance and identify barriers for users with disabilities.
+
+MEASUREMENT LIMITATIONS
+Client-side ARIA error detection has several limitations:
+
+1. Dynamic content: Elements added after initial page load may not be detected in automated scans
+2. JavaScript-generated content: Content created by frameworks may not be immediately available for testing
+3. Shadow DOM: Elements within Shadow DOM may require special handling
+4. Iframe content: Cross-origin iframes cannot be fully analyzed due to security restrictions
+5. Context-dependent names: Some accessible names depend on page context that automated tools may not fully understand
+6. False positives: Tools may flag elements that have accessible names through complex calculation paths
+7. Browser differences: Different browsers and assistive technologies may calculate accessible names slightly differently
+8. User interaction: Some accessible names only become available after user interaction
+
+Automated testing should be supplemented with:
+- Manual screen reader testing
+- Keyboard navigation testing
+- User testing with people with disabilities
+- Code review of ARIA implementation
+
+Measurements are most accurate when performed on fully rendered pages with all dynamic content loaded and after user interactions that may reveal additional content.
+
+
+SOURCES
+- MDN ARIA: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA
+- W3C WAI-ARIA: https://www.w3.org/WAI/ARIA/
+- W3C Accessible Name and Description Computation: https://www.w3.org/TR/accname-1.2/
+- WCAG 2.1 Success Criterion 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+- W3C ARIA Authoring Practices Guide: https://www.w3.org/WAI/ARIA/apg/
+- axe-core Documentation: https://github.com/dequelabs/axe-core
+- WAVE Tool: https://wave.webaim.org/
+- See metrics.txt for additional sources

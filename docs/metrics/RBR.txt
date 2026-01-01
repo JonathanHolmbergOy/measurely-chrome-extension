@@ -1,0 +1,131 @@
+RBR - Render-Blocking Resources
+
+WHAT IT MEASURES
+Count and impact of CSS and JavaScript resources that block page rendering. Render-blocking resources prevent the browser from displaying content until they are fully loaded and processed, delaying First Contentful Paint (FCP) and impacting perceived performance.
+
+Render-blocking resources include:
+- CSS files loaded in the document head
+- Synchronous JavaScript files (without async or defer attributes)
+- Resources with renderBlockingStatus === 'blocking'
+- Critical resources loaded in the first 1000ms of page load
+
+The metric tracks:
+- Number of blocking resources
+- Total blocking time duration
+- Individual resource size and load duration
+- Resource type (CSS or JavaScript)
+
+HOW IT'S MEASURED
+Performance Timeline API and Resource Timing API are used to identify blocking resources. The measurement process:
+
+1. Retrieves all resources via performance.getEntriesByType('resource')
+2. Checks renderBlockingStatus property for native blocking detection
+3. Identifies CSS files loaded early (within first 1000ms)
+4. Identifies synchronous JavaScript (no async/defer) loaded early
+5. Calculates total blocking time from all identified resources
+6. Reports count, duration, size, and type for each blocking resource
+
+Blocking detection criteria:
+- resource.renderBlockingStatus === 'blocking' (native browser detection)
+- CSS: initiatorType === 'link' or filename includes .css, loaded in first 1000ms
+- JS: initiatorType === 'script' or filename includes .js, synchronous (no async/defer), loaded in first 1000ms
+
+WHY IT'S IMPORTANT
+Render-blocking resources are one of the primary causes of slow First Contentful Paint (FCP) and delayed Time to Interactive (TTI). When the browser encounters render-blocking CSS or JavaScript, it must stop rendering the page until these resources are downloaded, parsed, and executed. This creates a blank screen for users and significantly impacts perceived performance.
+
+Performance impact:
+- Blocks initial page rendering
+- Delays First Contentful Paint (FCP)
+- Increases Time to Interactive (TTI)
+- Creates longer blank screen duration
+- Poor user experience on slow connections
+
+User experience:
+- Users see blank screens longer
+- Perceived performance is worse
+- Higher bounce rates
+- Reduced engagement
+- Poor Core Web Vitals scores
+
+SEO impact:
+- Affects Core Web Vitals rankings
+- Search engines penalize slow FCP
+- Reduced search visibility
+- Lower page rankings
+
+THRESHOLDS
+- Good: 0 render-blocking resources
+- Needs Improvement: 1-2 render-blocking resources
+- Poor: ≥ 3 render-blocking resources
+
+Best practice is to eliminate all render-blocking resources or defer non-critical resources.
+
+COMMON PITFALLS
+1. Large CSS files in head: Blocks rendering until entire file loads
+2. Synchronous scripts in head: JavaScript without async/defer blocks parsing
+3. Multiple CSS files: Each CSS file blocks rendering independently
+4. External fonts without font-display: Fonts block text rendering
+5. Unused CSS in critical path: Loading CSS rules that aren't needed initially
+6. JavaScript before content: Scripts loaded before visible content
+7. Large JavaScript bundles: Heavy scripts delay interactivity
+8. Third-party scripts: External resources beyond your control
+9. No critical CSS inlining: All CSS loaded externally
+10. CSS @import: Nested CSS imports create sequential blocking
+
+OPTIMIZATION STRATEGIES
+1. Inline critical CSS: Embed above-the-fold CSS directly in HTML
+2. Defer non-critical CSS: Load remaining CSS asynchronously via JavaScript or media queries
+3. Use async/defer on scripts: Add async or defer attributes to script tags
+4. Move scripts to end of body: Place non-critical scripts before closing body tag
+5. Code splitting: Break large bundles into smaller chunks
+6. Resource hints: Use preload for critical resources, preconnect for origins
+7. Remove unused CSS: Eliminate rules not used on initial render
+8. Optimize CSS delivery: Use media queries to conditionally load CSS
+9. Font-display: swap: Prevent fonts from blocking text rendering
+10. Tree shaking: Remove unused JavaScript code
+11. Minimize parser-blocking scripts: Reduce JavaScript in critical path
+12. HTTP/2 Server Push: Push critical resources early
+13. Use CDN: Faster delivery of resources
+14. Compress resources: Gzip or Brotli compression
+
+TECHNICAL DETAILS
+The metric uses the Resource Timing API to access detailed information about each resource loaded during page navigation. Modern browsers provide the renderBlockingStatus property that explicitly indicates whether a resource blocks rendering.
+
+For browsers without native support, the metric uses heuristics:
+- CSS files loaded in the first 1000ms are considered blocking (as CSS in head typically blocks)
+- JavaScript files without async or defer attributes loaded in first 1000ms are considered blocking
+
+The total blocking time is calculated by summing the duration property of all identified blocking resources. This represents the cumulative time the main thread was blocked waiting for these resources.
+
+Blocking time formula:
+totalBlockingTime = Σ(resource.duration) for all blocking resources
+
+Resource analysis includes:
+- URL: Full resource path
+- Type: CSS or JavaScript
+- Duration: Time from request start to response complete
+- Size: Transfer size in bytes (after compression)
+- Start time: When resource loading began relative to navigation start
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+- FCP (First Contentful Paint): Directly impacted by render-blocking resources
+- LCP (Largest Contentful Paint): Loading performance of main content
+- TTI (Time to Interactive): When page becomes fully interactive
+- TBT (Total Blocking Time): Main thread blocking during page load
+- CSB (CSS Budget): Total CSS size budget
+- JSB (JavaScript Budget): Total JavaScript size budget
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- MDN: https://developer.mozilla.org/en-US/docs/Web/API/Resource_Timing_API
+- Web.dev: https://web.dev/render-blocking-resources/
+- W3C: https://www.w3.org/TR/resource-timing/

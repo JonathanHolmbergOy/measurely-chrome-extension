@@ -1,0 +1,144 @@
+DLS - Definition List Structure
+================================
+
+OVERVIEW
+--------
+Rule ID: definition-list
+Impact: Serious
+Category: Accessibility (Document Structure)
+WCAG: 2.0 Level A (1.3.1 Info and Relationships)
+
+Description:
+Ensures dl (definition list) elements only contain dt, dd, div, script, or template elements as direct children. Invalid structure breaks screen reader navigation and semantic understanding.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Proper definition list structure:
+- Enables screen readers to navigate term/definition pairs
+- Maintains semantic document structure
+- Supports list navigation shortcuts
+- Meets WCAG 1.3.1 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all <dl> elements
+2. Checks direct children are only <dt>, <dd>, <div>, <script>, or <template>
+3. Reports lists with invalid children
+4. Identifies invalid child elements
+
+
+HOW TO FIX
+----------
+1. Move non-dt/dd content outside <dl>
+2. Wrap groups in <div> if needed
+3. Use semantic structure
+4. Validate term/definition pairing
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<dl>
+    <span>Term 1</span>
+    <span>Definition 1</span>
+</dl>
+
+<dl>
+    <p>Invalid paragraph</p>
+    <dt>Term</dt>
+    <dd>Definition</dd>
+</dl>
+
+Good:
+<dl>
+    <dt>Term 1</dt>
+    <dd>Definition 1</dd>
+</dl>
+
+<dl>
+    <div>
+        <dt>Term 1</dt>
+        <dd>Definition 1</dd>
+    </div>
+    <div>
+        <dt>Term 2</dt>
+        <dd>Definition 2</dd>
+    </div>
+</dl>
+
+
+GLOSSARY PATTERN
+----------------
+<dl>
+    <dt>HTML</dt>
+    <dd>HyperText Markup Language</dd>
+    
+    <dt>CSS</dt>
+    <dd>Cascading Style Sheets</dd>
+    
+    <dt>JavaScript</dt>
+    <dd>Programming language for web interactivity</dd>
+</dl>
+
+
+MULTIPLE DEFINITIONS
+--------------------
+<dl>
+    <dt>Coffee</dt>
+    <dd>A brewed drink prepared from roasted coffee beans</dd>
+    <dd>A dark brown color</dd>
+    
+    <dt>Tea</dt>
+    <dd>An aromatic beverage made from Camellia sinensis leaves</dd>
+</dl>
+
+
+METADATA LIST
+-------------
+<dl class="metadata">
+    <div class="meta-item">
+        <dt>Author:</dt>
+        <dd>Jane Smith</dd>
+    </div>
+    
+    <div class="meta-item">
+        <dt>Published:</dt>
+        <dd>January 15, 2024</dd>
+    </div>
+    
+    <div class="meta-item">
+        <dt>Category:</dt>
+        <dd>Technology</dd>
+    </div>
+</dl>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Invalid structure rendered but affects accessibility
+- Firefox: Invalid structure rendered but affects accessibility
+- Safari: Invalid structure rendered but affects accessibility
+- Screen Readers: Invalid structure breaks navigation
+
+
+RELATED RULES
+-------------
+- DLI (DL Item Parents)
+- LST (List Structure)
+- ARP (ARIA Required Parent)
+
+
+SOURCES
+-------
+- MDN dl: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl
+- HTML Spec: https://html.spec.whatwg.org/multipage/grouping-content.html#the-dl-element
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#definition-list
+- WCAG 1.3.1: https://www.w3.org/WAI/WCAG21/Understanding/info-and-relationships.html
+

@@ -1,0 +1,369 @@
+Adobe RGB (1998)
+================
+
+OVERVIEW
+--------
+Adobe RGB (1998) is a wide-gamut RGB color space developed by Adobe Systems in 1998.
+It encompasses approximately 50% more colors than sRGB, with particularly strong coverage
+of cyan and green tones. It was designed to encompass most of the colors achievable on CMYK color printers.
+
+DESCRIPTION
+-----------
+Adobe RGB uses three color channels (red, green, blue) with a significantly wider gamut than sRGB.
+The color space was specifically designed to include most of the gamut defined by CMYK color printing,
+making it ideal for workflows that involve both screen display and print output.
+
+The "1998" in the name distinguishes it from earlier Adobe RGB implementations.
+
+TECHNICAL SPECIFICATIONS
+-------------------------
+- Gamut: ~50% larger than sRGB (~52% of visible colors)
+- White Point: D65 (daylight, 6500K)
+- Gamma: 2.2 (simple power curve, not sRGB's piecewise function)
+- Primaries:
+  * Red: x=0.6400, y=0.3300
+  * Green: x=0.2100, y=0.7100  (wider than sRGB!)
+  * Blue: x=0.1500, y=0.0600 (same as sRGB)
+- Transfer Function: V = I^(1/2.2)
+
+HISTORY
+-------
+1997: Adobe begins development for print-to-web workflows
+1998: Adobe RGB (1998) officially released
+1999-2000s: Adopted by professional photographers
+2000s: Becomes standard in high-end cameras and monitors
+2010s: Remains professional standard for print workflows
+2021: Added to CSS Color Module Level 4 as 'a98-rgb'
+2023: Browser support achieved
+
+WHY ADOBE RGB WAS CREATED
+--------------------------
+In the late 1990s, professionals faced a problem:
+- sRGB couldn't represent many printable colors
+- Converting from screen to CMYK print lost color information
+- No standard RGB space covered CMYK gamut
+
+Adobe RGB solved this by:
+✓ Encompassing most CMYK colors
+✓ Providing consistent color across screen and print
+✓ Offering more color "headroom" for editing
+
+CSS SYNTAX
+----------
+Using color() function with 'a98-rgb' identifier:
+  color: color(a98-rgb 1 0 0);              /* Bright red */
+  color: color(a98-rgb 0 0.8 0.5);          /* Cyan-green */
+  color: color(a98-rgb 0.5 0.5 0.5 / 0.8);  /* Gray with alpha */
+
+Component ranges:
+  Red: 0-1
+  Green: 0-1
+  Blue: 0-1
+  Alpha: 0-1 or 0%-100%
+
+Note: CSS uses 'a98-rgb', not 'adobe-rgb', to avoid trademark issues.
+
+BROWSER SUPPORT
+---------------
+color(a98-rgb ...) syntax:
+- Safari 15.0+ (September 2021) ✓
+- Chrome 111+ (March 2023) ✓
+- Edge 111+ (March 2023) ✓
+- Firefox 113+ (May 2023) ✓
+- Opera 97+ (March 2023) ✓
+
+Not supported:
+- Internet Explorer (all versions)
+- Safari < 15.0
+- Chrome < 111
+- Firefox < 113
+
+ADVANTAGES
+----------
+✓ Wider gamut than sRGB (~50% more colors)
+✓ Covers most CMYK printable colors
+✓ Better for photography workflows
+✓ More "headroom" for color grading
+✓ Industry standard for print-to-web
+✓ Preserves vibrant cyans and greens
+✓ Supported by professional cameras
+✓ Better for wide-gamut monitors
+
+LIMITATIONS
+-----------
+✗ Not all displays can show full Adobe RGB gamut
+✗ Colors look "flat" on sRGB displays without conversion
+✗ Larger file sizes than sRGB
+✗ Requires proper color management
+✗ Not necessary for web-only content
+✗ Narrower than Display P3 in some reds
+✗ Less intuitive gamma curve than sRGB
+
+USE CASES
+---------
+Ideal for:
+- Professional photography
+- Print-to-web workflows
+- CMYK color matching
+- Photo editing and color grading
+- Wide-gamut monitor utilization
+- Commercial printing
+- Product photography
+- Fine art reproduction
+
+Not necessary for:
+- Web-only content (use sRGB or Display P3)
+- Social media (converts to sRGB)
+- Video (use Rec. 709 or Rec. 2020)
+- Maximum compatibility (use sRGB)
+
+COMPARISON WITH OTHER SPACES
+-----------------------------
+vs sRGB:
+  Adobe RGB: 50% wider gamut, better cyans/greens
+  sRGB: Universal compatibility, smaller files
+
+vs Display P3:
+  Adobe RGB: Better cyans/greens, covers more CMYK
+  Display P3: Better reds/oranges, matches modern displays
+
+vs ProPhoto RGB:
+  Adobe RGB: Reasonable gamut, practical
+  ProPhoto RGB: Huge gamut, theoretical colors
+
+vs CMYK:
+  Adobe RGB: Encompasses ~80-90% of CMYK gamut
+  CMYK: Print-specific, device-dependent
+
+DEVICE SUPPORT
+--------------
+Professional monitors:
+✓ Eizo ColorEdge series (~99% Adobe RGB)
+✓ BenQ SW series (~99% Adobe RGB)
+✓ Dell UltraSharp UP series (~99% Adobe RGB)
+✓ ASUS ProArt series (~99% Adobe RGB)
+
+Most consumer displays:
+- Standard monitors: ~70-80% Adobe RGB
+- MacBook Pro: ~87% Adobe RGB (focused on P3)
+- Budget monitors: ~60% Adobe RGB
+
+Cameras with Adobe RGB support:
+✓ Canon 5D/R series
+✓ Nikon D850, Z series
+✓ Sony A7/A9 series
+✓ Medium format cameras
+
+CONVERSION FORMULAS
+-------------------
+Adobe RGB to Linear RGB:
+```javascript
+function adobeRGBToLinear(a98) {
+  // Simple power curve (gamma = 2.2)
+  return Math.pow(a98, 2.2);
+}
+```
+
+Linear to Adobe RGB:
+```javascript
+function linearToAdobeRGB(linear) {
+  return Math.pow(linear, 1/2.2);
+}
+```
+
+Adobe RGB Linear to sRGB Linear (matrix transformation):
+```javascript
+const r_srgb = r_adobe * 1.2249439 + g_adobe * -0.2249439 + b_adobe * 0.0000000;
+const g_srgb = r_adobe * -0.0420569 + g_adobe * 1.0420569 + b_adobe * 0.0000000;
+const b_srgb = r_adobe * -0.0196376 + g_adobe * -0.0786361 + b_adobe * 1.0982737;
+```
+
+Then apply sRGB gamma correction for display.
+
+PRACTICAL EXAMPLES
+------------------
+// Vibrant cyan (outside sRGB gamut)
+color: color(a98-rgb 0 0.9 0.9);
+
+// Saturated green (better than sRGB)
+color: color(a98-rgb 0 1 0);
+
+// With fallback for older browsers
+.photo-accent {
+  background: rgb(0, 200, 200);           /* sRGB fallback */
+  background: color(a98-rgb 0 0.8 0.8);  /* Wide gamut */
+}
+
+// Progressive enhancement
+@media (color-gamut: p3) {
+  .brand-cyan {
+    color: color(a98-rgb 0 0.85 0.75);
+  }
+}
+
+GAMMA DIFFERENCE
+----------------
+Adobe RGB uses simple gamma 2.2:
+  V = I^(1/2.2)
+
+sRGB uses complex piecewise function:
+  V = 12.92 × I (for I ≤ 0.0031308)
+  V = 1.055 × I^(1/2.4) - 0.055 (otherwise)
+
+Adobe RGB's simpler gamma makes conversions faster but less optimized for human perception at very dark values.
+
+WORKFLOW RECOMMENDATIONS
+------------------------
+**Photography Workflow:**
+1. Shoot in Adobe RGB (if camera supports)
+2. Edit in Adobe RGB working space
+3. Export to sRGB for web
+4. Export to CMYK for print
+5. Embed color profiles in files
+
+**Web Workflow:**
+1. Master assets in Adobe RGB
+2. Convert to Display P3 for modern displays
+3. Provide sRGB fallback
+4. Use color profile embedding
+5. Test on multiple displays
+
+COMMON MISTAKES
+---------------
+1. **No color profile**: Images look desaturated on sRGB displays
+2. **Forgetting sRGB export**: Web images look wrong
+3. **Assuming all monitors support it**: Most don't
+4. **Not embedding profiles**: Browsers can't convert correctly
+5. **Using for web-only work**: Unnecessary complexity
+
+PRINT WORKFLOWS
+---------------
+Adobe RGB is standard for print preparation:
+
+**Coverage of print gamuts:**
+- Offset CMYK: ~85-90% coverage
+- Photo inkjet: ~90-95% coverage
+- Fine art paper: ~80-85% coverage
+
+**Workflow steps:**
+1. Edit photos in Adobe RGB
+2. Soft-proof in target CMYK profile
+3. Adjust colors for print
+4. Convert to CMYK with profile
+5. Print with embedded profile
+
+GAMUT MAPPING
+-------------
+When displaying Adobe RGB on sRGB screens:
+- Out-of-gamut colors get clipped
+- Vibrant cyans/greens become less saturated
+- Colors may shift unexpectedly
+- Proper color management required
+
+Strategy:
+1. Detect display capabilities
+2. Convert to display gamut
+3. Use perceptual rendering intent
+4. Provide sRGB fallback
+
+COLOR MANAGEMENT
+----------------
+Adobe RGB requires proper color management:
+
+**In Photoshop:**
+- Edit → Color Settings
+- Working Space: Adobe RGB (1998)
+- Color Management Policies: Preserve Embedded Profiles
+- Conversion Options: Perceptual or Relative Colorimetric
+
+**In Web Browsers:**
+- Browsers auto-convert if profile is embedded
+- Falls back to sRGB if no profile
+- Use `<img>` with proper color profile
+- CSS color() function handles conversion
+
+IMAGE EXPORT GUIDELINES
+-----------------------
+**For Web:**
+- Export as sRGB for maximum compatibility
+- Or use Display P3 for modern devices
+- Always embed color profile
+- Provide multiple versions if needed
+
+**For Print:**
+- Keep in Adobe RGB until final CMYK conversion
+- Embed Adobe RGB profile
+- Convert to printer-specific CMYK profile
+- Proof on calibrated monitor
+
+FILE FORMAT SUPPORT
+-------------------
+✓ JPEG: Can embed Adobe RGB profile
+✓ PNG: Can embed Adobe RGB profile
+✓ TIFF: Full Adobe RGB support
+✓ PSD: Native Adobe RGB working space
+✓ WebP: Supports wide-gamut profiles
+✗ GIF: Only sRGB (8-bit palette)
+
+REAL-WORLD ADOPTION
+-------------------
+Professional Photography: ~80% (industry standard)
+Print Industry: ~75% (especially photo printing)
+Web Development: ~5% (Display P3 more common)
+Consumer Photography: ~20% (most use sRGB)
+
+BEST PRACTICES
+--------------
+1. **Use for photography and print**
+2. **Always embed color profiles in images**
+3. **Provide sRGB fallback for CSS**
+4. **Test on both wide-gamut and sRGB displays**
+5. **Convert to sRGB for final web delivery** (unless targeting wide-gamut)
+6. **Calibrate monitors** for accurate color work
+7. **Use for RAW photo editing**, export to sRGB/P3 for web
+
+MONITOR CALIBRATION
+-------------------
+Working with Adobe RGB requires:
+- Hardware-calibrated wide-gamut monitor
+- Spectrophotometer for calibration (X-Rite i1Display, etc.)
+- Regular calibration (monthly)
+- Controlled lighting environment
+- Monitor hood to reduce glare
+
+WHEN NOT TO USE
+---------------
+❌ Web-only projects (use sRGB or Display P3)
+❌ Social media content (converts to sRGB anyway)
+❌ Video work (use Rec. 709 or Rec. 2020)
+❌ If you don't have wide-gamut monitor
+❌ If color management is not possible
+❌ For maximum compatibility needs
+
+TOOLS AND SOFTWARE
+------------------
+Full support:
+✓ Adobe Photoshop
+✓ Adobe Lightroom
+✓ Capture One
+✓ Affinity Photo
+✓ GIMP (with color management)
+✓ ColorSync (macOS)
+
+RELATED COLOR SPACES
+--------------------
+- sRGB: Narrower standard RGB space
+- Display P3: Modern wide-gamut for displays
+- ProPhoto RGB: Even wider gamut
+- Rec. 2020: Wide gamut for video
+- CMYK: Print color space Adobe RGB approximates
+
+FURTHER READING
+---------------
+- Adobe RGB (1998) Color Image Encoding specification
+- CSS Color Module Level 4: https://www.w3.org/TR/css-color-4/
+- Adobe color management documentation
+- "Adobe RGB vs sRGB" (Cambridge in Colour)
+- ICC Profile specification
+- Can I Use: https://caniuse.com/mdn-css_types_color_color
+

@@ -1,0 +1,200 @@
+FCI - Focus Contrast Issues
+
+WHAT IT MEASURES
+Count of focus indicators that don't meet minimum contrast requirements. Focus indicators are visual cues that show which element currently has keyboard focus, essential for keyboard navigation accessibility. WCAG 2.1 Success Criterion 2.4.7 (Focus Visible) requires that keyboard focus be visible, and WCAG 2.2 Success Criterion 2.4.11 (Focus Not Obscured) requires focus indicators to have sufficient contrast.
+
+Focus indicators can be implemented using:
+- CSS outline property (most common)
+- CSS border changes
+- CSS box-shadow
+- Background color changes
+- Custom focus styles
+
+The contrast requirement ensures that focus indicators are visible against their background, making it clear which element has focus for keyboard users.
+
+HOW IT'S MEASURED
+getComputedStyle analysis checking focus indicator contrast against background using WCAG contrast formula. The measurement process:
+
+1. Identifies all focusable elements (buttons, links, inputs, etc.)
+2. Applies focus state programmatically or detects focused elements
+3. Retrieves computed styles for focus indicators:
+   - outline-color and outline-width
+   - border-color when border changes on focus
+   - box-shadow color when shadow is used for focus
+   - background-color changes on focus
+4. Calculates contrast ratio between focus indicator and background:
+   - Uses WCAG contrast formula: (L1 + 0.05) / (L2 + 0.05)
+   - L1 is the relative luminance of the lighter color
+   - L2 is the relative luminance of the darker color
+5. Validates against minimum contrast requirement (3:1 for focus indicators)
+6. Flags elements where focus indicator contrast is below threshold
+
+The measurement distinguishes between:
+- Visible focus: Focus indicator with sufficient contrast (≥ 3:1)
+- Low contrast focus: Focus indicator with insufficient contrast (< 3:1)
+- Missing focus: No visible focus indicator
+- Obscured focus: Focus indicator exists but is hidden or obscured
+
+WHY IT'S IMPORTANT
+Focus indicators must have sufficient contrast to be visible. Low contrast focus indicators are hard to see, making keyboard navigation difficult or impossible for users who rely on visual focus indicators.
+
+Impact on users:
+- Keyboard users cannot see which element has focus
+- Navigation becomes difficult or impossible
+- Users may not know where they are on the page
+- Form completion becomes challenging
+- Violates WCAG 2.1 Success Criterion 2.4.7 (Focus Visible) - Level AA
+- Violates WCAG 2.2 Success Criterion 2.4.11 (Focus Not Obscured) - Level AA
+
+Accessibility impact:
+- Keyboard navigation becomes unusable
+- Users with motor disabilities who rely on keyboards are excluded
+- Users with low vision cannot see focus indicators
+- Creates barriers for users who cannot use pointing devices
+- Legal compliance issues in jurisdictions requiring WCAG compliance
+
+Technical impact:
+- Poor user experience for keyboard users
+- Reduced accessibility score
+- Non-compliance with accessibility standards
+- Potential legal liability
+
+THRESHOLDS
+- Good: 0 errors (all focus indicators have sufficient contrast ≥ 3:1)
+- Needs Improvement: 1-2 errors (minor focus visibility issues)
+- Poor: ≥ 3 errors (significant keyboard navigation barriers)
+
+Even a single focus indicator with insufficient contrast can create a barrier for keyboard users. The threshold reflects that focus visibility is critical for keyboard navigation accessibility.
+
+COMMON PITFALLS
+1. Low contrast focus indicators: Focus outline colors that blend with background
+2. Invisible focus outlines: outline: none without alternative focus styles
+3. Insufficient focus visibility: Focus indicators that are too subtle to see
+4. Removed focus styles: CSS that removes default browser focus styles without replacement
+5. Same color focus: Focus indicator color matches background color
+6. Thin focus outlines: Focus outlines that are too thin to be visible
+7. Obscured focus: Focus indicators hidden by overlapping elements or z-index issues
+8. Missing focus styles: No focus styles defined, relying on browser default (may be insufficient)
+9. Low contrast on different backgrounds: Focus indicator works on one background but not others
+10. Custom focus that's too subtle: Custom focus styles that don't meet contrast requirements
+
+OPTIMIZATION STRATEGIES
+1. Ensure focus indicators have 3:1 contrast: Use WCAG contrast calculator to verify contrast ratio
+2. Use visible focus styles: Implement clear, visible focus indicators for all focusable elements
+3. Test focus visibility: Manually test keyboard navigation to verify focus is visible
+4. Avoid low-contrast outlines: Choose focus indicator colors with sufficient contrast
+5. Don't remove focus styles: Never use outline: none without providing alternative focus styles
+6. Use high-contrast colors: Choose focus indicator colors that stand out against backgrounds
+7. Test on different backgrounds: Verify focus indicators work on all background colors
+8. Make focus indicators thick enough: Ensure focus outlines are at least 2px wide
+9. Use multiple visual cues: Combine outline, border, and background changes for better visibility
+10. Test with keyboard: Regularly test keyboard navigation to ensure focus is always visible
+
+
+TECHNICAL DETAILS
+Focus indicators are visual cues that show which element currently has keyboard focus. They are essential for keyboard navigation accessibility.
+
+WCAG requirements:
+- WCAG 2.1 Success Criterion 2.4.7 (Focus Visible) - Level AA: Keyboard focus must be visible
+- WCAG 2.2 Success Criterion 2.4.11 (Focus Not Obscured) - Level AA: Focus indicators must not be obscured and must have sufficient contrast
+
+Contrast requirements:
+- Focus indicators must have at least 3:1 contrast ratio with adjacent colors
+- This is lower than text contrast (4.5:1) because focus indicators are temporary and larger
+- Contrast must be maintained against all possible background colors
+
+Common focus indicator implementations:
+- CSS outline: Most common, browser default
+- CSS border: Changes border on focus
+- CSS box-shadow: Shadow effect for focus
+- Background color: Changes background on focus
+- Combination: Multiple visual cues for better visibility
+
+Browser default focus:
+- Browsers provide default focus styles (usually blue outline)
+- These may not meet contrast requirements on all backgrounds
+- Custom focus styles are often needed to ensure visibility
+
+HISTORY
+Focus indicator requirements have evolved with accessibility standards:
+
+1999: WCAG 1.0 Guideline 9 required that information and structure be separable from presentation, but didn't specifically address focus visibility.
+
+2008: WCAG 2.0 Success Criterion 2.4.7 (Focus Visible) was introduced as Level AA requirement. This required that keyboard focus be programmatically determined and visible.
+
+2010s: As keyboard navigation became more important, developers began to recognize that removing or styling focus indicators could create accessibility barriers. Best practices emerged for visible focus styles.
+
+2018: WCAG 2.1 maintained the 2.4.7 requirement. Focus indicator contrast became a focus of accessibility audits as many sites had low-contrast or missing focus styles.
+
+2023: WCAG 2.2 added Success Criterion 2.4.11 (Focus Not Obscured) - Level AA, which specifically requires that focus indicators not be obscured and have sufficient contrast. This addressed the issue of focus indicators being hidden by overlapping content or having insufficient contrast.
+
+The importance of focus indicator contrast grew as:
+- Keyboard navigation became more critical for accessibility
+- Users reported difficulty seeing focus indicators
+- Accessibility audits identified focus visibility as a common issue
+- Legal requirements for accessibility compliance increased
+- Research showed that low-contrast focus indicators create barriers
+
+INDUSTRY STANDARDS
+This metric aligns with W3C WCAG 2.1 and 2.2 accessibility guidelines. Focus indicator validation is implemented in major accessibility testing tools including:
+
+- axe-core: Open-source accessibility testing engine with focus-visible and focus-order rules
+- WAVE (Web Accessibility Evaluation Tool): Flags missing or low-contrast focus indicators
+- Lighthouse: Google's automated auditing tool includes focus visibility checks
+- Pa11y: Command-line accessibility testing tool that validates focus indicators
+- Accessibility Insights: Microsoft's accessibility testing tool with focus validation
+- Browser DevTools: Can inspect focus styles and contrast
+
+Legal requirements:
+- Section 508 (United States): Requires WCAG 2.0 Level AA compliance
+- EN 301 549 (European Union): Requires WCAG 2.1 Level AA compliance
+- AODA (Ontario, Canada): Requires WCAG 2.0 Level AA compliance
+- WCAG 2.1 Success Criterion 2.4.7 (Level AA) requires visible focus
+- WCAG 2.2 Success Criterion 2.4.11 (Level AA) requires unobscured focus with sufficient contrast
+
+Industry guidelines:
+- W3C WCAG 2.1 Success Criterion 2.4.7 (Focus Visible)
+- W3C WCAG 2.2 Success Criterion 2.4.11 (Focus Not Obscured)
+- WebAIM provides guidance on focus indicator best practices
+
+Thresholds are based on WCAG compliance requirements where zero errors is the target. Even a single focus indicator with insufficient contrast can create a barrier for keyboard users.
+
+RELATED METRICS
+Focus Contrast Issues is part of a comprehensive accessibility measurement framework. Related metrics include:
+
+- FNO (Focus Not Obscured): Focus indicators hidden by overlapping content
+- NTC (Non-Text Contrast Issues): Contrast issues for UI components (overlaps with focus indicators)
+- CIC (Contrast Issues): General text contrast issues
+- ASC (Accessibility Score): Composite score including focus visibility issues
+
+Together, these metrics identify different types of focus and contrast issues that prevent users from effectively navigating and interacting with web content using keyboards.
+
+MEASUREMENT LIMITATIONS
+Client-side focus contrast detection has several limitations:
+
+1. Dynamic focus states: Focus indicators may only be visible when elements are actually focused
+2. Complex focus styles: Custom focus implementations using multiple CSS properties may be difficult to measure
+3. Background variations: Focus indicators must work on all possible background colors, which is difficult to test comprehensively
+4. Overlapping content: Focus indicators may be obscured by other elements, requiring visual inspection
+5. Browser differences: Different browsers may render focus styles differently
+6. CSS specificity: Focus styles may be overridden by more specific CSS rules
+7. JavaScript-managed focus: Focus managed by JavaScript may not be detectable in static analysis
+8. Pseudo-class limitations: :focus pseudo-class may not be easily testable in automated tools
+
+Automated testing should be supplemented with:
+- Manual keyboard navigation testing
+- Visual inspection of focus indicators
+- Testing on different backgrounds and color schemes
+- User testing with people who use keyboards for navigation
+- Testing with different browsers and assistive technologies
+
+Measurements are most accurate when combined with manual testing and real user feedback on focus visibility.
+
+
+SOURCES
+- WCAG 2.1 Success Criterion 2.4.7: https://www.w3.org/WAI/WCAG21/Understanding/focus-visible.html
+- WCAG 2.2 Success Criterion 2.4.11: https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured.html
+- MDN :focus pseudo-class: https://developer.mozilla.org/en-US/docs/Web/CSS/:focus
+- WebAIM Keyboard Accessibility: https://webaim.org/techniques/keyboard/
+- axe-core focus-visible rule: https://www.deque.com/axe/developer-tools/api-documentation/#rules-focus-order-semantics
+- See metrics.txt for additional sources

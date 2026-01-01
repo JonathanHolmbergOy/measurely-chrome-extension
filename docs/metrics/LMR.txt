@@ -1,0 +1,98 @@
+LMR - Landmark Regions
+
+WHAT IT MEASURES
+Count of properly used ARIA landmark regions or semantic HTML5 elements that create page structure. Landmarks help screen reader users navigate page structure efficiently by providing regions they can jump to (main content, navigation, etc.).
+
+ARIA landmark roles:
+- banner: Site header (typically one per page)
+- navigation: Navigation menus
+- main: Main content area (typically one per page)
+- complementary: Sidebars, related content
+- contentinfo: Site footer (typically one per page)
+- search: Search functionality
+- form: Form regions
+- region: Generic regions with labels
+
+Semantic HTML5 elements (implicit landmarks):
+- `<header>`: Implicit banner role
+- `<nav>`: Implicit navigation role
+- `<main>`: Implicit main role
+- `<aside>`: Implicit complementary role
+- `<footer>`: Implicit contentinfo role
+- `<section>`: Can be landmark with aria-label
+- `<form>`: Implicit form role
+
+HOW IT'S MEASURED
+DOM analysis checking for ARIA landmark roles (banner, navigation, main, complementary, contentinfo, etc.) and semantic HTML5 elements. The measurement process:
+
+1. Identifies landmarks:
+   - Finds elements with ARIA landmark roles
+   - Identifies semantic HTML5 elements
+   - Counts unique landmark types
+
+2. Validates landmark usage:
+   - Checks for proper landmark structure
+   - Verifies landmarks are used correctly
+   - Identifies missing important landmarks
+
+3. Returns count:
+   - Number of unique landmark types present
+   - May identify which landmarks are missing
+
+WHY IT'S IMPORTANT
+Landmarks provide page structure navigation for screen readers, making it easier to jump to main content, navigation, etc. This improves accessibility and user experience for screen reader users.
+
+Accessibility impact:
+- Screen reader users can navigate efficiently
+- Quick access to main content
+- Better page structure understanding
+- Violates WCAG 2.1 Success Criterion 1.3.1 (Info and Relationships) - Level A if missing
+- Improves overall accessibility
+
+User experience:
+- Faster navigation for screen reader users
+- Better content organization
+- Improved usability
+- Reduced cognitive load
+
+THRESHOLDS
+- Good: ≥ 3 (Multiple landmarks, good structure)
+- Needs Improvement: 1-2 (Some landmarks, basic structure)
+- Poor: ≤ 1 (Few or no landmarks, poor structure)
+
+Note: A well-structured page typically has at least main, navigation, and banner/contentinfo landmarks.
+
+COMMON PITFALLS
+1. Missing landmarks: No ARIA landmarks or semantic elements
+2. Incorrect landmark usage: Wrong roles or improper structure
+3. No semantic structure: Missing HTML5 semantic elements
+4. Duplicate landmarks: Multiple elements with same landmark role incorrectly
+5. Missing main landmark: No main content landmark
+6. Missing navigation: No navigation landmark
+
+OPTIMIZATION STRATEGIES
+1. Implement ARIA landmarks: Add landmark roles where needed
+2. Use semantic HTML5 elements: Prefer semantic elements (header, nav, main, etc.)
+3. Ensure proper landmark structure: Use correct landmarks for page sections
+4. Test with screen readers: Verify landmark navigation works
+5. Add main landmark: Ensure main content is marked
+6. Add navigation landmarks: Mark navigation menus
+7. Use banner and contentinfo: Mark header and footer
+8. Document landmark structure: Ensure team understands landmarks
+
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, evolving to WCAG 2.0 (2008), WCAG 2.1 (2018), and WCAG 2.2 (2023). ARIA (Accessible Rich Internet Applications) was first published by W3C in 2014 to address accessibility gaps in dynamic web content. The Web Content Accessibility Guidelines have become legal requirements in many jurisdictions, driving adoption of accessibility metrics and testing tools.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

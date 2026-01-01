@@ -1,0 +1,108 @@
+CSQ - Cookie Security Quality
+
+WHAT IT MEASURES
+Percentage of cookies with security flags (HttpOnly, Secure, SameSite) properly configured. This metric evaluates how well cookies are protected against common attacks like XSS (Cross-Site Scripting), man-in-the-middle interception, and CSRF (Cross-Site Request Forgery).
+
+The metric calculates:
+- HttpOnly flag: Prevents JavaScript access (protects against XSS)
+- Secure flag: Ensures cookies only sent over HTTPS (protects against interception)
+- SameSite attribute: Prevents cross-site cookie sending (protects against CSRF)
+- Security score: Percentage of cookies with all three flags set
+
+Cookie security flags:
+- HttpOnly: Cookie not accessible via JavaScript (document.cookie)
+- Secure: Cookie only sent over HTTPS connections
+- SameSite: Controls when cookies are sent with cross-site requests
+  - Strict: Never sent with cross-site requests
+  - Lax: Sent with top-level navigation (default in modern browsers)
+  - None: Always sent (requires Secure flag)
+
+HOW IT'S MEASURED
+document.cookie analysis or HTTP header analysis checking Set-Cookie headers for HttpOnly, Secure, and SameSite attributes. The measurement process:
+
+1. Identifies cookies:
+   - Checks Set-Cookie headers in HTTP responses
+   - May analyze document.cookie (limited, can't see HttpOnly)
+   - Identifies all cookies set by the site
+
+2. Evaluates security flags:
+   - Checks for HttpOnly flag presence
+   - Checks for Secure flag presence
+   - Checks for SameSite attribute and value
+   - Verifies SameSite=None includes Secure flag
+
+3. Calculates security score:
+   - Counts cookies with all three flags (HttpOnly, Secure, SameSite)
+   - Divides by total cookie count
+   - Multiplies by 100 for percentage
+   - Returns security quality score
+
+4. May provide details:
+   - Lists cookies missing flags
+   - Identifies which flags are missing
+   - Provides recommendations
+
+WHY IT'S IMPORTANT
+Secure cookies prevent XSS attacks, man-in-the-middle interception, and CSRF attacks. Essential for session security and protecting user data.
+
+Security benefits:
+- HttpOnly prevents XSS cookie theft
+- Secure prevents interception over HTTP
+- SameSite prevents CSRF attacks
+- Protects session tokens and sensitive data
+- Reduces attack surface
+
+Attack prevention:
+- XSS: HttpOnly prevents JavaScript access to cookies
+- Man-in-the-middle: Secure ensures HTTPS-only transmission
+- CSRF: SameSite prevents cross-site cookie sending
+- Session hijacking: All flags together provide comprehensive protection
+
+THRESHOLDS
+- Good: ≥ 80% (Most cookies properly secured)
+- Needs Improvement: 50-79% (Some cookies need security flags)
+- Poor: ≤ 50% (Many cookies insecure, significant risk)
+
+Note: 100% is ideal - all cookies should have all three flags set.
+
+COMMON PITFALLS
+1. Missing HttpOnly flag: Cookies accessible via JavaScript, vulnerable to XSS
+2. Missing Secure flag: Cookies sent over HTTP, vulnerable to interception
+3. Missing SameSite attribute: Cookies sent with cross-site requests, vulnerable to CSRF
+4. Insecure cookie configuration: Cookies without proper security flags
+5. SameSite=None without Secure: SameSite=None requires Secure flag
+6. Inconsistent configuration: Some cookies secure, others not
+7. Legacy cookies: Old cookies not updated with security flags
+8. Third-party cookies: Third-party cookies may not have security flags
+9. Development vs production: Different configurations between environments
+10. Missing flags on session cookies: Critical session cookies not protected
+
+OPTIMIZATION STRATEGIES
+1. Set HttpOnly for all cookies: Prevents JavaScript access, protects against XSS
+2. Use Secure flag for HTTPS: Ensures cookies only sent over secure connections
+3. Implement SameSite=Strict: Maximum CSRF protection (or Lax for compatibility)
+4. Audit all cookies: Review all cookies and ensure security flags
+5. Update legacy cookies: Migrate old cookies to include security flags
+6. Test cookie behavior: Verify cookies work correctly with security flags
+7. Document cookie requirements: Ensure team understands security needs
+8. Use secure defaults: Configure application to set security flags by default
+9. Monitor cookie security: Regularly audit cookie configurations
+10. Gradual migration: Update cookies incrementally if needed
+11. Consider SameSite=Lax: Balance between security and functionality
+12. Ensure Secure with SameSite=None: Required combination for cross-site cookies
+13. Review third-party cookies: Work with vendors to secure third-party cookies
+14. Test across browsers: Verify cookie behavior in different browsers
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

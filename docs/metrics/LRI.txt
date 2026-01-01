@@ -1,0 +1,98 @@
+LRI - Live Region Issues
+
+WHAT IT MEASURES
+Count of dynamic content areas missing ARIA live regions. Live regions announce content changes to screen reader users without requiring them to navigate to the changed area, which is essential for single-page applications and dynamic content updates.
+
+ARIA live region attributes:
+- aria-live: Indicates content will be announced (polite, assertive, or off)
+- aria-atomic: Whether entire region or just changes are announced
+- aria-relevant: What changes trigger announcements (additions, removals, text, all)
+
+Live region values:
+- aria-live="polite": Announcements when user is idle (non-intrusive)
+- aria-live="assertive": Immediate announcements (interrupts current speech)
+- aria-live="off": No announcements (default)
+
+Use cases for live regions:
+- Form validation errors
+- Status messages
+- Dynamic content updates
+- Loading states
+- Notification messages
+- Search results
+- Chat messages
+
+HOW IT'S MEASURED
+DOM analysis checking dynamic content areas for aria-live, aria-atomic, or aria-relevant attributes. The measurement process:
+
+1. Identifies dynamic content:
+   - Finds content that changes dynamically
+   - Identifies areas updated by JavaScript
+   - Detects form validation, status messages, etc.
+
+2. Checks for live regions:
+   - Verifies aria-live attribute presence
+   - Checks aria-atomic and aria-relevant
+   - Validates live region configuration
+
+3. Flags missing live regions:
+   - Counts dynamic content without live regions
+   - Identifies which areas need live regions
+   - Returns count of issues
+
+WHY IT'S IMPORTANT
+Live regions announce dynamic content changes to screen reader users, essential for single-page applications and dynamic updates. Without live regions, screen reader users may miss important updates.
+
+Accessibility impact:
+- Screen reader users miss dynamic updates
+- Form errors not announced
+- Status messages not communicated
+- Violates WCAG 2.1 Success Criterion 4.1.3 (Status Messages) - Level AA
+- Creates barriers for screen reader users
+
+User experience:
+- Users miss important information
+- Form errors not communicated
+- Status updates not announced
+- Poor experience for screen reader users
+
+THRESHOLDS
+- Good: 0 errors (All dynamic content has live regions)
+- Needs Improvement: 1 error (Minor live region issue)
+- Poor: ≥ 2 errors (Multiple missing live regions, significant barriers)
+
+COMMON PITFALLS
+1. Dynamic content without live regions: Content changes not announced
+2. Missing aria-live attributes: No live region configuration
+3. No announcements for content changes: Updates not communicated
+4. Incorrect aria-live values: Wrong politeness level
+5. Missing aria-atomic: Not specifying atomic behavior
+6. No live regions for errors: Form errors not announced
+7. Status messages not live: Status updates not communicated
+
+OPTIMIZATION STRATEGIES
+1. Add aria-live to dynamic content areas: Mark dynamic content with live regions
+2. Use polite or assertive based on importance: Choose appropriate politeness level
+3. Test with screen readers: Verify announcements work correctly
+4. Use aria-atomic appropriately: Specify atomic behavior
+5. Configure aria-relevant: Control what changes trigger announcements
+6. Add live regions for errors: Ensure form errors are announced
+7. Mark status messages: Use live regions for status updates
+8. Document live region usage: Ensure team understands live regions
+
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, evolving to WCAG 2.0 (2008), WCAG 2.1 (2018), and WCAG 2.2 (2023). ARIA (Accessible Rich Internet Applications) was first published by W3C in 2014 to address accessibility gaps in dynamic web content. The Web Content Accessibility Guidelines have become legal requirements in many jurisdictions, driving adoption of accessibility metrics and testing tools.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

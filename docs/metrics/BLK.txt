@@ -1,0 +1,130 @@
+BLK - Blink Elements
+====================
+
+OVERVIEW
+--------
+Rule ID: blink
+Impact: Serious
+Category: Accessibility (Deprecated Elements)
+WCAG: 2.0 Level A (2.2.2 Pause, Stop, Hide)
+
+Description:
+Detects deprecated <blink> elements that cause content to flash repeatedly. Blinking content can trigger seizures in users with photosensitive epilepsy and makes reading difficult for all users.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Blinking elements:
+- Can trigger seizures in photosensitive users
+- Distract users from main content
+- Make text difficult to read
+- Are deprecated and not supported in modern browsers
+- Violate WCAG 2.2.2 Level A
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Searches for <blink> elements in DOM
+2. Counts total occurrences
+3. Reports presence of deprecated elements
+4. Flags as critical accessibility violation
+
+
+HOW TO FIX
+----------
+1. Remove all <blink> elements
+2. Use CSS animations if movement needed
+3. Allow user control of animations
+4. Provide pause/stop mechanism
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<blink>Important message!</blink>
+<blink>Sale ends today!</blink>
+<p>This is <blink>urgent</blink> information</p>
+
+Good:
+<p class="important">Important message!</p>
+
+<!-- Or controlled animation with CSS -->
+<p class="animated-text">Sale ends today!</p>
+
+<style>
+@media (prefers-reduced-motion: no-preference) {
+    .animated-text {
+        animation: pulse 2s ease-in-out infinite;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+</style>
+
+<!-- With pause control -->
+<button onclick="toggleAnimation()">Pause/Resume</button>
+<p id="animated" class="animated-text">Content</p>
+
+
+ACCESSIBLE ALTERNATIVES
+------------------------
+For attention-getting elements:
+
+Strong emphasis:
+<p><strong>Important:</strong> This message requires attention</p>
+
+Visual callout:
+<div class="callout" role="alert">
+    Time-sensitive information
+</div>
+
+CSS:
+.callout {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+
+REDUCED MOTION SUPPORT
+----------------------
+/* Respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: <blink> deprecated, no effect
+- Firefox: <blink> deprecated, no effect
+- Safari: <blink> deprecated, no effect
+- Screen Readers: Element content announced but not blinking
+
+
+RELATED RULES
+-------------
+- MRQ (Marquee Elements)
+- MRF (Meta Refresh)
+
+
+SOURCES
+-------
+- MDN Blink (deprecated): https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blink
+- WCAG 2.2.2: https://www.w3.org/WAI/WCAG21/Understanding/pause-stop-hide.html
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#blink
+- W3C Seizures: https://www.w3.org/WAI/WCAG21/Understanding/seizures-and-physical-reactions
+

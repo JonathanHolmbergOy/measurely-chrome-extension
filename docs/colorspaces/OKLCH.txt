@@ -1,0 +1,237 @@
+OKLCH
+=====
+
+OVERVIEW
+--------
+OKLCH is a modern perceptually uniform color space designed for digital color manipulation. It's a cylindrical (polar) transformation of OKLab, optimized for human color perception and smooth gradients.
+
+DESCRIPTION
+-----------
+OKLCH represents colors using three components:
+- L (Lightness): 0 to 1 (or 0% to 100%) - perceived brightness
+- C (Chroma): 0 to ~0.4 - colorfulness/saturation (unbounded)
+- H (Hue): 0 to 360 degrees - color angle
+
+The "OK" prefix indicates it's based on the Oklab color space, which was designed by Björn Ottosson in 2020 to address perceptual uniformity issues in older color spaces.
+
+TECHNICAL SPECIFICATIONS
+-------------------------
+- Based on: OKLab (converted to polar coordinates)
+- Perceptually uniform: Yes (excellent)
+- Device independent: Yes
+- Gamut: Unbounded (can represent all visible colors)
+- Reference white: D65
+- Hue angles:
+  * 0° = Red/Pink
+  * 90° = Yellow
+  * 180° = Cyan
+  * 270° = Blue
+
+HISTORY
+-------
+2020: Björn Ottosson publishes OKLab color space
+2020: OKLCH (polar form) introduced alongside OKLab
+2021: Added to CSS Color Module Level 4 specification
+2022: First browser implementations begin
+2023: Widespread browser support achieved (Safari 15.4+, Chrome 111+, Firefox 113+)
+2024: Growing adoption in design tools and frameworks
+
+CSS SYNTAX
+----------
+Basic:
+  color: oklch(0.65 0.15 180);
+  color: oklch(65% 0.15 180deg);
+
+With alpha:
+  color: oklch(0.65 0.15 180 / 0.5);
+  color: oklch(65% 0.15 180deg / 50%);
+
+Component ranges:
+  L: 0-1 or 0%-100%
+  C: 0-0.4 (typically, but unbounded)
+  H: 0-360 (degrees)
+  Alpha: 0-1 or 0%-100%
+
+BROWSER SUPPORT
+---------------
+Modern browsers (>90% global coverage):
+- Safari 15.4+ (March 2022) ✓
+- Chrome 111+ (March 2023) ✓
+- Edge 111+ (March 2023) ✓
+- Firefox 113+ (May 2023) ✓
+- Opera 97+ (March 2023) ✓
+
+Not supported:
+- Internet Explorer (all versions)
+- Safari < 15.4
+- Chrome < 111
+- Firefox < 113
+
+Fallback required for older browsers.
+
+ADVANTAGES
+----------
+✓ Perceptually uniform - equal numeric changes = equal visual changes
+✓ Predictable hue shifts - colors don't shift unexpectedly when lightening/darkening
+✓ Perfect for smooth gradients
+✓ Intuitive for color manipulation
+✓ Hue rotation works beautifully
+✓ Can represent all visible colors
+✓ Better than HSL in every perceptual way
+✓ Excellent for color palettes and design systems
+
+LIMITATIONS
+-----------
+✗ Not supported in older browsers (<2023)
+✗ Out-of-gamut colors need clipping for display
+✗ Less familiar to designers than HSL
+✗ Some color combinations outside sRGB gamut
+✗ Requires fallbacks for legacy support
+
+USE CASES
+---------
+Perfect for:
+- Color palettes and design systems
+- Smooth gradients and transitions
+- Color manipulation (lightening, darkening, saturating)
+- Hue rotation and color harmonies
+- Accessible color generation
+- Dynamic theming
+- Data visualization
+
+Examples:
+- Generate lighter/darker shades: just change L
+- Create complementary colors: add 180° to H
+- Adjust saturation: change C value
+- Color interpolation and gradients
+
+COMPARISON WITH OTHER SPACES
+-----------------------------
+vs HSL:
+  OKLCH: Perceptually uniform, predictable
+  HSL: Not uniform, hue shifts when adjusting lightness
+
+vs Lab/LCH:
+  OKLCH: Better hue uniformity, simpler conversions
+  Lab/LCH: Older standard, less perceptually accurate
+
+vs OKLab:
+  OKLCH: Polar (easier for hue manipulation)
+  OKLab: Rectangular (easier for interpolation)
+
+vs sRGB:
+  OKLCH: Perceptually uniform, unbounded
+  sRGB: Limited gamut, not perceptually uniform
+
+CONVERSION FORMULAS
+-------------------
+OKLCH to OKLab:
+  a = C × cos(H)
+  b = C × sin(H)
+
+OKLab to OKLCH:
+  L = L (unchanged)
+  C = √(a² + b²)
+  H = atan2(b, a) × 180/π
+
+OKLab to Linear sRGB (via LMS color space):
+  [Complex matrix transformation - see OKLab.txt]
+
+PRACTICAL EXAMPLES
+------------------
+// Brand color system
+--color-primary: oklch(0.55 0.22 250);      /* vibrant blue */
+--color-primary-light: oklch(0.75 0.22 250); /* lighter, same hue */
+--color-primary-dark: oklch(0.35 0.22 250);  /* darker, same hue */
+
+// Gradient (smooth and perceptually uniform)
+background: linear-gradient(
+  in oklch,
+  oklch(0.7 0.2 30),   /* orange */
+  oklch(0.7 0.2 180)   /* cyan */
+);
+
+// Complementary colors
+--color-accent: oklch(0.65 0.15 30);        /* orange */
+--color-complement: oklch(0.65 0.15 210);   /* blue (30 + 180) */
+
+PERCEPTUAL UNIFORMITY
+---------------------
+In OKLCH, a change of ΔL = 0.1 looks equally different whether:
+- Going from L=0.2 to L=0.3
+- Going from L=0.7 to L=0.8
+
+This is NOT true in HSL or RGB, where the same numeric change can look very different depending on the starting values.
+
+GAMUT MAPPING
+-------------
+OKLCH can describe colors outside the sRGB gamut. When displaying:
+1. Browser automatically clips out-of-gamut colors
+2. Or use CSS gamut-mapping: @media (color-gamut: p3)
+3. Consider using "perceptual" or "relative-colorimetric" rendering intent
+
+Example of out-of-gamut color:
+  oklch(0.7 0.4 150)  /* Very saturated green, likely out of sRGB */
+
+COLOR INTERPOLATION
+-------------------
+OKLCH is excellent for interpolation:
+
+linear-gradient(in oklch, red, blue)
+
+This produces smoother, more natural-looking gradients than:
+- RGB (muddy middle)
+- HSL (unexpected hue shifts)
+
+ACCESSIBILITY CONSIDERATIONS
+-----------------------------
+While OKLCH is perceptually uniform, WCAG contrast calculations still require sRGB:
+1. Convert OKLCH to sRGB
+2. Calculate relative luminance in sRGB
+3. Apply WCAG contrast formula
+
+Tools can help generate accessible OKLCH color palettes automatically.
+
+DESIGN TOOLS SUPPORT
+--------------------
+Growing support in 2024:
+✓ Figma: Partial support via plugins
+✓ Adobe: Coming in future releases
+✓ Sketch: Limited support
+✓ CSS frameworks: Tailwind, Open Props, etc.
+✓ Online tools: OKLCH Color Picker, Coloraide
+
+REAL-WORLD ADOPTION
+-------------------
+Current usage: ~5-10% of modern sites (2024)
+Growing rapidly among:
+- Design systems (e.g., Radix Colors, Open Props)
+- Modern frameworks (Svelte, Solid, etc.)
+- Progressive web apps
+- Design-forward agencies
+
+BEST PRACTICES
+--------------
+1. Provide sRGB fallback for older browsers:
+   color: rgb(255, 100, 50);  /* fallback */
+   color: oklch(0.65 0.2 30);  /* modern */
+
+2. Use for color manipulation, not static definitions
+3. Keep chroma reasonable (< 0.35) for most UI colors
+4. Test on actual devices for out-of-gamut colors
+5. Use for gradients and transitions
+
+RELATED COLOR SPACES
+--------------------
+- OKLab: Rectangular form of the same color space
+- LCH: Older polar color space based on Lab
+- Lab: CIE Lab color space
+- HSL: Similar polar structure but not perceptually uniform
+
+FURTHER READING
+---------------
+- Björn Ottosson's blog: https://bottosson.github.io/posts/oklab/
+- CSS Color 4 spec: https://www.w3.org/TR/css-color-4/#ok-lab
+- "OKLCH in CSS" by Evil Martians: https://evilmartians.com/chronicles/oklch-in-css
+- Can I Use: https://caniuse.com/mdn-css_types_color_oklch
+

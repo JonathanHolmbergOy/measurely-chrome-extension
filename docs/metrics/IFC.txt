@@ -1,0 +1,112 @@
+IFC - Iframe Content Issues
+
+WHAT IT MEASURES
+Count of accessibility and security issues found in iframes (both same-origin and cross-origin). Checks for missing titles, improper sandbox attributes, nested accessibility problems, and security vulnerabilities.
+
+Iframe issues checked:
+- Missing title attribute: Iframes without descriptive titles
+- Missing aria-label: Iframes without accessible names
+- Improper sandbox: Missing or incorrect sandbox attributes
+- Security issues: Iframes with security vulnerabilities
+- Nested accessibility: Accessibility issues within iframe content (same-origin only)
+- Cross-origin restrictions: Issues with cross-origin iframe access
+
+Accessibility requirements:
+- Iframes must have title or aria-label for screen readers
+- Title should describe iframe purpose
+- Same-origin iframes should be tested for nested issues
+
+Security considerations:
+- Sandbox attribute restricts iframe capabilities
+- Cross-origin iframes have security restrictions
+- Proper sandboxing prevents security vulnerabilities
+
+HOW IT'S MEASURED
+DOM analysis checking iframe elements for title attributes, sandbox attributes, and recursively testing same-origin iframe content. The measurement process:
+
+1. Identifies all iframes:
+   - Finds all `<iframe>` elements in DOM
+   - Records iframe attributes
+   - Determines if same-origin or cross-origin
+
+2. Checks accessibility:
+   - Verifies title attribute presence
+   - Checks for aria-label attribute
+   - Validates accessible name is provided
+
+3. Checks security:
+   - Verifies sandbox attribute (if needed)
+   - Checks sandbox restrictions
+   - Identifies security issues
+
+4. Tests nested content (same-origin):
+   - Recursively tests iframe content for accessibility issues
+   - Checks for nested problems
+   - May test same-origin iframe DOM
+
+5. Counts issues:
+   - Missing titles
+   - Missing sandbox (where needed)
+   - Nested accessibility issues
+   - Security problems
+
+WHY IT'S IMPORTANT
+Iframes can have accessibility and security issues. Missing titles prevent screen reader users from understanding iframe purpose, and improper sandboxing creates security vulnerabilities.
+
+Accessibility impact:
+- Screen reader users cannot understand iframe purpose without title
+- Violates WCAG 2.1 Success Criterion 4.1.2 (Name, Role, Value) - Level A
+- Nested issues in iframes create additional barriers
+- Reduces overall accessibility
+
+Security impact:
+- Improper sandboxing allows security vulnerabilities
+- Cross-origin iframes can be security risks
+- Missing restrictions enable attacks
+- Data leakage risks
+
+THRESHOLDS
+- Good: 0 errors (All iframes properly configured)
+- Needs Improvement: 1-2 errors (Minor iframe issues)
+- Poor: ≥ 3 errors (Significant iframe problems)
+
+COMMON PITFALLS
+1. Missing iframe titles: Iframes without title or aria-label
+2. No sandbox attributes: Iframes missing security restrictions
+3. Inaccessible iframe content: Content within iframes not accessible
+4. Security issues: Improper sandbox configuration
+5. Cross-origin issues: Problems with cross-origin iframe access
+6. Nested problems: Accessibility issues within iframe content
+7. Missing accessible names: Iframes without proper labeling
+
+OPTIMIZATION STRATEGIES
+1. Add title attributes to iframes: Provide descriptive titles for all iframes
+2. Implement sandbox attributes: Use sandbox for security when appropriate
+3. Test iframe accessibility: Verify iframes are accessible
+4. Ensure proper security: Configure sandbox restrictions correctly
+5. Test nested content: Check same-origin iframe content for issues
+6. Use aria-label: Provide aria-label if title not appropriate
+7. Document iframe purpose: Ensure iframes have clear purpose
+8. Review sandbox restrictions: Verify sandbox allows needed functionality
+9. Test with screen readers: Verify iframe titles are announced
+10. Monitor iframe usage: Track iframe implementation and issues
+
+
+HISTORY
+User experience metrics emerged as web applications became more interactive. Frame rate monitoring and scroll performance measurement became important as single-page applications and complex interactions became common. Responsive design metrics gained prominence with mobile web usage growth starting around 2010. Modern UX metrics focus on perceived performance and user satisfaction rather than just technical measurements.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

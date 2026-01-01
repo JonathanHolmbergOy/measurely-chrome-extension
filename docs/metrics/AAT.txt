@@ -1,0 +1,111 @@
+AAT - Area Alt Text
+===================
+
+OVERVIEW
+--------
+Rule ID: area-alt
+Impact: Critical
+Category: Accessibility (Image Maps)
+WCAG: 2.0 Level A (1.1.1 Non-text Content, 2.4.4 Link Purpose)
+
+Description:
+Ensures <area> elements in image maps have alt text. Image map areas define clickable regions within images, and without alt text, screen reader users cannot identify or activate these interactive regions.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Area alt text:
+- Describes clickable regions in image maps
+- Enables keyboard navigation of map areas
+- Provides link context for screen readers
+- Meets WCAG 1.1.1 and 2.4.4 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all <area> elements in <map> tags
+2. Checks for alt attribute presence and content
+3. Reports areas without alt text
+4. Includes href and coords for identification
+
+
+HOW TO FIX
+----------
+1. Add alt attribute to every <area> element
+2. Describe the destination or purpose
+3. Keep descriptions concise and meaningful
+4. Don't include "link" or "image" in alt text
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<map name="nav">
+    <area shape="rect" coords="0,0,100,50" href="home.html">
+    <area shape="rect" coords="100,0,200,50" href="about.html" alt="">
+</map>
+
+Good:
+<map name="nav">
+    <area shape="rect" coords="0,0,100,50" href="home.html" alt="Home">
+    <area shape="rect" coords="100,0,200,50" href="about.html" alt="About Us">
+    <area shape="rect" coords="200,0,300,50" href="contact.html" alt="Contact">
+</map>
+
+
+COMPLETE IMAGE MAP EXAMPLE
+---------------------------
+<img src="world-map.png" alt="World Map" usemap="#world">
+<map name="world">
+    <area shape="rect" coords="0,0,200,200" 
+          href="/regions/north-america" alt="North America">
+    <area shape="rect" coords="200,0,400,200" 
+          href="/regions/europe" alt="Europe">
+    <area shape="rect" coords="0,200,200,400" 
+          href="/regions/south-america" alt="South America">
+    <area shape="rect" coords="200,200,400,400" 
+          href="/regions/africa" alt="Africa">
+</map>
+
+
+INTERACTIVE DIAGRAM
+-------------------
+<img src="car-diagram.png" alt="Car parts diagram" usemap="#car-parts">
+<map name="car-parts">
+    <area shape="circle" coords="100,100,30" 
+          href="/parts/engine" alt="Engine specifications">
+    <area shape="poly" coords="150,50,200,75,175,125" 
+          href="/parts/hood" alt="Hood and body panels">
+    <area shape="rect" coords="50,150,150,200" 
+          href="/parts/wheels" alt="Tires and wheels">
+</map>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: Critical for image map accessibility
+
+
+RELATED RULES
+-------------
+- AMC (Alt Text Missing)
+- SVA (SVG Accessibility)
+- OBA (Object Alt Text)
+
+
+SOURCES
+-------
+- MDN Area: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/area
+- MDN Map: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/map
+- WCAG H24: https://www.w3.org/WAI/WCAG21/Techniques/html/H24
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#area-alt
+- WCAG 1.1.1: https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html
+

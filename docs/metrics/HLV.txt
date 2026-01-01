@@ -1,0 +1,176 @@
+HLV - HTML Lang Valid
+=====================
+
+OVERVIEW
+--------
+Rule ID: html-has-lang, html-lang-valid
+Impact: Serious
+Category: Accessibility (Language)
+WCAG: 2.0 Level A (3.1.1 Language of Page)
+
+Description:
+Ensures the html element has a valid lang attribute with a proper language code. The lang attribute enables screen readers to use correct pronunciation and helps browsers provide appropriate translations.
+
+Thresholds:
+- Good: 0 violations
+- Poor: 1 violation
+
+
+WHY IT MATTERS
+--------------
+Valid HTML lang attribute:
+- Enables correct screen reader pronunciation
+- Supports browser translation features
+- Helps search engines understand content language
+- Meets WCAG 3.1.1 Level A requirement
+
+
+VALID LANGUAGE CODES
+--------------------
+Format: language[-REGION]
+- en (English)
+- en-US (English - United States)
+- en-GB (English - United Kingdom)
+- es (Spanish)
+- fr (French)
+- de (German)
+- ja (Japanese)
+- zh (Chinese)
+- ar (Arabic)
+- pt-BR (Portuguese - Brazil)
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Checks if <html> element has lang attribute
+2. Validates lang format matches ISO 639-1 standard
+3. Reports missing or invalid lang attributes
+4. Suggests correct language codes
+
+
+HOW TO FIX
+----------
+1. Add lang attribute to <html> element
+2. Use valid ISO 639-1 language code
+3. Include region code if needed (optional)
+4. Match lang to primary page language
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<html>  <!-- Missing lang -->
+
+<html lang="english">  <!-- Invalid: use "en" -->
+<html lang="EN">  <!-- Invalid: should be lowercase -->
+<html lang="eng">  <!-- Invalid: use 2-letter code -->
+
+Good:
+<html lang="en">
+<html lang="en-US">
+<html lang="es">
+<html lang="fr-CA">
+
+
+BASIC PAGE STRUCTURE
+---------------------
+English:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page Title</title>
+</head>
+<body>
+    Content in English
+</body>
+</html>
+
+Spanish:
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Título de la página</title>
+</head>
+<body>
+    Contenido en español
+</body>
+</html>
+
+
+MULTIPLE LANGUAGES
+------------------
+Primary language on html, secondary languages on elements:
+
+<html lang="en">
+<body>
+    <p>This is in English</p>
+    <p lang="fr">Ceci est en français</p>
+    <p lang="de">Dies ist auf Deutsch</p>
+</body>
+</html>
+
+
+COMMON LANGUAGE CODES
+----------------------
+- ar: Arabic
+- de: German
+- en: English
+- es: Spanish
+- fr: French
+- hi: Hindi
+- it: Italian
+- ja: Japanese
+- ko: Korean
+- nl: Dutch
+- pl: Polish
+- pt: Portuguese
+- ru: Russian
+- sv: Swedish
+- tr: Turkish
+- zh: Chinese
+
+With regions:
+- en-US, en-GB, en-AU, en-CA
+- es-ES, es-MX
+- pt-BR, pt-PT
+- zh-CN, zh-TW
+
+
+DYNAMIC LANGUAGE SETTING
+-------------------------
+// Set language dynamically
+document.documentElement.lang = 'en';
+
+// Change based on user preference
+function setLanguage(langCode) {
+    if (/^[a-z]{2,3}(-[A-Z]{2})?$/.test(langCode)) {
+        document.documentElement.lang = langCode;
+    }
+}
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support, uses for translation
+- Firefox: Full support, uses for translation
+- Safari: Full support, uses for translation
+- Screen Readers: Critical for correct pronunciation
+
+
+RELATED RULES
+-------------
+- LAA (Language Attributes)
+- VLG (Valid Lang Attributes)
+
+
+SOURCES
+-------
+- MDN lang attribute: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/lang
+- WCAG 3.1.1: https://www.w3.org/WAI/WCAG21/Understanding/language-of-page.html
+- WCAG H57: https://www.w3.org/WAI/WCAG21/Techniques/html/H57
+- ISO 639-1: https://www.loc.gov/standards/iso639-2/php/code_list.php
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#html-has-lang
+

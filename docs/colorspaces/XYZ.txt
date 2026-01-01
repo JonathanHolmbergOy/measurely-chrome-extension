@@ -1,0 +1,451 @@
+CIE XYZ
+=======
+
+OVERVIEW
+--------
+CIE XYZ is the foundational color space defined by the International Commission on Illumination (CIE) in 1931. It is the first mathematically defined color space based on measurements of human color perception. All other color spaces are derived from or can be converted to/from XYZ, making it the fundamental "master" color space in color science.
+
+DESCRIPTION
+-----------
+XYZ represents colors using three values based on the human eye's three types of cone cells:
+- X: Roughly corresponds to red sensitivity (but not purely red)
+- Y: Corresponds to luminance/brightness (green-weighted)
+- Z: Roughly corresponds to blue sensitivity (but not purely blue)
+
+Unlike RGB spaces, XYZ is designed to be perceptually uniform and device-independent. The Y component directly represents luminance as perceived by the human eye, making it particularly useful for brightness calculations.
+
+TECHNICAL SPECIFICATIONS
+-------------------------
+- Type: Tristimulus color space (device-independent)
+- Based on: CIE 1931 color matching experiments
+- Gamut: Can represent all visible colors
+- Reference: Spectral power distributions
+- Y component: Represents luminance (CIE luminous efficiency function)
+- Coordinates: X, Y, Z (non-negative, unbounded)
+- White points: Multiple (D50, D65, A, C, E, etc.)
+
+HISTORY
+-------
+1931: CIE defines XYZ color space based on color matching experiments
+1931: CIE xy chromaticity diagram created
+1960s: Becomes foundation for color television standards
+1976: CIE Lab and LCH derived from XYZ
+1990s: ICC profiles use XYZ as Profile Connection Space (PCS)
+2000s: Used in all color management systems
+2021: Added to CSS Color Module Level 4
+2023: Browser support achieved
+
+WHY XYZ EXISTS
+--------------
+Before XYZ, color description was subjective and device-dependent. Problems:
+- No universal way to specify colors
+- Different devices showed different colors
+- No mathematical model of human vision
+- Color reproduction inconsistent
+
+XYZ solved this by:
+✓ Being based on actual human vision measurements
+✓ Device-independent color specification
+✓ Mathematical foundation for color science
+✓ Universal reference for all other color spaces
+✓ Enabling accurate color reproduction
+
+CSS SYNTAX
+----------
+Three variants in CSS:
+
+**xyz-d65 (D65 white point, default):**
+  color: color(xyz-d65 0.5 0.5 0.5);
+  color: color(xyz-d65 0.4 0.2 0.1 / 0.8);
+
+**xyz (alias for xyz-d65):**
+  color: color(xyz 0.5 0.5 0.5);
+
+**xyz-d50 (D50 white point):**
+  color: color(xyz-d50 0.5 0.5 0.5);
+
+Component ranges:
+  X: 0-1 (typically, but can exceed 1 for bright colors)
+  Y: 0-1 (corresponds to 0-100% luminance)
+  Z: 0-1 (typically)
+  Alpha: 0-1 or 0%-100%
+
+BROWSER SUPPORT
+---------------
+color(xyz ...) syntax:
+- Safari 15.0+ (September 2021) ✓
+- Chrome 111+ (March 2023) ✓
+- Edge 111+ (March 2023) ✓
+- Firefox 113+ (May 2023) ✓
+- Opera 97+ (March 2023) ✓
+
+Not supported:
+- Internet Explorer (all versions)
+- Safari < 15.0
+- Chrome < 111
+- Firefox < 113
+
+ADVANTAGES
+----------
+✓ Foundation of all color science
+✓ Device-independent
+✓ Based on human vision
+✓ Y component = luminance (useful for brightness)
+✓ Can represent all visible colors
+✓ Universal color reference
+✓ Used in ICC profiles
+✓ Enables accurate color conversions
+✓ Mathematically defined
+
+LIMITATIONS
+-----------
+✗ Not perceptually uniform (use Lab instead)
+✗ Not intuitive for humans
+✗ Not suitable for direct color picking
+✗ Requires conversion for display
+✗ Different white points cause confusion
+✗ Values don't correspond to specific colors obviously
+✗ Primarily for calculations, not design
+
+USE CASES
+---------
+Perfect for:
+- Color space conversions (intermediate step)
+- Color science research
+- Colorimetry and measurements
+- Calculating luminance
+- ICC color management
+- Spectrophotometer output
+- Color matching functions
+- Academic and scientific work
+
+Not suitable for:
+- Direct color specification (use RGB, HSL, etc.)
+- Color picking and design (use OKLCH, LCH)
+- Image editing (use RGB or Lab)
+- Web design (use sRGB, P3)
+
+COMPARISON WITH OTHER SPACES
+-----------------------------
+vs RGB spaces:
+  XYZ: Device-independent, perceptual basis
+  RGB: Device-dependent, display-oriented
+
+vs Lab:
+  XYZ: Foundation space, not uniform
+  Lab: Derived from XYZ, perceptually uniform
+
+vs OKLCH:
+  XYZ: Scientific foundation
+  OKLCH: Intuitive for design
+
+vs sRGB:
+  XYZ: All visible colors, no gamma
+  sRGB: Display gamut, gamma-encoded
+
+Y COMPONENT AND LUMINANCE
+--------------------------
+The Y component in XYZ is special - it represents **relative luminance** as perceived by human vision.
+
+**CIE Luminous Efficiency Function:**
+- Peaks at 555nm (green)
+- Human eye most sensitive to green light
+- Y = weighted sum of spectral power
+
+**For RGB → XYZ conversion:**
+```javascript
+Y = 0.2126 * R_linear + 0.7152 * G_linear + 0.0722 * B_linear
+```
+
+This is why WCAG contrast uses Y - it represents perceived brightness!
+
+CONVERSION FORMULAS
+-------------------
+**sRGB to XYZ (D65):**
+
+Step 1: Convert sRGB to Linear RGB
+```javascript
+function sRGBToLinear(srgb) {
+  if (srgb <= 0.04045) {
+    return srgb / 12.92;
+  } else {
+    return Math.pow((srgb + 0.055) / 1.055, 2.4);
+  }
+}
+```
+
+Step 2: Linear RGB to XYZ (matrix transformation)
+```javascript
+const X = 0.4124564 * R + 0.3575761 * G + 0.1804375 * B;
+const Y = 0.2126729 * R + 0.7151522 * G + 0.0721750 * B;
+const Z = 0.0193339 * R + 0.1191920 * G + 0.9503041 * B;
+```
+
+**XYZ (D65) to sRGB:**
+
+Step 1: XYZ to Linear RGB
+```javascript
+const R_linear = X * 3.2404542 + Y * -1.5371385 + Z * -0.4985314;
+const G_linear = X * -0.9692660 + Y * 1.8760108 + Z * 0.0415560;
+const B_linear = X * 0.0556434 + Y * -0.2040259 + Z * 1.0572252;
+```
+
+Step 2: Apply sRGB gamma correction
+```javascript
+function linearToSRGB(linear) {
+  if (linear <= 0.0031308) {
+    return linear * 12.92;
+  } else {
+    return 1.055 * Math.pow(linear, 1/2.4) - 0.055;
+  }
+}
+```
+
+WHITE POINTS
+------------
+XYZ values depend on the illuminant (white point):
+
+**D65 (6500K):**
+- Daylight, blue-tinted
+- Standard for displays (sRGB, Rec. 709, Display P3)
+- CSS default: `xyz` and `xyz-d65`
+
+**D50 (5000K):**
+- Horizon light, warmer
+- Standard for graphic arts and ICC profiles
+- CSS: `xyz-d50`
+
+**Conversion between D50 and D65:**
+Uses Bradford chromatic adaptation:
+```javascript
+// D50 to D65 (simplified)
+const X_D65 = X_D50 * 0.9555766 + Y_D50 * -0.0230393 + Z_D50 * 0.0631636;
+const Y_D65 = X_D50 * -0.0282895 + Y_D50 * 1.0099416 + Z_D50 * 0.0210077;
+const Z_D65 = X_D50 * 0.0122982 + Y_D50 * -0.0204830 + Z_D50 * 1.3299098;
+```
+
+PRACTICAL EXAMPLES
+------------------
+// D65 middle gray (Y = 0.2 = 20% luminance)
+color: color(xyz-d65 0.2 0.2 0.2);
+
+// D50 white point
+color: color(xyz-d50 0.9642 1.0000 0.8251);
+
+// Pure luminance (Y component)
+color: color(xyz 0 1 0);  // Impossible, but demonstrates Y = brightness
+
+// With fallback (always recommended)
+.scientific-color {
+  background: rgb(100, 150, 200);      /* Fallback */
+  background: color(xyz 0.2 0.25 0.4); /* XYZ specification */
+}
+
+CIE 1931 CHROMATICITY DIAGRAM
+------------------------------
+The famous "tongue" shaped diagram shows all visible colors:
+
+**xy chromaticity coordinates:**
+```javascript
+// Normalize XYZ to xy
+const x = X / (X + Y + Z);
+const y = Y / (X + Y + Z);
+const z = Z / (X + Y + Z);  // z = 1 - x - y
+```
+
+**Properties:**
+- Edge represents spectral (pure wavelength) colors
+- Interior represents mixed colors
+- Any RGB gamut forms a triangle within the tongue
+- Shows which colors are in/out of gamut for any color space
+
+RELATIONSHIP TO OTHER SPACES
+-----------------------------
+All color spaces convert through XYZ:
+
+**RGB → Lab:**
+RGB → XYZ → Lab
+
+**OKLCH → Display P3:**
+OKLCH → OKLab → XYZ → Display P3
+
+**Adobe RGB → sRGB:**
+Adobe RGB → XYZ → sRGB
+
+XYZ is the "hub" in color management!
+
+COLOR MATCHING FUNCTIONS
+-------------------------
+XYZ is based on color matching experiments:
+
+**Standard Observer (1931):**
+- 2° visual field
+- Based on averaging data from ~10 observers
+- Three functions: x̄(λ), ȳ(λ), z̄(λ)
+- Defines how much of each primary is needed to match any wavelength
+
+**Supplementary Observer (1964):**
+- 10° visual field
+- Better for large color patches
+- Slightly different values
+
+SPECTRAL TO XYZ CONVERSION
+---------------------------
+To convert spectral power distribution to XYZ:
+
+```javascript
+// Integrate over visible spectrum (380-780nm)
+X = ∫ S(λ) × x̄(λ) × dλ
+Y = ∫ S(λ) × ȳ(λ) × dλ
+Z = ∫ S(λ) × z̄(λ) × dλ
+```
+
+Where:
+- S(λ) = spectral power distribution
+- x̄(λ), ȳ(λ), z̄(λ) = color matching functions
+- λ = wavelength
+
+This is how spectrophotometers output XYZ values!
+
+ICC PROFILE CONNECTION SPACE
+-----------------------------
+XYZ is used as the Profile Connection Space (PCS) in ICC color management:
+
+**Workflow:**
+1. Source device (camera) → XYZ via input profile
+2. XYZ (universal reference)
+3. XYZ → Destination device (printer) via output profile
+
+**Why XYZ:**
+- Device-independent
+- Well-defined mathematically
+- Can represent all visible colors
+- Lossless conversions possible
+
+CALCULATING LUMINANCE
+---------------------
+XYZ makes luminance calculations trivial:
+
+**Relative luminance** = Y component
+
+For WCAG contrast ratios:
+```javascript
+// sRGB to XYZ gives Y = relative luminance
+const Y1 = calculateY(color1);
+const Y2 = calculateY(color2);
+
+// Contrast ratio
+const contrast = (max(Y1, Y2) + 0.05) / (min(Y1, Y2) + 0.05);
+```
+
+This is why accessibility tools use XYZ (via the Y component).
+
+METAMERISM
+----------
+XYZ explains metamerism - colors that match under one light but not another:
+
+**Example:**
+- Two objects appear identical under daylight (D65)
+- Their XYZ values match under D65
+- Under tungsten light (A), they look different
+- Their XYZ values differ under illuminant A
+
+XYZ values are always relative to an illuminant!
+
+LIMITATIONS OF XYZ
+------------------
+Why we need other spaces despite XYZ being fundamental:
+
+1. **Not perceptually uniform:**
+   - Equal distances in XYZ ≠ equal perceived color differences
+   - Lab/OKLCH fix this
+
+2. **Not intuitive:**
+   - X, Y, Z values don't map to human color concepts
+   - RGB, HSL, LCH more intuitive
+
+3. **No direct display:**
+   - Requires conversion to device RGB
+   - Never displayed directly
+
+4. **White point dependency:**
+   - Values change with illuminant
+   - Requires chromatic adaptation
+
+COMMON MISTAKES
+---------------
+1. **Treating as perceptually uniform**: Use Lab for color differences
+2. **Ignoring white point**: D50 vs D65 matters!
+3. **Using for color picking**: Not intuitive, use OKLCH
+4. **Forgetting gamma**: Must convert to linear RGB first
+5. **Direct display**: XYZ must be converted to RGB
+6. **Mixing white points**: Always specify D50 or D65
+
+MEASURING COLORS
+----------------
+Professional color measurement outputs XYZ:
+
+**Spectrophotometer:**
+- Measures spectral reflectance
+- Integrates with color matching functions
+- Outputs XYZ under specified illuminant
+
+**Colorimeter:**
+- Directly measures X, Y, Z using filters
+- Faster but less accurate than spectrophotometer
+- Used for monitor calibration
+
+REAL-WORLD ADOPTION
+-------------------
+Color Science: 100% (universal foundation)
+ICC Color Management: 100% (PCS standard)
+Scientific Instruments: 100% (spectrophotometer output)
+Web Development: <1% (mainly through conversions)
+Design Tools: Indirect (used internally for conversions)
+
+BEST PRACTICES
+--------------
+1. **Use as intermediate**: Convert through XYZ, don't design in it
+2. **Specify white point**: Always use xyz-d50 or xyz-d65
+3. **Linear RGB first**: Always linearize before XYZ conversion
+4. **Use Y for luminance**: Y component is relative luminance
+5. **Chromatic adaptation**: Convert white points properly
+6. **Not for display**: Always convert to RGB for display
+7. **Scientific use**: Perfect for colorimetry and measurements
+
+WHY IT MATTERS FOR WEB
+----------------------
+Even though rarely used directly in CSS, XYZ is crucial:
+
+- **Browser color conversions**: All CSS colors convert through XYZ internally
+- **WCAG contrast**: Uses XYZ Y component (relative luminance)
+- **Color management**: ICC profiles use XYZ as connection space
+- **Future-proofing**: New color spaces derived from XYZ
+
+TOOLS AND SOFTWARE
+------------------
+✓ Color management systems (all use XYZ internally)
+✓ Spectrophotometers (output XYZ)
+✓ ICC profile editors
+✓ ColorSync (macOS)
+✓ Color science research tools
+✓ Browser color engines (internal use)
+
+RELATED COLOR SPACES
+--------------------
+- Lab: Perceptually uniform transformation of XYZ
+- LCH: Polar form of Lab
+- OKLab: Modern perceptually uniform space (via XYZ)
+- xyY: Chromaticity + luminance (derived from XYZ)
+- RGB: Display-oriented (converts via XYZ)
+
+FURTHER READING
+---------------
+- CIE 1931 specification
+- CSS Color Module Level 4: https://www.w3.org/TR/css-color-4/
+- "CIE Color Space" by Wyszecki & Stiles
+- Bruce Lindbloom's color math: http://brucelindbloom.com/
+- ICC specification documents
+- ASTM color standards
+- Can I Use: https://caniuse.com/mdn-css_types_color_color
+

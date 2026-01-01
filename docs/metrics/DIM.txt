@@ -1,0 +1,203 @@
+DIM - Decorative Image Marking
+
+WHAT IT MEASURES
+Count of decorative images that are incorrectly marked with alt text. Decorative images are purely visual elements that don't convey meaningful information and should have empty alt text (`alt=""`) to indicate they can be ignored by screen readers. This metric identifies images that are decorative but have descriptive alt text, or images that should be decorative but are missing the alt attribute entirely.
+
+Images fall into three categories:
+1. Informative images: Convey content or information - must have descriptive alt text
+2. Decorative images: Purely decorative, don't convey information - should have alt="" (empty)
+3. Functional images: Used as links or buttons - alt text should describe the function
+
+Decorative images include:
+- Purely visual elements (decorative borders, dividers, backgrounds)
+- Images that don't add information beyond what's in surrounding text
+- Spacer images (though CSS should be used instead)
+- Redundant images (images that repeat information already in text)
+
+HOW IT'S MEASURED
+DOM analysis checking images for decorative status and appropriate alt text. The measurement process:
+
+1. Identifies all `<img>` elements in the DOM
+2. Analyzes each image to determine if it's decorative:
+   - Checks for visual indicators (small size, repeated patterns, borders)
+   - Analyzes surrounding context to see if image adds information
+   - Looks for CSS classes or attributes that indicate decorative status
+   - Checks if image content is redundant with nearby text
+3. Validates alt text appropriateness:
+   - Decorative images should have alt="" (empty string)
+   - Decorative images with descriptive alt text are flagged
+   - Decorative images missing alt attribute are flagged
+4. Counts incorrectly marked decorative images
+
+The measurement distinguishes between:
+- Correctly marked: Decorative image with alt=""
+- Incorrectly marked: Decorative image with descriptive alt text
+- Missing alt: Decorative image without alt attribute
+- False positive: Informative image incorrectly identified as decorative
+
+WHY IT'S IMPORTANT
+Decorative images should have empty alt text to prevent screen readers from announcing them unnecessarily. When decorative images have descriptive alt text, screen readers waste time announcing irrelevant information, creating a poor user experience.
+
+Impact on users:
+- Screen readers announce unnecessary information, cluttering the experience
+- Users must listen to irrelevant descriptions before reaching meaningful content
+- Navigation becomes slower and more tedious
+- Important information may be missed due to information overload
+- Users may become frustrated and abandon the page
+
+Accessibility impact:
+- Violates WCAG 2.1 Success Criterion 1.1.1 (Level A) when decorative images have descriptive alt
+- Creates unnecessary cognitive load for screen reader users
+- Reduces overall accessibility score
+- Makes content less usable for people using assistive technologies
+
+Best practice:
+- Decorative images should use alt="" to indicate they can be ignored
+- This allows screen readers to skip decorative content entirely
+- Improves efficiency and reduces cognitive load
+
+THRESHOLDS
+- Good: 0 errors (all decorative images correctly marked with alt="")
+- Needs Improvement: 1-2 errors (minor issues)
+- Poor: ≥ 3 errors (significant accessibility barriers)
+
+Even a few incorrectly marked decorative images can significantly impact the screen reader experience, as users must listen to unnecessary announcements.
+
+COMMON PITFALLS
+1. Decorative images with descriptive alt: Adding alt text to purely decorative images
+2. Missing alt on decorative images: Decorative images without alt attribute (should be alt="")
+3. Incorrect alt text: Using placeholder or generic text instead of alt=""
+4. Misidentifying decorative images: Treating informative images as decorative
+5. Redundant alt text: Describing images that repeat information already in text
+6. Spacer images: Using images for spacing instead of CSS (legacy issue)
+7. Background images: Important images used as CSS backgrounds (should use img elements)
+8. Decorative borders: Image-based borders with descriptive alt text
+9. Logo images: Decorative logos with descriptive alt when they're purely visual
+10. Pattern images: Decorative patterns or textures with alt text
+
+OPTIMIZATION STRATEGIES
+1. Use alt="" for decorative images: Mark all decorative images with empty alt attribute
+2. Add descriptive alt only for informative images: Reserve descriptive alt for images that convey information
+3. Identify decorative vs informative: Carefully determine if images add information or are purely visual
+4. Remove decorative images: Consider removing purely decorative images and using CSS instead
+5. Use CSS for decoration: Replace decorative images with CSS backgrounds, borders, or gradients
+6. Review image purpose: Evaluate each image to determine if it's decorative or informative
+7. Test with screen readers: Verify that decorative images are properly skipped
+8. Use aria-hidden: For complex decorative elements, consider aria-hidden="true" as alternative
+9. Document image purpose: Maintain clear documentation of which images are decorative
+10. Automated detection: Use tools to help identify potentially decorative images
+
+
+TECHNICAL DETAILS
+The distinction between decorative and informative images is a key concept in web accessibility:
+
+Decorative images:
+- Purely visual elements that don't convey information
+- Should use alt="" (empty string) to indicate they can be ignored
+- Screen readers skip images with empty alt text
+- Examples: decorative borders, spacers, background patterns, purely aesthetic elements
+
+Informative images:
+- Convey content or information not available in text
+- Must have descriptive alt text
+- Screen readers announce the alt text
+- Examples: charts, graphs, photos with content, diagrams
+
+Determining if an image is decorative:
+- Does it add information beyond what's in the surrounding text?
+- Would removing it change the meaning or understanding of the content?
+- Is it purely aesthetic or functional?
+- Does it repeat information already conveyed in text?
+
+HTML5 specification:
+- The alt attribute is required for all img elements
+- For decorative images, alt="" (empty string) is the correct value
+- Empty alt indicates the image can be ignored by assistive technologies
+
+Screen reader behavior:
+- alt="" (empty): Screen reader skips the image entirely
+- alt with text: Screen reader announces "Image: [alt text]"
+- Missing alt: Screen reader may announce "Image" or filename (poor experience)
+
+HISTORY
+The concept of decorative vs informative images has been part of web accessibility since early guidelines:
+
+1999: WCAG 1.0 Guideline 1.1 required text equivalents for non-text content, including images. The distinction between decorative and informative images was recognized.
+
+2000s: As screen reader usage grew, developers learned that decorative images with descriptive alt text created poor experiences. Best practices emerged to use alt="" for decorative images.
+
+2008: WCAG 2.0 Success Criterion 1.1.1 (Level A) required text alternatives, with guidance that decorative images should use empty alt text. The HTML5 specification clarified that alt="" is appropriate for decorative images.
+
+2014: HTML5 became a W3C Recommendation, formalizing that decorative images should use alt="". WebAIM and other accessibility organizations provided clear guidance on identifying decorative images.
+
+2018: WCAG 2.1 maintained the requirement. Tools began specifically checking for decorative images with descriptive alt text as an accessibility issue.
+
+2023: WCAG 2.2 continued to emphasize proper alt text usage. Modern development practices and component libraries made it easier to mark decorative images correctly, but the issue remained common.
+
+The importance of correctly marking decorative images grew as:
+- Screen reader users reported frustration with unnecessary image announcements
+- Accessibility audits identified decorative images with descriptive alt as a common issue
+- Tools improved their ability to detect potentially decorative images
+- Best practices became more widely known
+
+INDUSTRY STANDARDS
+This metric aligns with W3C HTML specifications and WCAG 2.1/2.2 accessibility guidelines. Decorative image detection is implemented in major accessibility testing tools including:
+
+- axe-core: Open-source accessibility testing engine with image-alt rules
+- WAVE (Web Accessibility Evaluation Tool): Flags decorative images with descriptive alt
+- Lighthouse: Google's automated auditing tool includes alt text checks
+- Pa11y: Command-line accessibility testing tool that validates alt text
+- Accessibility Insights: Microsoft's accessibility testing tool with image validation
+- W3C HTML Validator: Validates alt attribute usage
+
+Legal requirements:
+- Section 508 (United States): Requires WCAG 2.0 Level AA compliance
+- EN 301 549 (European Union): Requires WCAG 2.1 Level AA compliance
+- AODA (Ontario, Canada): Requires WCAG 2.0 Level AA compliance
+- WCAG 2.1 Success Criterion 1.1.1 (Level A) requires appropriate alt text
+
+Industry guidelines:
+- WebAIM provides comprehensive guidance on decorative vs informative images
+- W3C HTML5 specification requires alt attribute, allows alt="" for decorative images
+- WCAG 2.1 Success Criterion 1.1.1 requires text alternatives
+
+Thresholds are based on WCAG compliance requirements and user experience research showing that even a few incorrectly marked decorative images can significantly impact screen reader users.
+
+RELATED METRICS
+Decorative Image Marking is part of a comprehensive accessibility measurement framework. Related metrics include:
+
+- AMC (Alt Text Missing): Images missing alt attributes (overlaps when decorative images are missing alt)
+- ASC (Accessibility Score): Composite score including alt text issues
+- CIC (Contrast Issues): Another common accessibility barrier
+
+Together, these metrics identify different types of image accessibility issues that prevent users with visual impairments from properly understanding web content.
+
+MEASUREMENT LIMITATIONS
+Client-side decorative image detection has several limitations:
+
+1. Context-dependent: Determining if an image is decorative requires understanding its purpose and context, which can be difficult to automate
+2. False positives: Informative images may be incorrectly identified as decorative
+3. False negatives: Decorative images may not be detected if they appear informative
+4. Dynamic content: Images added after page load may not be analyzed
+5. CSS background images: Cannot have alt attributes, so important images should use img elements
+6. Complex images: Images that are partially decorative and partially informative are difficult to categorize
+7. Cultural context: What's decorative in one context may be informative in another
+8. User perspective: Different users may have different opinions on what's decorative
+
+Automated testing should be supplemented with:
+- Manual review of image content and purpose
+- Content author input on image intent
+- Screen reader testing to verify decorative images are properly skipped
+- User testing with people who use screen readers
+- Design review to identify decorative vs informative images
+
+Measurements are most accurate when combined with human judgment about image purpose and context.
+
+
+SOURCES
+- WebAIM Alternative Text: https://webaim.org/techniques/images/
+- WCAG 2.1 Success Criterion 1.1.1: https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html
+- MDN img element alt attribute: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-alt
+- HTML5 img specification: https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element
+- axe-core image-alt rules: https://www.deque.com/axe/developer-tools/api-documentation/#rules-image-alt
+- See metrics.txt for additional sources

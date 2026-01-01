@@ -1,0 +1,173 @@
+CLS - Cumulative Layout Shift
+
+WHAT IT MEASURES
+Measure of visual stability during page load, quantifying unexpected layout shifts that occur after the page begins loading. CLS is a Core Web Vital that tracks how much visible content shifts during the page lifecycle. Layout shifts happen when elements change position after initial render, causing content to jump and creating a frustrating user experience.
+
+CLS measures:
+- Unexpected layout shifts (shifts not caused by user interaction)
+- Visual instability during page load
+- Content jumping or moving unexpectedly
+- Impact on user experience from layout changes
+
+The metric calculates a score by:
+- Identifying layout shifts (elements moving from their initial position)
+- Calculating impact fraction (portion of viewport affected)
+- Calculating distance fraction (how far elements moved)
+- Multiplying impact × distance for each shift
+- Summing all shift scores for the final CLS value
+
+HOW IT'S MEASURED
+PerformanceObserver API with 'layout-shift' entry type, or manual calculation by monitoring element positions and calculating shift scores based on impact fraction and distance fraction. The measurement process:
+
+1. Observes layout shifts:
+   - Uses PerformanceObserver with 'layout-shift' entry type
+   - Tracks all layout shift events during page lifecycle
+   - Records shift data including affected elements and movement
+
+2. Calculates shift scores:
+   - Impact fraction: Portion of viewport affected by the shift (0.0 to 1.0)
+   - Distance fraction: Distance moved relative to viewport size (0.0 to 1.0)
+   - Shift score = impact fraction × distance fraction
+
+3. Filters user-initiated shifts:
+   - Only counts unexpected shifts (not caused by user input)
+   - Ignores shifts within 500ms of user input (click, keypress, etc.)
+   - Focuses on shifts that frustrate users
+
+4. Sums all shift scores:
+   - Accumulates all individual shift scores
+   - Final CLS = sum of all shift scores during page lifecycle
+   - Higher score = more visual instability
+
+5. Manual calculation fallback:
+   - Monitors element positions using getBoundingClientRect()
+   - Detects position changes between frames
+   - Calculates impact and distance manually
+
+WHY IT'S IMPORTANT
+Unexpected layout shifts create poor user experience, causing users to click wrong elements or lose reading position. CLS directly impacts user satisfaction and is a Core Web Vital used by Google for search ranking.
+
+User experience impact:
+- Users click wrong elements when content shifts
+- Reading position is lost when text moves
+- Creates perception of poor quality and instability
+- Frustrates users and reduces trust
+- Particularly problematic on mobile devices
+
+Business impact:
+- CLS is a Core Web Vital and Google search ranking factor
+- Poor CLS scores reduce search visibility
+- High CLS correlates with lower conversion rates
+- Affects user retention and engagement
+- Reflects poorly on brand quality
+
+Performance impact:
+- Layout shifts indicate inefficient resource loading
+- Suggests missing dimensions or improper resource prioritization
+- May indicate performance optimization opportunities
+
+THRESHOLDS
+- Good: ≤ 0.1 (Minimal layout shift, stable layout)
+- Needs Improvement: 0.1-0.25 (Some layout shift, noticeable but acceptable)
+- Poor: ≥ 0.25 (Significant layout shift, poor user experience)
+
+These thresholds are based on Google's Core Web Vitals research and user perception studies. A CLS of 0.1 means the cumulative shift is 10% of the viewport, which is generally acceptable.
+
+COMMON PITFALLS
+1. Images without dimensions: Images load and push content down
+2. Dynamically injected content: Content added after initial render causes shifts
+3. Web fonts causing FOIT: Font loading causes text reflow (Flash of Invisible Text)
+4. Ads or embeds without reserved space: Third-party content loads and shifts layout
+5. Videos without dimensions: Video elements expand when loaded
+6. Iframes without size: Embedded content causes layout shifts
+7. Content inserted above viewport: New content pushes existing content down
+8. CSS animations: Animations that cause layout changes
+9. Late-loading stylesheets: CSS that changes layout after initial render
+10. JavaScript inserting content: Dynamic content injection without space reservation
+11. Cookie banners: Banners appearing and pushing content
+12. Lazy-loaded images: Images loading and expanding layout
+
+OPTIMIZATION STRATEGIES
+1. Set width/height on images: Use explicit dimensions or aspect-ratio CSS
+2. Reserve space for ads/embeds: Allocate space before content loads
+3. Use font-display: swap: Prevents FOIT by showing fallback font immediately
+4. Avoid inserting content above existing content: Add content below or reserve space
+5. Use CSS aspect-ratio: Modern way to maintain aspect ratio without dimensions
+6. Preload critical resources: Load fonts and images early to prevent shifts
+7. Use size attributes: width and height attributes on img elements
+8. Reserve space for dynamic content: Use skeleton screens or placeholders
+9. Optimize font loading: Use font-display: optional or swap
+10. Set dimensions on videos: Prevent video elements from expanding
+11. Use transform instead of position changes: Transforms don't cause layout shifts
+12. Minimize late-loading CSS: Inline critical CSS, defer non-critical
+13. Test with throttled network: Simulate slow connections to find shifts
+14. Use Layout Instability API: Monitor shifts in development
+15. Reserve space for third-party content: Allocate space for ads, embeds, widgets
+
+
+TECHNICAL DETAILS
+CLS calculation uses the Layout Instability API, which provides detailed information about layout shifts:
+
+Shift score formula:
+- impact fraction: Fraction of viewport that the unstable elements occupied in both frames
+- distance fraction: Greatest distance any unstable element moved (horizontally or vertically) divided by viewport's largest dimension
+- shift score = impact fraction × distance fraction
+
+Key characteristics:
+- Only unexpected shifts count (not user-initiated)
+- Shifts within 500ms of user input are ignored
+- Multiple shifts in the same frame are grouped
+- CLS is cumulative (sum of all shifts)
+- Measurement continues throughout page lifecycle
+
+Layout Instability API:
+- PerformanceObserver with 'layout-shift' entry type
+- Each entry contains: value (shift score), sources (elements that shifted), hadRecentInput (user interaction flag)
+- Browser automatically calculates impact and distance fractions
+- API available in Chrome 84+, Firefox 89+, Safari 15.4+
+
+Manual calculation:
+- Monitor element positions using getBoundingClientRect()
+- Compare positions between requestAnimationFrame calls
+- Calculate viewport-relative movement
+- Determine affected viewport area
+
+HISTORY
+Cumulative Layout Shift (CLS) has a relatively recent but important history in web performance:
+
+2010s: Layout shifts were recognized as a user experience problem, but there was no standardized way to measure them. Developers noticed that ads, images without dimensions, and web fonts caused content to jump, frustrating users. The issue was particularly problematic on mobile devices with slower connections.
+
+2019: Google began developing metrics to quantify visual stability. The Layout Instability API was proposed to the W3C as a way to measure unexpected layout shifts. Research showed that layout shifts were a major source of user frustration, particularly on news sites with ads and content-heavy pages.
+
+April 2020: Google announced Core Web Vitals, which included CLS as one of three key metrics. CLS was designed to measure visual stability by quantifying unexpected layout shifts during the page lifecycle. The initial threshold was set at 0.1 for "good" performance based on user experience research.
+
+July 2020: The Layout Instability API was implemented in Chrome 84, providing browser-native measurement of layout shifts. The API automatically calculates impact fraction and distance fraction for each shift, making CLS measurement straightforward.
+
+June 2021: Core Web Vitals (including CLS) became a Google search ranking factor. This gave CLS significant importance, as poor visual stability could negatively impact search rankings. Website owners began prioritizing CLS optimization.
+
+June 2021: Google refined the CLS calculation to use windowing, measuring shifts within specific time windows rather than the entire page lifecycle. This change made CLS scores more representative of user experience, especially on long-lived pages.
+
+2022-Present: CLS optimization became a standard part of web development. Common practices include:
+- Setting explicit dimensions on images and videos
+- Reserving space for ads and dynamic content
+- Using font-display: swap to prevent font-related shifts
+- Implementing skeleton screens and placeholders
+- Testing with slow connections to identify shifts
+
+CLS is now widely recognized as a critical user experience metric. Studies show that sites with good CLS scores (≤ 0.1) have higher user engagement and lower bounce rates. The metric has influenced how developers approach layout design, resource loading, and third-party content integration.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

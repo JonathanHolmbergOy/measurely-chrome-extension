@@ -1,0 +1,194 @@
+ARS - ARIA Relationship Errors
+
+WHAT IT MEASURES
+Count of broken ARIA relationships where relationship attributes (aria-labelledby, aria-describedby, aria-controls, aria-owns, aria-flowto) reference non-existent element IDs. These attributes create semantic relationships between elements that assistive technologies use to understand the page structure and provide context to users.
+
+ARIA relationship attributes include:
+- aria-labelledby: References element IDs that provide the accessible name
+- aria-describedby: References element IDs that provide additional descriptive information
+- aria-controls: References element IDs of elements controlled by the current element
+- aria-owns: References element IDs of elements owned by the current element (for parent-child relationships)
+- aria-flowto: References element IDs that should be read after the current element (for reading order)
+
+When these attributes reference IDs that don't exist in the DOM, the relationships are broken, preventing assistive technologies from properly associating elements and providing context to users.
+
+HOW IT'S MEASURED
+DOM analysis checking ARIA relationship attributes for valid target IDs. The measurement process:
+
+1. Identifies all elements with ARIA relationship attributes (aria-labelledby, aria-describedby, aria-controls, aria-owns, aria-flowto)
+2. Extracts the ID references from each attribute (can be space-separated for multiple IDs)
+3. Validates that each referenced ID exists in the DOM:
+   - Checks for elements with matching id attributes
+   - Verifies IDs are unique (duplicate IDs are invalid HTML)
+   - Confirms referenced elements are accessible (not hidden with aria-hidden="true" in a way that breaks the relationship)
+4. Flags broken relationships where:
+   - Referenced ID does not exist
+   - Referenced ID appears multiple times (duplicate IDs)
+   - Circular references that create infinite loops
+5. Counts the total number of broken relationships
+
+The measurement distinguishes between:
+- Missing IDs: Referenced ID doesn't exist anywhere in the DOM
+- Duplicate IDs: Multiple elements share the same ID (invalid HTML)
+- Hidden targets: Referenced element exists but may be hidden in a way that breaks the relationship
+
+WHY IT'S IMPORTANT
+Broken ARIA relationships prevent assistive technologies from properly associating elements, breaking accessibility and violating WCAG 2.1 Success Criterion 4.1.2 (Name, Role, Value).
+
+Impact on users:
+- Screen readers cannot find referenced elements, so accessible names or descriptions are not announced
+- Relationships between form controls and labels are broken
+- Descriptions for complex widgets are not provided
+- Reading order and content flow are disrupted
+- Users cannot understand the relationship between related elements
+
+Accessibility impact:
+- Violates WCAG 2.1 Success Criterion 4.1.2 (Level A)
+- Breaks the Accessible Name and Description Computation algorithm
+- Prevents assistive technologies from providing proper context
+- Creates barriers for users relying on screen readers
+- Can make forms and interactive widgets completely unusable
+
+Technical impact:
+- Browser accessibility trees are incomplete or incorrect
+- Assistive technology APIs receive incomplete information
+- Dynamic content updates may fail to announce properly
+- Complex widget patterns (tabs, accordions, dialogs) become inaccessible
+
+THRESHOLDS
+- Good: 0 errors (all ARIA relationships are valid)
+- Needs Improvement: 1-2 errors (minor relationship issues)
+- Poor: ≥ 3 errors (significant accessibility barriers)
+
+Even a single broken relationship can create a significant barrier, as it may prevent users from understanding critical content or functionality. The threshold of 1 error for "poor" reflects that any broken relationship is a serious accessibility issue.
+
+COMMON PITFALLS
+1. aria-labelledby pointing to missing ID: Referenced element was removed or never existed
+2. aria-describedby with invalid reference: Description element ID is misspelled or doesn't exist
+3. Broken aria-controls: Controlled element ID is missing or incorrect
+4. Duplicate IDs: Multiple elements share the same ID, making references ambiguous
+5. Dynamic content: IDs referenced before elements are added to the DOM
+6. Typos in ID references: Simple spelling mistakes in attribute values
+7. Removed elements: Elements with referenced IDs are removed from DOM but references remain
+8. Circular references: Elements reference each other creating infinite loops
+9. Multiple ID references: Space-separated IDs where one or more don't exist
+10. Hidden target elements: Referenced elements exist but are hidden in ways that break relationships
+11. Case sensitivity: ID references are case-sensitive, typos in case break relationships
+12. Missing id attributes: Elements referenced but don't have id attributes set
+
+OPTIMIZATION STRATEGIES
+1. Ensure all ARIA relationship IDs exist: Validate that every referenced ID has a corresponding element in the DOM
+2. Validate relationships: Use automated testing tools to check for broken references
+3. Test with screen readers: Verify relationships work correctly with actual assistive technologies
+4. Use unique IDs: Ensure all IDs are unique throughout the document
+5. Check dynamic content: Verify relationships work after content is dynamically added
+6. Validate on page load: Check relationships after all content is loaded
+7. Use consistent naming: Establish naming conventions for IDs to reduce typos
+8. Test relationship chains: Verify complex relationships with multiple references work correctly
+9. Remove unused references: Clean up references to elements that no longer exist
+10. Document relationships: Maintain documentation of ARIA relationships for complex widgets
+
+
+TECHNICAL DETAILS
+ARIA relationship attributes use the IDREF mechanism, where attribute values contain one or more space-separated IDs that reference other elements in the document. The browser and assistive technologies resolve these references to build the accessibility tree.
+
+Accessible Name and Description Computation:
+- aria-labelledby takes precedence over aria-label and content for determining accessible name
+- aria-describedby provides additional descriptive information beyond the accessible name
+- Multiple IDs can be referenced (space-separated), and their text content is concatenated
+- References are resolved at runtime when assistive technologies query the accessibility tree
+
+ID requirements:
+- IDs must be unique within the document (HTML5 requirement)
+- IDs are case-sensitive
+- IDs must start with a letter and can contain letters, digits, hyphens, underscores, colons, and periods
+- Referenced elements must exist in the DOM when the relationship is evaluated
+
+Common relationship patterns:
+- Form controls: aria-labelledby or aria-describedby to associate with labels
+- Complex widgets: aria-controls to indicate controlled panels or regions
+- Descriptions: aria-describedby for additional context or help text
+- Ownership: aria-owns for programmatic parent-child relationships
+
+HISTORY
+ARIA relationship attributes have evolved with the ARIA specification:
+
+2007: First Working Draft of WAI-ARIA 1.0 introduced relationship attributes including aria-labelledby and aria-describedby to address accessibility gaps in dynamic web content.
+
+2014: WAI-ARIA 1.0 became a W3C Recommendation, formalizing relationship attributes. The Accessible Name and Description Computation specification was developed to define how these relationships are processed.
+
+2017: WAI-ARIA 1.1 added additional relationship attributes and refined the specification. Tools began to specifically check for broken ARIA relationships.
+
+2021: WAI-ARIA 1.2 further enhanced relationship attributes. Automated testing tools became more sophisticated in detecting broken references.
+
+The importance of validating ARIA relationships grew as:
+- Dynamic web applications became more complex
+- Developers increasingly used ARIA to enhance accessibility
+- Testing tools improved their ability to detect broken references
+- Legal requirements for accessibility compliance increased
+
+Broken ARIA relationships became a focus of accessibility audits because they directly impact the ability of assistive technologies to provide proper context and information to users.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C ARIA specifications and WCAG 2.1/2.2 accessibility guidelines. ARIA relationship validation is implemented in major accessibility testing tools including:
+
+- axe-core: Open-source accessibility testing engine with specific rules for aria-valid-attr-value and aria-valid-attr
+- WAVE (Web Accessibility Evaluation Tool): Flags broken ARIA relationships
+- Lighthouse: Google's automated auditing tool includes ARIA relationship checks
+- Pa11y: Command-line accessibility testing tool that validates ARIA relationships
+- Accessibility Insights: Microsoft's accessibility testing tool with relationship validation
+- HTML Validator: Can detect duplicate IDs that break relationships
+
+Legal requirements:
+- Section 508 (United States): Requires WCAG 2.0 Level AA compliance
+- EN 301 549 (European Union): Requires WCAG 2.1 Level AA compliance
+- AODA (Ontario, Canada): Requires WCAG 2.0 Level AA compliance
+- WCAG 2.1 Success Criterion 4.1.2 (Level A) requires valid relationships
+
+Industry guidelines:
+- W3C ARIA Authoring Practices Guide provides guidance on using relationship attributes
+- W3C Accessible Name and Description Computation specification defines how relationships are processed
+- WebAIM provides best practices for ARIA relationships
+
+Thresholds are based on WCAG compliance requirements where zero errors is the target. Even a single broken relationship can create a significant accessibility barrier.
+
+RELATED METRICS
+ARIA Relationship Errors is part of a comprehensive accessibility measurement framework. Related metrics include:
+
+- AEC (ARIA Errors): Missing accessible names for ARIA roles (overlaps with broken aria-labelledby)
+- AIV (ARIA Invalid Combinations): Incorrect role-attribute pairings
+- DID (Duplicate ID Count): Duplicate IDs that break ARIA relationships
+- FLI (Form Label Issues): Form controls missing proper labels (may use aria-labelledby)
+- ASC (Accessibility Score): Composite score including ARIA relationship errors
+
+Together, these metrics identify different types of ARIA implementation issues that prevent assistive technologies from properly understanding and communicating web content to users.
+
+MEASUREMENT LIMITATIONS
+Client-side ARIA relationship detection has several limitations:
+
+1. Dynamic content: Relationships may be valid after content is dynamically added, but appear broken during initial scan
+2. JavaScript-generated content: Elements created by frameworks may not be immediately available for testing
+3. Shadow DOM: ARIA relationships within Shadow DOM may not be fully accessible due to encapsulation
+4. Cross-origin iframes: Cannot validate relationships in cross-origin iframe content
+5. Timing issues: References may be valid but elements not yet in DOM when checked
+6. Hidden elements: Determining if a hidden element breaks a relationship requires understanding context
+7. Complex relationships: Multi-level relationship chains may be difficult to fully validate
+8. Browser differences: Different browsers may handle broken relationships differently
+
+Automated testing should be supplemented with:
+- Manual review of ARIA relationship usage
+- Screen reader testing to verify relationships work correctly
+- Dynamic content testing to ensure relationships work after updates
+- User testing with people who use assistive technologies
+
+Measurements are most accurate when performed on fully rendered pages with all dynamic content loaded and after user interactions that may reveal additional relationships.
+
+
+SOURCES
+- W3C ARIA 1.2 Specification: https://www.w3.org/TR/wai-aria-1.2/#attrs_relationships
+- W3C Accessible Name and Description Computation: https://www.w3.org/TR/accname-1.2/
+- MDN ARIA relationship attributes: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes#relationship_attributes
+- WCAG 2.1 Success Criterion 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+- axe-core aria-valid-attr-value rule: https://www.deque.com/axe/developer-tools/api-documentation/#rules-aria-valid-attr-value
+- WebAIM ARIA relationships: https://webaim.org/techniques/aria/
+- See metrics.txt for additional sources

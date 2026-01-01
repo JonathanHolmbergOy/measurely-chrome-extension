@@ -1,0 +1,114 @@
+CVC - CSP Violations
+
+WHAT IT MEASURES
+Count of Content Security Policy violations detected during page load or execution. CSP violations occur when the browser blocks resources or code execution because they violate the site's Content Security Policy. These violations indicate potential security risks, policy misconfigurations, or legitimate resources being blocked.
+
+CSP violations can occur for:
+- Blocked scripts: JavaScript from unauthorized sources
+- Blocked styles: CSS from unauthorized sources
+- Blocked images: Images from unauthorized sources
+- Blocked fonts: Fonts from unauthorized sources
+- Blocked connections: Network requests to unauthorized endpoints
+- Inline code: Inline scripts/styles without nonces or hashes
+- eval() usage: Dynamic code evaluation blocked by CSP
+
+Violation types:
+- Directive violations: Resources violating specific CSP directives
+- Inline violations: Inline code without proper nonces/hashes
+- Eval violations: Dynamic code evaluation attempts
+- Mixed content: Resources violating mixed content policies
+
+HOW IT'S MEASURED
+CSP violation reports via SecurityPolicyViolationEvent or console error monitoring. The measurement process:
+
+1. Listens for violation events:
+   - Uses SecurityPolicyViolationEvent API
+   - Monitors browser console for CSP errors
+   - Captures violation reports if report-uri is configured
+
+2. Collects violation data:
+   - Records blocked resource URL
+   - Identifies violated directive
+   - Captures violation type
+   - Records timestamp
+
+3. Counts violations:
+   - Counts total violations during page lifecycle
+   - May group by violation type
+   - Tracks violations over time
+
+4. Returns violation count:
+   - Total number of CSP violations
+   - May include violation details
+   - Identifies which resources were blocked
+
+Measurement considerations:
+- Violations only detected if CSP is enforced (not report-only)
+- Some violations may be expected (legacy code, third-party scripts)
+- Violations in iframes may not be captured
+- Dynamic content may trigger violations after initial load
+
+WHY IT'S IMPORTANT
+CSP violations indicate security policy failures, potential XSS vulnerabilities, and misconfigured security headers. Monitoring violations helps identify security gaps and policy issues.
+
+Security implications:
+- Violations may indicate attempted XSS attacks
+- Blocked resources suggest policy is working
+- Unblocked violations indicate policy gaps
+- Misconfigured CSP may block legitimate resources
+- Missing CSP allows all resources (security risk)
+
+Policy effectiveness:
+- Zero violations with strict CSP = good security
+- Many violations = policy may be too restrictive or misconfigured
+- Violations indicate policy needs adjustment
+- Helps identify resources that need to be allowed
+
+THRESHOLDS
+- Good: 0 violations (No violations, CSP working correctly)
+- Needs Improvement: 1-5 violations (Some violations, may need policy adjustment)
+- Poor: ≥ 6 violations (Many violations, significant policy issues)
+
+Note: Some violations may be expected during CSP implementation. Focus on eliminating violations from legitimate resources.
+
+COMMON PITFALLS
+1. Missing CSP header: No CSP implemented, allowing all resources
+2. Overly restrictive CSP: CSP blocks legitimate resources
+3. unsafe-inline/unsafe-eval usage: Using unsafe directives that bypass protection
+4. Incorrect CSP directives: Wrong directive names or syntax
+5. Missing sources: Legitimate resources not included in source lists
+6. Third-party violations: Third-party scripts violating CSP
+7. Inline code violations: Inline scripts/styles without nonces/hashes
+8. Eval violations: Code using eval() or similar functions
+9. Mixed content: HTTP resources on HTTPS pages
+10. Report-only mode: Using report-only without enforcing policy
+
+OPTIMIZATION STRATEGIES
+1. Implement proper CSP: Set up Content Security Policy with appropriate directives
+2. Use nonces or hashes: Replace unsafe-inline with nonces or hashes
+3. Test CSP policies: Verify CSP doesn't break functionality
+4. Monitor violations: Use report-uri to track violations
+5. Gradually tighten policy: Start permissive and tighten over time
+6. Allow necessary sources: Add legitimate resources to source lists
+7. Fix inline code: Move inline code to external files or use nonces
+8. Remove eval(): Eliminate eval() and similar functions
+9. Update third-party code: Work with vendors to make code CSP-compliant
+10. Use strict-dynamic: Leverage strict-dynamic for better security
+11. Document CSP requirements: Ensure team understands CSP needs
+12. Regular CSP audits: Review and update CSP regularly
+13. Test in report-only first: Use report-only mode to identify issues
+14. Fix violations systematically: Address violations one by one
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

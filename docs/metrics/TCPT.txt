@@ -1,0 +1,85 @@
+TCPT - TCP Connection Time
+
+WHAT IT MEASURES
+Average TCP (Transmission Control Protocol) connection establishment time, measured in milliseconds. TCP connection time is the time it takes to establish a TCP connection between the browser and server before data can be transferred.
+
+TCP connection phases:
+- SYN: Client sends connection request
+- SYN-ACK: Server acknowledges
+- ACK: Client confirms connection
+- Connection established: Ready for data transfer
+
+The metric measures:
+- Time from connectStart to connectEnd
+- Average across all TCP connections
+- Network connection efficiency
+- Impact on resource loading
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis calculating connectEnd - connectStart for TCP connections. The measurement process:
+
+1. Gets resource timing:
+   - Uses PerformanceResourceTiming API
+   - Extracts TCP connection timing
+   - Calculates connectEnd - connectStart
+
+2. Calculates average:
+   - Averages TCP connection times
+   - Returns average in milliseconds
+   - May exclude SSL connections (measured separately)
+
+WHY IT'S IMPORTANT
+TCP connection time adds overhead to each request. Slow connections delay resource loading and affect overall page performance, especially when multiple connections are needed.
+
+Performance impact:
+- Adds latency to each request
+- Delays resource loading
+- Affects Time to First Byte
+- Impacts overall page load time
+- More noticeable with HTTP/1.1 (multiple connections)
+
+User experience:
+- Slower page loads
+- Delayed content visibility
+- Poor perceived performance
+- Increased wait time
+
+THRESHOLDS
+- Good: ≤ 50ms (Fast connection, minimal overhead)
+- Needs Improvement: 50-200ms (Moderate connection time)
+- Poor: ≥ 200ms (Slow connection, significant delay)
+
+COMMON PITFALLS
+1. Slow TCP connections: Connections taking too long
+2. Network latency: High network latency
+3. Server issues: Server not responding quickly
+4. Connection establishment delays: Delays in connection setup
+5. Geographic distance: Server far from users
+6. Network congestion: Network congestion affecting connections
+
+OPTIMIZATION STRATEGIES
+1. Use HTTP/2 or HTTP/3: Leverage multiplexing to reduce connections
+2. Implement connection reuse: Reuse existing connections
+3. Optimize server: Improve server response to connection requests
+4. Use CDN: Serve content from CDN closer to users
+5. Reduce connection overhead: Minimize connection setup time
+6. Use preconnect: Establish connections early with preconnect
+7. Monitor connection times: Track TCP connection performance
+8. Test from multiple locations: Verify performance from different regions
+
+
+HISTORY
+Network timing metrics have been fundamental to web performance since the early days of the web. The Resource Timing API was standardized by W3C in 2012, providing detailed network timing information. DNS, TCP, and SSL timing measurements became standard as HTTPS adoption increased and network optimization became more sophisticated.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

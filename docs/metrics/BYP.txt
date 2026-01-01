@@ -1,0 +1,134 @@
+BYP - Bypass Blocks
+===================
+
+OVERVIEW
+--------
+Rule ID: bypass
+Impact: Serious
+Category: Accessibility (Navigation)
+WCAG: 2.0 Level A (2.4.1 Bypass Blocks)
+
+Description:
+Ensures pages have mechanisms to bypass repetitive content blocks (skip links, landmarks, headings). Without bypass mechanisms, keyboard and screen reader users must tab through repeated navigation on every page.
+
+Thresholds:
+- Good: 1 (mechanism present)
+- Poor: 0 (no mechanism)
+
+
+WHY IT MATTERS
+--------------
+Bypass mechanisms:
+- Save time for keyboard and screen reader users
+- Enable quick access to main content
+- Reduce frustration from repetitive navigation
+- Meet WCAG 2.4.1 Level A requirement
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Checks for skip links (a[href^="#"] with bypass-related text)
+2. Verifies HTML5 landmarks (main, nav, header elements)
+3. Checks for heading elements (h1, h2)
+4. Reports if no bypass mechanism found
+
+
+HOW TO FIX
+----------
+1. Add skip link at page start (preferred)
+2. Use semantic HTML5 landmarks
+3. Implement proper heading hierarchy
+4. Include multiple bypass methods
+
+
+EXAMPLE IMPLEMENTATIONS
+-----------------------
+Skip Link (Best):
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header>
+        <nav>...</nav>
+    </header>
+    <main id="main-content">
+        <h1>Page Content</h1>
+    </main>
+</body>
+
+CSS for Skip Link:
+.skip-link {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.skip-link:focus {
+    position: static;
+    width: auto;
+    height: auto;
+}
+
+
+HTML5 LANDMARKS
+---------------
+<body>
+    <header>
+        <nav aria-label="Main navigation">...</nav>
+    </header>
+    
+    <main>
+        <h1>Page Title</h1>
+        <article>...</article>
+    </main>
+    
+    <aside>
+        <nav aria-label="Related links">...</nav>
+    </aside>
+    
+    <footer>...</footer>
+</body>
+
+
+HEADING STRUCTURE
+-----------------
+<h1>Page Title</h1>
+<h2>Section 1</h2>
+<h3>Subsection 1.1</h3>
+<h3>Subsection 1.2</h3>
+<h2>Section 2</h2>
+
+
+MULTIPLE SKIP LINKS
+-------------------
+<nav aria-label="Skip links" class="skip-links">
+    <a href="#main-content">Skip to main content</a>
+    <a href="#main-navigation">Skip to navigation</a>
+    <a href="#search">Skip to search</a>
+</nav>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: Essential for efficient navigation
+
+
+RELATED RULES
+-------------
+- LMR (Landmark Regions)
+- HHI (Heading Hierarchy Issues)
+- SRF (Scrollable Region Focusable)
+
+
+SOURCES
+-------
+- WCAG 2.4.1: https://www.w3.org/WAI/WCAG21/Understanding/bypass-blocks.html
+- WebAIM Skip Navigation: https://webaim.org/techniques/skipnav/
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#bypass
+- ARIA Landmarks: https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/
+

@@ -1,0 +1,127 @@
+IIA - Input Image Alt
+=====================
+
+OVERVIEW
+--------
+Rule ID: input-image-alt
+Impact: Critical
+Category: Accessibility (Form Elements)
+WCAG: 2.0 Level A (1.1.1 Non-text Content, 4.1.2 Name, Role, Value)
+
+Description:
+Ensures input elements with type="image" have alt text via alt attribute, aria-label, or aria-labelledby. Image buttons without alt text are inaccessible to screen reader users who cannot determine their purpose.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Alt text on image inputs:
+- Describes button purpose to screen readers
+- Enables keyboard and voice control users
+- Provides text alternative for image buttons
+- Meets WCAG 1.1.1 and 4.1.2 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all input[type="image"] elements
+2. Checks for alt, aria-label, or aria-labelledby attributes
+3. Reports image inputs without accessible names
+4. Includes src and ID for identification
+
+
+HOW TO FIX
+----------
+1. Add alt attribute with button purpose (preferred)
+2. Use aria-label for dynamic labels
+3. Use aria-labelledby to reference existing text
+4. Describe action, not image appearance
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<input type="image" src="submit.png">
+<input type="image" src="search-icon.png" alt="">
+<input type="image" src="button.gif">
+
+Good:
+<input type="image" src="submit.png" alt="Submit form">
+<input type="image" src="search.png" alt="Search">
+<input type="image" src="delete.png" alt="Delete item" aria-label="Delete this post">
+
+
+FORM SUBMISSION BUTTONS
+------------------------
+<form>
+    <label for="search-input">Search:</label>
+    <input type="text" id="search-input">
+    <input type="image" src="search-button.png" alt="Search">
+</form>
+
+<form>
+    <input type="text" name="email" placeholder="Email">
+    <input type="image" src="subscribe.png" alt="Subscribe to newsletter">
+</form>
+
+
+ICON BUTTONS
+------------
+<input type="image" src="icons/save.svg" alt="Save document">
+<input type="image" src="icons/print.svg" alt="Print page">
+<input type="image" src="icons/share.svg" alt="Share on social media">
+
+
+ALTERNATIVE: USE BUTTON ELEMENT
+--------------------------------
+Better semantic alternative:
+
+Instead of:
+<input type="image" src="submit.png" alt="Submit">
+
+Consider:
+<button type="submit">
+    <img src="submit.png" alt="">
+    Submit
+</button>
+
+Or:
+<button type="submit" class="icon-button">
+    <span class="sr-only">Submit</span>
+    <img src="submit.png" alt="" aria-hidden="true">
+</button>
+
+
+DYNAMIC ALT TEXT
+----------------
+const deleteBtn = document.querySelector('#delete-btn');
+const itemName = 'Report 2024.pdf';
+deleteBtn.setAttribute('alt', `Delete ${itemName}`);
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support for input[type="image"]
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: Alt text essential for announcement
+
+
+RELATED RULES
+-------------
+- AMC (Alt Text Missing)
+- BTN (Button Names)
+- IBN (Input Button Names)
+
+
+SOURCES
+-------
+- MDN Input Image: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/image
+- WCAG H36: https://www.w3.org/WAI/WCAG21/Techniques/html/H36
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#input-image-alt
+- WCAG 1.1.1: https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html
+

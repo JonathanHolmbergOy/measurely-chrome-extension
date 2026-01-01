@@ -1,0 +1,203 @@
+TPI - Third-Party Impact
+
+WHAT IT MEASURES
+Performance impact score of third-party scripts, combining blocking time and resource usage. This metric quantifies how much third-party resources (analytics, ads, widgets) affect page performance by measuring their blocking time and resource consumption.
+
+Impact factors:
+- Blocking time: Time third-party scripts block main thread
+- Resource size: Total size of third-party resources
+- Network impact: Third-party resource loading time
+- Combined score: Weighted combination of factors
+
+The metric calculates:
+- Blocking time from third-party scripts
+- Resource size impact
+- Combined performance impact score
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis identifying third-party origins, calculating blocking time and resource size impact. The measurement process:
+
+1. Identifies third-party resources:
+   - Uses PerformanceResourceTiming API
+   - Identifies resources from third-party origins
+   - Tracks third-party scripts
+
+2. Calculates blocking time:
+   - Measures main thread blocking from third-party scripts
+   - Tracks execution time
+   - Calculates blocking impact
+
+3. Calculates resource impact:
+   - Sums third-party resource sizes
+   - Measures network impact
+   - Calculates size impact
+
+4. Combines into score:
+   - Weighted combination of blocking and size
+   - Returns impact score in milliseconds
+
+WHY IT'S IMPORTANT
+Third-party scripts often block rendering and consume resources. High impact degrades overall page performance, affecting Core Web Vitals and user experience.
+
+Performance impact:
+- Blocks main thread
+- Delays page rendering
+- Affects Time to Interactive
+- Impacts First Input Delay and INP
+- Degrades overall performance
+
+User experience:
+- Slower page loads
+- Unresponsive interactions
+- Poor mobile experience
+- Increased frustration
+
+THRESHOLDS
+- Good: ≤ 500ms (Low third-party impact)
+- Needs Improvement: 500-1000ms (Moderate impact)
+- Poor: ≥ 1000ms (High impact, significant performance degradation)
+
+COMMON PITFALLS
+1. Blocking third-party scripts: Third-party scripts blocking main thread
+2. Large third-party resources: Third-party resources too large
+3. Synchronous third-party loading: Third-party scripts loaded synchronously
+4. Unoptimized embeds: Third-party embeds not optimized
+5. Too many third parties: Excessive third-party services
+
+OPTIMIZATION STRATEGIES
+1. Load third-party scripts asynchronously: Use async/defer
+2. Defer non-critical third parties: Load after page load
+3. Use resource hints: Preconnect to third-party domains
+4. Optimize third-party loading: Minimize third-party impact
+5. Consider self-hosting: Self-host critical third-party resources
+6. Monitor third-party impact: Track impact over time
+7. Review third-party necessity: Remove unnecessary services
+8. Test third-party performance: Measure and optimize impact
+
+
+HISTORY
+Third-party impact measurement has grown in importance as web pages increasingly rely on external scripts:
+
+Early 2000s: Third-party scripts were relatively rare. Most websites were self-contained with their own HTML, CSS, JavaScript, and images. External dependencies were limited to perhaps an analytics script or ad server.
+
+2005-2010: The rise of SaaS tools and social media integration dramatically increased third-party script usage:
+- Google Analytics for tracking
+- Facebook Like buttons
+- Twitter widgets
+- Advertising networks (Google AdSense, DoubleClick)
+- Comment systems (Disqus)
+- Payment processors
+- Live chat widgets
+
+Pages began loading 5-10 third-party scripts. However, there was no easy way to measure their performance impact. Slow third-party scripts would block page loading, but identifying the culprit required manual investigation.
+
+2011-2013: Third-party script problems became evident:
+- Single slow third-party could block entire page
+- Third-party failures caused site failures
+- Security concerns (XSS via compromised third-party)
+- Privacy concerns (tracking and data collection)
+
+Developers used workarounds:
+- Async script loading (`<script async>`)
+- Defer attribute (`<script defer>`)
+- Dynamic script injection via JavaScript
+- Loading scripts after page load
+
+2012: W3C's Resource Timing API enabled measuring third-party resources programmatically. For the first time, developers could systematically track how long third-party scripts took to load and execute.
+
+2014-2016: Studies quantified third-party impact:
+- Average page loaded 50+ third-party requests
+- Third-party scripts often exceeded first-party code size
+- Ads and analytics were primary performance bottlenecks
+- Third-party scripts caused 50-90% of load time
+
+Tools emerged:
+- WebPageTest's third-party analysis
+- Browser extensions to block third-parties for testing
+- Request blocking features in DevTools
+
+2016: Long Tasks API was introduced, making it possible to attribute JavaScript execution time to specific scripts. This revealed how much main thread blocking was caused by third-parties.
+
+2018-2020: As Core Web Vitals emerged, third-party impact became critical:
+- Third-party scripts delayed FCP and LCP
+- Third-party execution caused poor FID/INP
+- Third-party ads and embeds caused CLS
+
+Research showed:
+- Social media widgets: 100-500ms execution time
+- Analytics: 50-200ms execution time
+- Ads: 200ms-2s execution time (highly variable)
+- Tag managers: 100-300ms execution time
+
+Best practices evolved:
+- Lazy load non-critical third-parties
+- Use facade patterns (load lightweight placeholder, load real widget on interaction)
+- Self-host critical third-party scripts for better caching
+- Use resource hints (preconnect) for third-party domains
+- Implement performance budgets for third-parties
+
+2020: Google published guidance on third-party optimization:
+- Defer non-critical scripts
+- Use `loading="lazy"` for iframes
+- Implement request interception via Service Workers
+- Consider removing unused third-parties
+
+Lighthouse added audits:
+- Flag third-party blocking main thread
+- Report third-party transfer size
+- Identify third-parties impacting LCP
+
+2021-2023: Third-party impact measurement became standard:
+- Real User Monitoring tools track third-party performance separately
+- Performance budgets include third-party limits
+- Companies audit third-parties regularly
+- Privacy concerns led to reduced third-party usage (GDPR, ad blockers)
+
+Modern measurement approaches:
+1. **Resource Timing**: Measure third-party resource load time
+2. **Long Tasks**: Measure third-party JavaScript execution time
+3. **Attribution**: Connect third-party scripts to Core Web Vitals impact
+4. **Coverage**: Measure unused third-party code
+
+2024-Present: Third-party scripts remain a major performance challenge:
+- Median page loads 20-30 third-party requests
+- Third-parties often cause 30-50% of JavaScript execution time
+- Ad scripts remain particularly problematic for performance
+- Balance between functionality and performance is constant tension
+
+Modern best practices:
+- Audit third-parties quarterly (do you still need each one?)
+- Lazy load non-essential third-parties
+- Use facade patterns for expensive widgets (YouTube embeds, etc.)
+- Implement Consent Management Platforms efficiently
+- Monitor third-party performance in production
+- Set SLAs with third-party vendors
+- Have fallback plans if third-party fails
+- Use Subresource Integrity for third-party security
+
+Common third-party categories and typical impact:
+- Analytics: 50-200ms (Google Analytics, Adobe Analytics)
+- Social widgets: 200-800ms (Facebook, Twitter embeds)
+- Advertising: 500ms-3s (Google Ads, programmatic ads)
+- Tag managers: 100-400ms (Google Tag Manager, Tealium)
+- Chat widgets: 200-600ms (Intercom, Drift, Zendesk)
+- Video embeds: 400ms-2s (YouTube, Vimeo)
+- Payment processors: 100-300ms (Stripe, PayPal)
+
+Third-party scripts are here to stay - modern web depends on them. Measuring their impact is essential for maintaining good performance despite relying on external code outside your control.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

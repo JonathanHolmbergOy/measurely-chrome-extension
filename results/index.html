@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Measurely - Results</title>
+  <link rel="stylesheet" href="../public/global.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="header">
+    <div class="header-brand">
+      <svg class="measurely-logo" width="64" height="64" viewBox="0 0 450 450" fill="none"
+        xmlns="http://www.w3.org/2000/svg" aria-label="Measurely logo">
+        <circle id="bg-circle" class="bg-circle" cx="147.591" cy="147.591" r="147.591"
+          transform="matrix(1 8.74228e-08 8.74228e-08 -1 77.4141 370.727)" fill="#476EFF" aria-hidden="true" />
+        <path id="measurely-logo" class="logo-shape"
+          d="M161 286.562V172.938L222.018 314.125L237.837 142L289.25 286.562V172.938" stroke="white" stroke-width="30"
+          aria-hidden="true" />
+      </svg>
+      <h1>Measurely - Analysis Results</h1>
+    </div>
+    <button id="copyButton" class="measurely-icon-button" aria-label="Copy filtered results to clipboard">
+        <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M7.5 3.375c0-1.036.84-1.875 1.875-1.875h.375a3.75 3.75 0 0 1 3.75 3.75v1.875C13.5 8.161 14.34 9 15.375 9h1.875A3.75 3.75 0 0 1 21 12.75v3.375C21 17.16 20.16 18 19.125 18h-9.75A1.875 1.875 0 0 1 7.5 16.125V3.375Z" />
+          <path d="M15 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 17.25 7.5h-1.875A.375.375 0 0 1 15 7.125V5.25ZM4.875 6H6v10.125A3.375 3.375 0 0 0 9.375 19.5H16.5v1.125c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 0 1 3 20.625V7.875C3 6.839 3.84 6 4.875 6Z" />
+        </svg>
+      </button>
+  </header>
+  <main id="content" aria-busy="false">
+    <nav id="navigationBar" aria-label="Results navigation">
+
+      <section class="search-bar">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+        </svg>
+        <search>
+          <form role="search">
+            <input id="searchInput" type="search" placeholder="Search metrics..." aria-label="Search metrics">
+          </form>
+        </search>
+      </section>
+
+      <section class="categories" id="categoriesNav" aria-label="Category summary">
+        <a href="#performance" class="category-button" data-category="performance" aria-label="Performance category" title="Scroll to Performance metrics">
+          <div class="category-info">
+            <div class="category-header">
+              <svg height="18" width="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+              </svg>
+              <h3>Performance</h3>
+            </div>
+            <p class="issues-text">Issues found: <strong class="issues-count">0</strong></p>
+          </div>
+          <div class="summary-score-wrapper">
+            <svg class="score-circle" viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="score-circle-bg" cx="32" cy="32" r="28" fill="none" stroke="#ffffff10"></circle>
+              <circle class="score-circle-progress" cx="32" cy="32" r="28" fill="none" stroke="#10b981"
+                stroke-dasharray="176" stroke-dashoffset="176" transform="rotate(-90 32 32)" stroke-linecap="round">
+              </circle>
+            </svg>
+            <div class="score-value">0</div>
+          </div>
+        </a>
+
+        <a href="#security" class="category-button" data-category="security" aria-label="Security category" title="Scroll to Security metrics">
+          <div class="category-info">
+            <div class="category-header">
+              <svg height="18" width="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+              </svg>
+              <h3>Security</h3>
+            </div>
+            <p class="issues-text">Issues found: <strong class="issues-count">0</strong></p>
+          </div>
+          <div class="summary-score-wrapper">
+            <svg class="score-circle" viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="score-circle-bg" cx="32" cy="32" r="28" fill="none" stroke="#ffffff10"></circle>
+              <circle class="score-circle-progress" cx="32" cy="32" r="28" fill="none" stroke="#10b981"
+                stroke-dasharray="176" stroke-dashoffset="176" transform="rotate(-90 32 32)" stroke-linecap="round">
+              </circle>
+            </svg>
+            <div class="score-value">0</div>
+          </div>
+        </a>
+
+        <a href="#accessibility" class="category-button" data-category="accessibility" aria-label="Accessibility category" title="Scroll to Accessibility metrics">
+          <div class="category-info">
+            <div class="category-header">
+              <svg height="18" width="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+              </svg>
+              <h3>Accessibility</h3>
+            </div>
+            <p class="issues-text">Issues found: <strong class="issues-count">0</strong></p>
+          </div>
+          <div class="summary-score-wrapper">
+            <svg class="score-circle" viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="score-circle-bg" cx="32" cy="32" r="28" fill="none" stroke="#ffffff10"></circle>
+              <circle class="score-circle-progress" cx="32" cy="32" r="28" fill="none" stroke="#10b981"
+                stroke-dasharray="176" stroke-dashoffset="176" transform="rotate(-90 32 32)" stroke-linecap="round">
+              </circle>
+            </svg>
+            <div class="score-value">0</div>
+          </div>
+        </a>
+
+        <a href="#user-experience" class="category-button" data-category="ux" aria-label="User Experience category" title="Scroll to User Experience metrics">
+          <div class="category-info">
+            <div class="category-header">
+              <svg height="18" width="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+              </svg>
+              <h3>User Experience</h3>
+            </div>
+            <p class="issues-text">Issues found: <strong class="issues-count">0</strong></p>
+          </div>
+          <div class="summary-score-wrapper">
+            <svg class="score-circle" viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="score-circle-bg" cx="32" cy="32" r="28" fill="none" stroke="#ffffff10"></circle>
+              <circle class="score-circle-progress" cx="32" cy="32" r="28" fill="none" stroke="#10b981"
+                stroke-dasharray="176" stroke-dashoffset="176" transform="rotate(-90 32 32)" stroke-linecap="round">
+              </circle>
+            </svg>
+            <div class="score-value">0</div>
+          </div>
+        </a>
+
+        <a href="#resource-optimization" class="category-button" data-category="optimization" aria-label="Resource Optimization category" title="Scroll to Resource Optimization metrics">
+          <div class="category-info">
+            <div class="category-header">
+              <svg height="18" width="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+              </svg>
+              <h3>Resource Optimization</h3>
+            </div>
+            <p class="issues-text">Issues found: <strong class="issues-count">0</strong></p>
+          </div>
+          <div class="summary-score-wrapper">
+            <svg class="score-circle" viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="score-circle-bg" cx="32" cy="32" r="28" fill="none" stroke="#ffffff10"></circle>
+              <circle class="score-circle-progress" cx="32" cy="32" r="28" fill="none" stroke="#10b981"
+                stroke-dasharray="176" stroke-dashoffset="176" transform="rotate(-90 32 32)" stroke-linecap="round">
+              </circle>
+            </svg>
+            <div class="score-value">0</div>
+          </div>
+        </a>
+
+        <a href="#seo" class="category-button" data-category="seo" aria-label="SEO category" title="Scroll to SEO metrics">
+          <div class="category-info">
+            <div class="category-header">
+              <svg height="18" width="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Zm3.75 11.625a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+              </svg>
+              <h3>SEO</h3>
+            </div>
+            <p class="issues-text">Issues found: <strong class="issues-count">0</strong></p>
+          </div>
+          <div class="summary-score-wrapper">
+            <svg class="score-circle" viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="score-circle-bg" cx="32" cy="32" r="28" fill="none" stroke="#ffffff10"></circle>
+              <circle class="score-circle-progress" cx="32" cy="32" r="28" fill="none" stroke="#10b981"
+                stroke-dasharray="176" stroke-dashoffset="176" transform="rotate(-90 32 32)" stroke-linecap="round">
+              </circle>
+            </svg>
+            <div class="score-value">0</div>
+          </div>
+        </a>
+      </section>
+
+      <section class="filter-bar" id="filterBar" aria-label="Filter metrics">
+        <button class="filter-btn active" data-filter="all" aria-pressed="true">
+          <svg height="14" width="14" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+          </svg>
+          All
+        </button>
+        <button class="filter-btn" data-filter="good" aria-pressed="false">
+          <svg height="14" width="14" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="#10b981">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+          Good
+        </button>
+        <button class="filter-btn" data-filter="ok" aria-pressed="false">
+          <svg height="14" width="14" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="#f59e0b">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+          </svg>
+          Needs Improvement
+        </button>
+        <button class="filter-btn" data-filter="poor" aria-pressed="false">
+          <svg height="14" width="14" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="#ef4444">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+          </svg>
+          Poor
+        </button>
+        <button class="filter-btn" data-filter="no-data" aria-pressed="false">
+          <svg height="14" width="14" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="#476EFF">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z" />
+          </svg>
+          No data
+        </button>
+        <button class="filter-btn" data-filter="issues" aria-pressed="false">
+          <svg height="14" width="14" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="#6b7280">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+          </svg>
+          Issues
+        </button>
+      </section>
+    </nav>
+
+    <section class="metrics-list" aria-labelledby="metrics-heading">
+      <h2 id="metrics-heading" class="sr-only">Metrics by Category</h2>
+      <div class="metrics-wrapper" role="region" aria-label="Metrics list">
+        <template id="metricTemplate">
+          <details class="metric-details" data-status="" data-category="">
+            <summary class="metric-summary">
+              <div class="metric-name-wrapper">
+                <span class="metric-name">
+                  <span class="name-category"></span>
+                  <span class="name-code"></span>
+                </span>
+                <span class="metric-description"></span>
+              </div>
+              <div class="metric-value-wrapper">
+                <span class="metric-value">
+                  <span class="value-actual"></span>
+                  <span class="value-separator"> / </span>
+                  <span class="value-threshold"></span>
+                </span>
+                <svg class="status-icon status-good" height="16" width="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="#10b981">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                <svg class="status-icon status-ok" height="16" width="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="#f59e0b" style="display: none;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                </svg>
+                <svg class="status-icon status-poor" height="16" width="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="#ef4444" style="display: none;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                </svg>
+                <svg class="status-icon status-nodata" height="16" width="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="#6b7280" style="display: none;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+              </div>
+              <span class="metric-issues-count"></span>
+            </summary>
+            <ul class="metric-issues-list"></ul>
+          </details>
+        </template>
+        <div id="metricsList"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="main.js"></script>
+</body>
+
+</html>

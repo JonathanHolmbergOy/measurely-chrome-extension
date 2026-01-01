@@ -1,0 +1,89 @@
+REE - Redundant Entry
+
+WHAT IT MEASURES
+Count of forms requiring users to re-enter the same information unnecessarily. WCAG 2.2 Success Criterion 3.3.7 (Redundant Entry) requires avoiding redundant data entry when the information is previously provided by the user or available to the system.
+
+Examples of redundant entry:
+- Email confirmation fields (entering email twice)
+- Password confirmation fields (entering password twice)
+- Re-entering information already provided
+- Duplicate data entry in multi-step forms
+- Re-entering information available from previous sessions
+
+WCAG 2.2 Success Criterion 3.3.7:
+- Level A requirement
+- Applies when information was previously entered
+- Applies when information is available to the system
+- Allows exceptions for security (e.g., password confirmation)
+
+HOW IT'S MEASURED
+Form analysis checking for duplicate input fields requiring same information (e.g., email confirmation, password confirmation). The measurement process:
+
+1. Identifies forms:
+   - Finds all forms on the page
+   - Analyzes form fields
+   - Checks for duplicate fields
+
+2. Detects redundant entry:
+   - Identifies fields requiring same information
+   - Checks for email/password confirmations
+   - Flags unnecessary duplicate fields
+
+3. Counts redundant entries:
+   - Counts forms with redundant entry
+   - Returns total count
+
+WHY IT'S IMPORTANT
+Redundant entry creates unnecessary burden for users. WCAG 2.2 requires avoiding redundant data entry when possible, improving usability and accessibility.
+
+Accessibility impact:
+- Creates unnecessary burden
+- Violates WCAG 2.2 Success Criterion 3.3.7 (Redundant Entry) - Level A
+- Increases form completion time
+- Reduces usability
+
+User experience:
+- Frustrating for users
+- Increases form abandonment
+- Wastes user time
+- Poor user experience
+
+THRESHOLDS
+- Good: 0 errors (No redundant entry)
+- Poor: ≥ 1 error (Redundant entry present)
+
+Note: Password confirmation may be acceptable for security, but other redundant entries should be avoided.
+
+COMMON PITFALLS
+1. Email confirmation fields: Requiring email to be entered twice
+2. Password confirmation: Password confirmation (may be acceptable for security)
+3. Duplicate information entry: Re-entering information already provided
+4. Multi-step form redundancy: Re-entering information in later steps
+5. No autocomplete: Not using autocomplete to avoid re-entry
+
+OPTIMIZATION STRATEGIES
+1. Eliminate redundant entry: Remove unnecessary duplicate fields
+2. Use autocomplete: Enable autocomplete to avoid re-entry
+3. Pre-fill information: Pre-fill information when available
+4. Avoid unnecessary confirmations: Only require confirmations when necessary
+5. Use single entry: Allow single entry when information is available
+6. Store information: Save information to avoid re-entry
+7. Test forms: Verify forms don't require unnecessary re-entry
+8. Document exceptions: Document when confirmations are needed for security
+
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, evolving to WCAG 2.0 (2008), WCAG 2.1 (2018), and WCAG 2.2 (2023). ARIA (Accessible Rich Internet Applications) was first published by W3C in 2014 to address accessibility gaps in dynamic web content. The Web Content Accessibility Guidelines have become legal requirements in many jurisdictions, driving adoption of accessibility metrics and testing tools.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

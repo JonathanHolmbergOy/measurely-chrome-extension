@@ -1,0 +1,88 @@
+RFI - Required Field Indicators
+
+WHAT IT MEASURES
+Count of required form fields missing both visual and programmatic indicators. Required fields must be clearly indicated both visually (for sighted users) and programmatically (for screen reader users) using the `required` attribute and `aria-required='true'`.
+
+Required field indicators:
+- Visual indicators: Asterisk (*), "required" text, color coding
+- Programmatic indicators: `required` attribute, `aria-required='true'`
+- Both are needed: Visual for sighted users, programmatic for screen readers
+
+WCAG requirements:
+- WCAG 2.1 Success Criterion 3.3.2 (Labels or Instructions) - Level A
+- Required fields must be identified
+- Both visual and programmatic indication needed
+
+HOW IT'S MEASURED
+DOM analysis checking required form fields for both required attribute and aria-required='true'. The measurement process:
+
+1. Identifies required fields:
+   - Finds form fields marked as required
+   - Checks for `required` attribute
+   - Checks for `aria-required='true'`
+
+2. Validates indicators:
+   - Verifies both `required` and `aria-required` are present
+   - Checks for visual indicators (may check for asterisk or text)
+   - Flags fields missing indicators
+
+3. Counts missing indicators:
+   - Counts fields missing `required` attribute
+   - Counts fields missing `aria-required`
+   - Returns total count
+
+WHY IT'S IMPORTANT
+Required fields must be indicated both visually and programmatically for screen reader users. Missing indicators create accessibility barriers and violate WCAG guidelines.
+
+Accessibility impact:
+- Screen reader users cannot identify required fields
+- Violates WCAG 2.1 Success Criterion 3.3.2 (Labels or Instructions) - Level A
+- Creates barriers for users with disabilities
+- Reduces form accessibility
+
+User experience:
+- Users cannot identify required fields
+- Increased form errors
+- Frustration and abandonment
+- Poor user experience
+
+THRESHOLDS
+- Good: 0 errors (All required fields properly indicated)
+- Poor: ≥ 1 error (Missing required field indicators)
+
+Even a single missing indicator creates an accessibility barrier.
+
+COMMON PITFALLS
+1. Missing required attribute: Fields not marked with `required`
+2. Missing aria-required: Fields not marked with `aria-required='true'`
+3. No visual indicators: Missing asterisk or "required" text
+4. Inconsistent indicators: Different indication methods across forms
+5. Visual-only indicators: Only visual, no programmatic indication
+6. Programmatic-only indicators: Only programmatic, no visual indication
+
+OPTIMIZATION STRATEGIES
+1. Add required attribute: Mark required fields with `required`
+2. Set aria-required='true': Add `aria-required='true'` to required fields
+3. Provide visual indicators: Add asterisk (*) or "required" text
+4. Ensure consistency: Use consistent indication methods
+5. Test with screen readers: Verify indicators are announced
+6. Document requirements: Ensure team understands indicator needs
+7. Review forms: Regularly check forms for proper indicators
+8. Use consistent styling: Style required indicators consistently
+
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, evolving to WCAG 2.0 (2008), WCAG 2.1 (2018), and WCAG 2.2 (2023). ARIA (Accessible Rich Internet Applications) was first published by W3C in 2014 to address accessibility gaps in dynamic web content. The Web Content Accessibility Guidelines have become legal requirements in many jurisdictions, driving adoption of accessibility metrics and testing tools.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

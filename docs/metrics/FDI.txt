@@ -1,0 +1,199 @@
+FDI - Font Display Issues
+
+WHAT IT MEASURES
+Count of @font-face rules missing the font-display property or using font-display: block, which causes FOIT (Flash of Invisible Text). FOIT occurs when browsers hide text while waiting for web fonts to load, creating periods where text is invisible and degrading user experience.
+
+Font display behaviors:
+- font-display: block: Text invisible until font loads (FOIT, worst UX)
+- font-display: swap: Shows fallback immediately, swaps when font loads (best UX)
+- font-display: optional: Shows fallback, may not swap if font loads slowly
+- font-display: fallback: Short block period, then swap
+- font-display: auto: Browser default (usually block, causes FOIT)
+
+Missing font-display:
+- Defaults to font-display: auto (browser-dependent)
+- Often results in FOIT behavior
+- Text remains invisible during font loading
+- Poor user experience
+
+HOW IT'S MEASURED
+CSS analysis checking @font-face rules for font-display property. Scans stylesheets for font-face declarations. The measurement process:
+
+1. Scans stylesheets:
+   - Iterates through all stylesheets
+   - Finds all @font-face rules
+   - Extracts font-display values
+
+2. Identifies issues:
+   - Flags @font-face rules missing font-display
+   - Flags rules using font-display: block
+   - Flags rules using font-display: auto (may cause FOIT)
+
+3. Counts issues:
+   - Counts total problematic @font-face rules
+   - May group by severity
+   - Returns count of font display issues
+
+WHY IT'S IMPORTANT
+FOIT causes invisible text during font loading, degrading user experience and potentially affecting CLS (Cumulative Layout Shift). Proper font-display ensures text is visible immediately.
+
+User experience impact:
+- Text invisible during font loading (FOIT)
+- Users can't read content while fonts load
+- Poor perceived performance
+- May cause layout shifts when fonts load
+- Frustrating user experience
+
+Performance impact:
+- Delays text visibility
+- Affects First Contentful Paint (FCP)
+- May contribute to CLS if fonts cause layout shifts
+- Blocks text rendering
+- Wastes user's time
+
+Best practices:
+- Use font-display: swap for most fonts
+- Use font-display: optional for non-critical fonts
+- Avoid font-display: block
+- Preload critical fonts
+
+THRESHOLDS
+- Good: 0 issues (All fonts have proper font-display)
+- Poor: ≥ 1 issue (Fonts causing FOIT)
+
+Note: Even one font without proper font-display can cause FOIT and poor UX.
+
+COMMON PITFALLS
+1. Missing font-display property: @font-face rules without font-display
+2. Using font-display: block: Explicitly causing FOIT
+3. Fonts blocking text rendering: Text invisible until fonts load
+4. font-display: auto: Browser default may cause FOIT
+5. Inconsistent font-display: Different fonts using different strategies
+6. Not preloading critical fonts: Critical fonts not preloaded
+7. Too many web fonts: Loading many fonts increases FOIT risk
+8. Large font files: Large fonts take longer to load, extending FOIT
+
+OPTIMIZATION STRATEGIES
+1. Use font-display: swap: Show fallback immediately, swap when font loads
+2. Implement font-display: optional: For non-critical fonts, may not swap
+3. Preload critical fonts: Use <link rel="preload"> for critical fonts
+4. Use system fonts as fallback: Ensure fallback fonts are similar
+5. Limit web font usage: Use web fonts only when necessary
+6. Optimize font files: Use font subsetting, compression
+7. Use font-display: fallback: Balance between block and swap
+8. Test font loading: Verify fonts load quickly and don't cause FOIT
+9. Monitor font performance: Track font load times
+10. Consider variable fonts: May reduce number of font files needed
+
+
+HISTORY
+Font display issues emerged as web fonts became ubiquitous in web design:
+
+2009-2010: The @font-face CSS rule allowed web designers to use custom fonts beyond the limited "web-safe" fonts (Arial, Times New Roman, etc.). Services like Google Fonts, Typekit, and Font Squirrel made web fonts easily accessible.
+
+However, a problem emerged: **FOIT (Flash of Invisible Text)**. When a page loaded, browsers would hide text until custom fonts loaded. Users would see a blank page for 3-10 seconds, creating a terrible experience especially on slow connections.
+
+Browser behavior varied:
+- Chrome/Safari: Hide text for up to 3 seconds (FOIT)
+- Firefox: Hide text for up to 3 seconds, then show fallback
+- IE/Edge: Show fallback immediately (FOUT - Flash of Unstyled Text)
+
+2011-2015: FOIT became a major performance problem. Studies showed users leaving sites during the blank text period. Designers wanted custom fonts, but the loading experience was poor.
+
+Workarounds emerged:
+- Font loading JavaScript libraries (Web Font Loader by Google/Typekit)
+- Manual font loading using JavaScript
+- FOUT-like behavior via script (show fallback, swap when font loaded)
+- Font subsetting to reduce file sizes
+
+These workarounds were complex and required JavaScript, even though the issue was fundamentally about CSS and fonts.
+
+2016: CSS Font Display specification was proposed to W3C. The `font-display` property would give developers control over font loading behavior without JavaScript.
+
+2017-2018: `font-display` was implemented in browsers (Chrome 60+, Firefox 58+, Safari 11.1+, Edge 79+). This property could be set in @font-face rules:
+
+```css
+@font-face {
+  font-family: 'CustomFont';
+  src: url('font.woff2');
+  font-display: swap; /* or auto, block, fallback, optional */
+}
+```
+
+Values:
+- **auto**: Browser default (usually 3s block period)
+- **block**: Block for short period (3s), then swap
+- **swap**: Show fallback immediately, swap when font loads (FOUT)
+- **fallback**: Very short block (100ms), then fallback, swap only if fast
+- **optional**: Very short block, fallback if font not ready, never swap
+
+2018-2019: `font-display: swap` became the recommended approach for web fonts. It eliminated FOIT by showing fallback text immediately, then swapping to custom font when ready. This dramatically improved perceived performance.
+
+Google Fonts added `?display=swap` parameter:
+```html
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+```
+
+Lighthouse added an audit for font-display, flagging fonts without it as a performance issue.
+
+2020: As Largest Contentful Paint (LCP) became a Core Web Vital, font loading became even more critical. If the LCP element was text with a custom font, FOIT would delay LCP significantly. Using `font-display: swap` could improve LCP by 1-3 seconds.
+
+However, swap introduced a new problem: **layout shift**. When the fallback font and custom font had different dimensions, swapping caused content to jump (poor CLS - Cumulative Layout Shift).
+
+Solutions emerged:
+- Font-matching: Adjust fallback font to match custom font dimensions
+- CSS size-adjust: New CSS property to scale fallback font to match
+- Preload critical fonts to load them faster
+- Use system fonts that don't require loading
+
+2021-Present: Font display optimization is now standard:
+
+Best practices:
+1. Use `font-display: swap` for all custom fonts (eliminates FOIT)
+2. Preload critical fonts: `<link rel="preload" href="font.woff2" as="font">`
+3. Match fallback font dimensions to minimize layout shift
+4. Use `@font-face` descriptors (ascent-override, descent-override) to adjust fallback
+5. Consider `font-display: optional` for non-critical decorative fonts
+6. Subset fonts to reduce file size and load time
+
+Modern font loading strategy:
+```css
+@font-face {
+  font-family: 'CustomFont';
+  src: url('font.woff2');
+  font-display: swap;
+  /* Optional: adjust fallback to match custom font */
+  ascent-override: 95%;
+  descent-override: 25%;
+}
+```
+
+Tools check font display:
+- Lighthouse audits fonts without font-display
+- Chrome DevTools shows font loading in Network panel
+- WebPageTest measures font loading impact on LCP
+
+Font display issues affect:
+- LCP: Text with fonts can be LCP element
+- CLS: Font swapping can cause layout shifts
+- User experience: Invisible text frustrates users
+
+The evolution: FOIT (terrible) → JavaScript font loaders (complex) → font-display (simple CSS solution) → font-display + matching (optimized).
+
+Font display remains important in 2024 because custom fonts are still ubiquitous, and the default browser behavior (FOIT) is still problematic without developer intervention.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

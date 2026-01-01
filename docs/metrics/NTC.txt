@@ -1,0 +1,92 @@
+NTC - Non-Text Contrast Issues
+
+WHAT IT MEASURES
+Count of UI elements (buttons, form controls, icons, graphics) with low contrast borders, outlines, or backgrounds. WCAG 2.1 Success Criterion 1.4.11 (Non-text Contrast) requires at least 3:1 contrast ratio for UI components and graphical objects.
+
+Non-text elements requiring contrast:
+- Buttons and controls
+- Form inputs and borders
+- Icons and graphics
+- Focus indicators
+- UI component boundaries
+- Graphical objects
+
+Contrast requirements:
+- 3:1 contrast ratio minimum (WCAG 2.1 Level AA)
+- Applies to borders, outlines, backgrounds
+- Required for interactive elements
+- Essential for visual identification
+
+HOW IT'S MEASURED
+getComputedStyle analysis checking border and outline colors against background, calculating contrast ratios. The measurement process:
+
+1. Identifies UI elements:
+   - Finds buttons, form controls, interactive elements
+   - Identifies elements with borders/outlines
+   - Checks graphical objects
+
+2. Calculates contrast:
+   - Uses getComputedStyle to get colors
+   - Calculates contrast ratio for borders/outlines
+   - Compares against background colors
+
+3. Validates contrast:
+   - Checks if contrast meets 3:1 requirement
+   - Flags elements with insufficient contrast
+   - Returns count of issues
+
+WHY IT'S IMPORTANT
+WCAG 2.1 requires 3:1 contrast for UI components and graphical objects. Low contrast makes buttons and controls hard to identify, especially for users with visual impairments.
+
+Accessibility impact:
+- Users cannot identify interactive elements
+- Buttons and controls hard to see
+- Violates WCAG 2.1 Success Criterion 1.4.11 (Non-text Contrast) - Level AA
+- Creates barriers for users with visual impairments
+- Reduces usability
+
+User experience:
+- Difficult to identify clickable elements
+- Poor visual clarity
+- Reduced usability
+- Frustration for users
+
+THRESHOLDS
+- Good: 0 errors (All UI elements meet contrast requirements)
+- Needs Improvement: 1-2 errors (Minor contrast issues)
+- Poor: ≥ 3 errors (Multiple contrast issues, significant barriers)
+
+COMMON PITFALLS
+1. Low contrast borders: Borders with insufficient contrast
+2. Insufficient outline contrast: Outlines not meeting 3:1 ratio
+3. Buttons with poor visibility: Buttons hard to identify
+4. Form controls with low contrast: Form elements with poor contrast
+5. Icons with low contrast: Icons hard to see
+6. Graphics with low contrast: Graphical objects not meeting requirements
+
+OPTIMIZATION STRATEGIES
+1. Ensure 3:1 contrast for borders/outlines: Meet WCAG contrast requirements
+2. Test all interactive elements: Verify contrast for all UI components
+3. Use sufficient color contrast for UI components: Ensure visual clarity
+4. Test with color contrast tools: Use tools to verify contrast ratios
+5. Review button and control styles: Ensure buttons are clearly visible
+6. Check form element contrast: Verify form controls meet requirements
+7. Test with users: Get feedback on visual clarity
+8. Document contrast requirements: Ensure team understands contrast needs
+
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, evolving to WCAG 2.0 (2008), WCAG 2.1 (2018), and WCAG 2.2 (2023). ARIA (Accessible Rich Internet Applications) was first published by W3C in 2014 to address accessibility gaps in dynamic web content. The Web Content Accessibility Guidelines have become legal requirements in many jurisdictions, driving adoption of accessibility metrics and testing tools.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

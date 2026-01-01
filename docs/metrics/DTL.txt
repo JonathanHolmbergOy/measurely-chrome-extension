@@ -1,0 +1,206 @@
+DTL - Document Title
+
+WHAT IT MEASURES
+Whether the HTML document has a descriptive and meaningful title element. The document title appears in browser tabs, bookmarks, and search engine results. A good title provides users and search engines with a clear, concise description of the page's content.
+
+The title element should:
+- Exist in the document's <head> section
+- Be non-empty (not blank or whitespace only)
+- Be descriptive of the page content
+- Be unique across different pages of the site
+- Include relevant keywords for SEO
+- Be appropriately length (50-60 characters is optimal)
+
+HOW IT'S MEASURED
+DOM analysis checking for the presence of a <title> element within the document <head> section. The measurement process:
+
+1. Checks for <title> element in document.head
+2. Verifies the title element exists
+3. Validates that title text is not empty or whitespace only
+4. May check title length (too short or too long)
+5. Returns boolean result:
+   - true: Valid title element exists
+   - false: Missing or empty title
+
+The measurement uses:
+- document.title - returns the text of the title element
+- document.querySelector('title') - finds the title element
+- Validation of text content length and content
+
+WHY IT'S IMPORTANT
+The document title is one of the most important on-page SEO elements. It directly impacts search engine rankings, click-through rates from search results, and user experience.
+
+SEO impact:
+- Major ranking factor for search engines
+- Appears as the main link in search results (SERP)
+- Influences click-through rate from search results
+- First thing users see in search results
+- Used by search engines to understand page content
+
+User experience:
+- Appears in browser tabs (helps users identify and switch between tabs)
+- Used for bookmarks (helps users find saved pages)
+- Displayed in browser history
+- Shows in social media shares
+- Helps users understand page content
+
+Accessibility:
+- Screen readers announce page title when page loads
+- Helps users understand what page they're on
+- Provides context for page content
+
+THRESHOLDS
+- Good: true (descriptive title element present)
+- Poor: false (missing or empty title)
+
+All pages must have a title element with meaningful, descriptive text.
+
+COMMON PITFALLS
+1. Missing title element: No <title> tag in document <head>
+2. Empty title: Title element present but contains no text
+3. Generic titles: Using same title across multiple pages ("Home", "Page")
+4. Too short: Title too brief to be descriptive (less than 10 characters)
+5. Too long: Title exceeds 60 characters and gets truncated in search results
+6. Keyword stuffing: Over-optimizing with too many keywords
+7. Site name only: Using just the site name without page-specific description
+8. Default titles: Leaving placeholder text like "Untitled" or "New Page"
+9. Duplicate titles: Same title used across different pages
+10. Missing page context: Title doesn't describe the specific page content
+
+OPTIMIZATION STRATEGIES
+1. Always include a title element: Every page must have a <title> in the <head>
+2. Make titles descriptive: Clearly describe page content
+3. Keep titles concise: Aim for 50-60 characters (search engines may truncate longer titles)
+4. Make each title unique: Different title for each page
+5. Include relevant keywords: Use keywords naturally, avoid stuffing
+6. Put important keywords first: Most important words at the beginning
+7. Include site name: Add site name at the end (e.g., "Page Title - Site Name")
+8. Match page content: Title should accurately reflect page content
+9. Consider user intent: Write titles that address what users are looking for
+10. Test in search results: Check how title appears in search engine results pages
+
+Title formula:
+- Primary Keyword - Secondary Keyword | Brand Name
+- Page Name | Section | Site Name
+- Benefit Statement - Brand Name
+
+Example good titles:
+- "Chocolate Chip Cookie Recipe - Easy Homemade Cookies | Baker's Kitchen"
+- "Web Performance Optimization Guide | Developer Resources"
+- "Men's Running Shoes - Size 10 | Athletic Gear Store"
+
+TECHNICAL DETAILS
+The HTML <title> element has been a fundamental part of HTML since its inception. It must appear in the <head> section and should contain text only (no HTML markup).
+
+HTML structure:
+```html
+<head>
+  <title>Page Title Here</title>
+</head>
+```
+
+Title element characteristics:
+- Must be inside <head> element
+- Only one title element per page
+- Contains text only, no HTML tags
+- Text is rendered as plain text
+- Supports Unicode characters
+- No length limit in HTML spec, but search engines have display limits
+
+Search engine display limits:
+- Google: ~50-60 characters (512 pixels wide)
+- Bing: Similar to Google
+- Titles exceeding limits are truncated with "..."
+- Character limits include spaces
+
+Accessing the title:
+- JavaScript: document.title
+- DOM: document.querySelector('title').textContent
+- Can be changed dynamically with JavaScript
+
+HISTORY
+The <title> element has been a core HTML element since the beginning of the web:
+
+1991: Tim Berners-Lee's original HTML specification included the <title> element as a required part of the document head. It was recognized early as essential for document identification.
+
+1995: HTML 2.0 (RFC 1866) formally specified the title element as required. Browser tabs didn't exist yet, but titles appeared in browser window title bars and history.
+
+1999: HTML 4.01 maintained title as a required element. By this time, browsers were using titles in history, bookmarks, and the growing practice of web search.
+
+2000-2005: Search engines, particularly Google, began giving significant weight to title elements for ranking. The title became recognized as one of the most important on-page SEO factors.
+
+2006: Google began displaying page titles as the main link text in search results (the "blue link"), making titles critical for click-through rates.
+
+2008: Browser tabs became standard in all major browsers. The title element became essential for users to identify and switch between multiple open tabs.
+
+2010s: Social media platforms began using title elements for link previews (though Open Graph tags often override this). Mobile browsers with limited screen space made concise, descriptive titles even more important.
+
+2014: Google began rewriting titles that were deemed non-optimal, either too short, too long, or keyword-stuffed. This encouraged better title practices.
+
+2021: Google updated its title rewriting algorithm to more aggressively modify titles it deemed unhelpful, using headings or other page content instead. This highlighted the importance of writing good titles.
+
+Present: The title element remains one of the top 3 on-page SEO factors. It's used by search engines, browsers, social media platforms, and accessibility tools. Missing or poor titles are considered a critical SEO and UX issue.
+
+BROWSER SUPPORT
+The <title> element is universally supported by all browsers since the beginning of the web. All modern browsers (Chrome, Firefox, Safari, Edge) and legacy browsers support the title element. No polyfills or fallbacks needed.
+
+INDUSTRY STANDARDS
+This metric aligns with HTML standards and SEO best practices from major search engines:
+
+HTML specifications:
+- HTML 4.01: Title element required
+- HTML5/Living Standard: Title element required
+- W3C HTML specification: Must contain text content
+
+SEO guidelines:
+- Google Search Central: Recommends descriptive, concise titles
+- Bing Webmaster Guidelines: Similar recommendations
+- All major search engines use titles as primary ranking factor
+
+Accessibility standards:
+- WCAG 2.1 Success Criterion 2.4.2 (Level A): Page Titled
+- Requires that web pages have titles that describe topic or purpose
+- Required for WCAG Level A compliance
+
+Tools that check titles:
+- Google Search Console: Reports title issues
+- Lighthouse: Audits for title presence
+- Screaming Frog SEO Spider: Analyzes titles
+- Yoast SEO: WordPress plugin for title optimization
+- SEMrush: SEO tool with title analysis
+
+RELATED METRICS
+Document Title is part of comprehensive SEO measurement. Related metrics include:
+
+- MD (Meta Description): Another key SEO meta element
+- OG (Open Graph Tags): Social media title tags
+- STD (Structured Data): Schema.org markup that includes page names
+- HRF (Hreflang): International pages need localized titles
+- All SEO metrics work together for search optimization
+
+MEASUREMENT LIMITATIONS
+Title measurement limitations:
+
+1. Can't judge quality: Automated tools can detect presence but not quality or appropriateness
+2. Context needed: Determining if a title is "good" requires understanding page content and intent
+3. Dynamic titles: Single-page applications may change titles dynamically
+4. No uniqueness check: Individual page scan can't detect duplicate titles across site
+5. Length is subjective: 50-60 character guideline is flexible, not absolute
+6. Keyword relevance: Tools can't determine if keywords match user intent
+7. Search engine rewriting: Google may display different title than coded
+
+Manual review needed for:
+- Title quality and descriptiveness
+- Keyword optimization
+- Title uniqueness across site
+- Appropriateness for target audience
+- A/B testing different title approaches
+
+
+SOURCES
+- HTML Living Standard: https://html.spec.whatwg.org/multipage/semantics.html#the-title-element
+- Google Search Central: https://developers.google.com/search/docs/appearance/title-link
+- WCAG 2.4.2 Page Titled: https://www.w3.org/WAI/WCAG21/Understanding/page-titled.html
+- MDN title element: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title
+- Moz Title Tag Guide: https://moz.com/learn/seo/title-tag
+

@@ -1,0 +1,102 @@
+OBA - Object Alt Text
+=====================
+
+OVERVIEW
+--------
+Rule ID: object-alt
+Impact: Serious
+Category: Accessibility (Embedded Content)
+WCAG: 2.0 Level A (1.1.1 Non-text Content)
+
+Description:
+Ensures <object> elements have alternative text via aria-label, title, or fallback content. Object elements embed external resources (PDFs, Flash, plugins) that need text alternatives for accessibility.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Object alt text:
+- Provides alternatives when plugin unavailable
+- Describes embedded content to screen readers
+- Supports users with plugin blockers
+- Meets WCAG 1.1.1 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all <object> elements
+2. Checks for aria-label, aria-labelledby, title, or text content
+3. Reports objects without accessible text
+4. Includes data attribute for identification
+
+
+HOW TO FIX
+----------
+1. Add aria-label with description
+2. Provide fallback content inside object
+3. Use title attribute
+4. Include both visual and text alternatives
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<object data="document.pdf" type="application/pdf"></object>
+<object data="animation.swf"></object>
+
+Good:
+<object data="document.pdf" type="application/pdf" aria-label="Annual Report 2023">
+    <p>Your browser doesn't support PDFs. 
+       <a href="document.pdf">Download the PDF</a>
+    </p>
+</object>
+
+<object data="map.svg" title="Office location map">
+    <img src="map-fallback.png" alt="Office at 123 Main Street">
+</object>
+
+
+PDF EMBEDS
+----------
+<object data="report.pdf" type="application/pdf" 
+        aria-label="Q4 2023 Financial Report">
+    <p>This browser does not support PDF viewing.</p>
+    <p><a href="report.pdf">Download PDF</a> (2.3 MB)</p>
+    <p>Alternative: <a href="report.html">HTML version</a></p>
+</object>
+
+
+DEPRECATED FLASH
+----------------
+Note: Flash is deprecated. Convert to modern alternatives:
+- Video: Use <video> with WebM/MP4
+- Animation: Use CSS animations or Canvas
+- Interactive: Use JavaScript and HTML5
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Object support varies by type
+- Firefox: Object support varies by type
+- Safari: Object support varies by type
+- Screen Readers: Fallback content essential
+
+
+RELATED RULES
+-------------
+- AMC (Alt Text Missing)
+- SVA (SVG Accessibility)
+- AAT (Area Alt Text)
+
+
+SOURCES
+-------
+- MDN Object: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object
+- WCAG H53: https://www.w3.org/WAI/WCAG21/Techniques/html/H53
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#object-alt
+- WCAG 1.1.1: https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html
+

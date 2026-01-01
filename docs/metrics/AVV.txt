@@ -1,0 +1,135 @@
+AVV - ARIA Valid Attribute Values
+==================================
+
+OVERVIEW
+--------
+Rule ID: aria-valid-attr-value
+Impact: Critical
+Category: Accessibility (ARIA Validation)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Ensures ARIA attributes have valid values according to their type (boolean, tristate, ID reference, etc.). Invalid values are ignored by assistive technologies, breaking accessibility features.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Valid ARIA attribute values ensure:
+- Screen readers interpret element states correctly
+- Boolean/tristate toggles work properly
+- ID references resolve correctly
+- WCAG 4.1.2 compliance
+
+
+ARIA ATTRIBUTE VALUE TYPES
+---------------------------
+Boolean (true/false only):
+- aria-atomic, aria-busy, aria-disabled, aria-hidden, aria-modal
+- aria-multiline, aria-multiselectable, aria-readonly, aria-required
+
+Tristate (true/false/mixed):
+- aria-checked, aria-pressed
+
+True/False/Undefined:
+- aria-expanded
+
+ID Reference:
+- aria-activedescendant, aria-controls, aria-describedby, aria-details
+- aria-errormessage, aria-flowto, aria-labelledby, aria-owns
+
+Token/Enumerated:
+- aria-autocomplete (none|inline|list|both)
+- aria-current (page|step|location|date|time|true|false)
+- aria-haspopup (false|true|menu|listbox|tree|grid|dialog)
+- aria-invalid (false|true|grammar|spelling)
+- aria-live (off|polite|assertive)
+- aria-orientation (horizontal|vertical|undefined)
+- aria-sort (none|ascending|descending|other)
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all elements with ARIA attributes
+2. Validates value type and format for each attribute
+3. Reports invalid values by type
+4. Suggests correct values
+
+
+HOW TO FIX
+----------
+1. Check attribute value type in ARIA spec
+2. Use correct boolean/tristate values
+3. Ensure ID references exist
+4. Use valid token values from enumerated list
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<div aria-hidden="yes">Content</div>
+<button aria-pressed="on">Toggle</button>
+<input aria-checked="1">
+<div aria-expanded="open">Content</div>
+<select aria-autocomplete="on">
+<div aria-live="aggressive">Updates</div>
+
+Good:
+<div aria-hidden="true">Content</div>
+<button aria-pressed="true">Toggle</button>
+<input type="checkbox" aria-checked="true">
+<div aria-expanded="true">Content</div>
+<input aria-autocomplete="list">
+<div aria-live="assertive">Updates</div>
+
+
+TOGGLE BUTTON STATES
+---------------------
+// Correct tristate values
+<button aria-pressed="false">Not pressed</button>
+<button aria-pressed="true">Pressed</button>
+<button aria-pressed="mixed">Partially pressed</button>
+
+// JavaScript toggle
+button.addEventListener('click', () => {
+    const pressed = button.getAttribute('aria-pressed') === 'true';
+    button.setAttribute('aria-pressed', !pressed);
+});
+
+
+EXPANDABLE SECTIONS
+-------------------
+<button aria-expanded="false" aria-controls="section1">
+    Show details
+</button>
+<div id="section1" hidden>
+    Details content
+</div>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Invalid values ignored
+- Firefox: Invalid values ignored
+- Safari: Invalid values ignored
+- Screen Readers: Invalid values not recognized
+
+
+RELATED RULES
+-------------
+- AVA (ARIA Valid Attributes)
+- AAA (ARIA Allowed Attributes)
+- ARA (ARIA Required Attributes)
+
+
+SOURCES
+-------
+- W3C ARIA Values: https://www.w3.org/TR/wai-aria-1.2/#propcharacteristic_value
+- MDN ARIA Attributes: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#aria-valid-attr-value
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

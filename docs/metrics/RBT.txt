@@ -1,0 +1,287 @@
+RBT - Robots Meta Tag
+
+WHAT IT MEASURES
+Document robots meta tag configuration that controls how search engine crawlers index and follow links on the page. The robots meta tag provides page-level instructions to search engine crawlers, complementing or overriding robots.txt directives.
+
+The robots meta tag can specify:
+- Whether to index the page content
+- Whether to follow links on the page
+- Snippet and preview behavior
+- Image indexing permissions
+- Caching directives
+
+Common robot directives:
+- index/noindex: Allow or prevent indexing
+- follow/nofollow: Follow or don't follow links
+- noarchive: Prevent cached copies
+- nosnippet: Prevent snippets in search results
+- noimageindex: Prevent image indexing
+- max-snippet: Control snippet length
+- max-image-preview: Control image preview size
+
+HOW IT'S MEASURED
+DOM analysis checking for robots meta tags and their content. The measurement process:
+
+1. Queries for robots meta elements:
+   - Checks for <meta name="robots" content="...">
+   - May check for <meta name="googlebot" content="...">
+   - Looks for other bot-specific meta tags
+
+2. Validates content attribute:
+   - Checks if content directives exist
+   - Parses directives (index, noindex, follow, nofollow, etc.)
+   - May validate directive combinations
+
+3. Returns configuration:
+   - May return boolean (true if properly configured)
+   - May return parsed directive values
+   - Identifies potential issues (conflicting directives)
+
+The measurement uses:
+- document.querySelector('meta[name="robots"]')
+- Parses content attribute for directives
+- Checks for proper configuration
+
+WHY IT'S IMPORTANT
+The robots meta tag provides precise control over how individual pages are indexed and represented in search results. It's essential for SEO strategy and preventing indexing of inappropriate content.
+
+SEO control:
+- Prevents duplicate content indexing
+- Controls which pages appear in search results
+- Manages link equity flow (nofollow)
+- Controls snippet display in SERPs
+- Manages image indexing
+
+Common use cases:
+- Noindex on thin content (tag pages, filter pages, search results)
+- Noindex on private or sensitive pages
+- Nofollow on user-generated content
+- Noarchive for time-sensitive content
+- Nosnippet for copyright-sensitive content
+
+Prevention scenarios:
+- Admin/login pages
+- Thank you/confirmation pages
+- Duplicate content variations
+- Paginated pages (sometimes)
+- Filtered/sorted product pages
+- Search result pages on your site
+- Staging/development pages
+
+THRESHOLDS
+- Good: true (robots meta tag properly configured when needed)
+- Poor: false (missing robots meta tag when it should be present, or misconfigured)
+
+Not all pages need a robots meta tag (default is to allow indexing). The metric checks if configuration is appropriate for the page type.
+
+COMMON PITFALLS
+1. Conflicting directives: noindex, index together (last one typically wins)
+2. noindex on important pages: Accidentally blocking content you want indexed
+3. Blocking entire site: Using noindex site-wide instead of robots.txt
+4. nofollow overuse: Preventing link equity flow unnecessarily
+5. Missing meta tag: Not using robots meta when it's needed
+6. Conflicting with robots.txt: Contradictory rules in robots.txt and meta tag
+7. Using both noindex and canonical: Conflicting signals to search engines
+8. Case sensitivity issues: Directives should be lowercase
+9. Syntax errors: Incorrect directive names or format
+10. Bot-specific contradictions: Different directives for different bots causing confusion
+
+OPTIMIZATION STRATEGIES
+1. Use robots meta sparingly: Default is to allow indexing; only use when needed
+2. Combine directives properly: Use comma-separated list (e.g., "noindex, nofollow")
+3. Be specific: Target specific bots if needed (googlebot, bingbot)
+4. Audit regularly: Check which pages have robots directives
+5. Don't contradict robots.txt: Ensure rules align
+6. Test in Search Console: Verify indexing behaves as expected
+7. Use proper syntax: Lowercase directives, comma-separated
+8. Consider user experience: nosnippet may reduce click-through rate
+9. Use X-Robots-Tag header: For non-HTML resources (PDFs, images)
+10. Document your strategy: Keep track of which pages use which directives
+
+Robots meta tag syntax:
+```html
+<!-- Allow indexing and following links (default behavior, usually omitted) -->
+<meta name="robots" content="index, follow">
+
+<!-- Prevent indexing but allow following links -->
+<meta name="robots" content="noindex, follow">
+
+<!-- Prevent indexing and following links -->
+<meta name="robots" content="noindex, nofollow">
+
+<!-- Prevent cached copies -->
+<meta name="robots" content="noarchive">
+
+<!-- Prevent snippets in search results -->
+<meta name="robots" content="nosnippet">
+
+<!-- Multiple directives -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+
+<!-- Target specific bot -->
+<meta name="googlebot" content="noindex">
+
+<!-- Advanced directives (Google-specific) -->
+<meta name="googlebot" content="max-snippet:50, max-image-preview:standard">
+```
+
+When to use specific directives:
+- noindex: Duplicate content, thin content, admin pages, private pages
+- nofollow: User-generated content, paid links, untrusted links
+- noarchive: Time-sensitive content, privacy concerns
+- nosnippet: Copyright-sensitive content, competitive information
+- noimageindex: Prevent images from appearing in Google Images
+- none: Equivalent to noindex, nofollow
+
+TECHNICAL DETAILS
+The robots meta tag is processed by search engine crawlers during page crawling and indexing.
+
+HTML structure:
+```html
+<head>
+  <meta name="robots" content="noindex, nofollow">
+</head>
+```
+
+Robots meta tag characteristics:
+- Must be in <head> element
+- Uses name="robots" attribute (or bot-specific names)
+- Directives specified in content attribute
+- Multiple directives separated by commas
+- Directives are case-insensitive but lowercase is convention
+
+Available directives:
+- index: Allow indexing (default)
+- noindex: Prevent indexing
+- follow: Follow links (default)
+- nofollow: Don't follow links
+- none: Equivalent to noindex, nofollow
+- all: Equivalent to index, follow (default)
+- noarchive: Don't show cached link in search results
+- nocache: Same as noarchive (older)
+- nosnippet: Don't show snippet in search results
+- noodp: Don't use ODP description (deprecated)
+- noydir: Don't use Yahoo directory description (deprecated)
+- noimageindex: Don't index images on this page
+- notranslate: Don't offer translation in search results
+
+Google-specific directives:
+- max-snippet:[number]: Maximum snippet length in characters
+- max-image-preview:[setting]: none, standard, or large
+- max-video-preview:[seconds]: Maximum video preview length
+- unavailable_after:[date]: Don't show after specific date
+
+Bot-specific meta tags:
+```html
+<meta name="googlebot" content="noindex">
+<meta name="bingbot" content="noindex">
+<meta name="slurp" content="noindex"> <!-- Yahoo -->
+```
+
+Accessing robots meta tag:
+- JavaScript: document.querySelector('meta[name="robots"]').content
+- Can be changed dynamically (but crawlers cache it)
+
+Robots meta tag vs robots.txt:
+- robots.txt: Site-wide crawling directives, checked before crawling
+- robots meta tag: Page-level indexing directives, checked during crawling
+- Both can be used together
+- Meta tag can override robots.txt for indexing (but not crawling)
+
+X-Robots-Tag HTTP header:
+- Alternative to meta tag, especially for non-HTML resources
+- Same directives as meta tag
+- Applied via HTTP headers
+- Example: X-Robots-Tag: noindex, nofollow
+
+HISTORY
+Robots directives have evolved with the web and search engines:
+
+1994: robots.txt specification created by Martijn Koster to provide site-wide crawl control. Early search engines (WebCrawler, Lycos) adopted it.
+
+1996-1997: The robots meta tag was introduced to provide page-level control, complementing robots.txt. Early directives were index/noindex and follow/nofollow.
+
+2000s: Additional directives added (noarchive, nosnippet) as search engines offered more features like cached pages and rich snippets.
+
+2007: nofollow introduced for links (rel="nofollow") to combat comment spam. The concept extended to page-level nofollow directive.
+
+2008-2010: More advanced directives appeared (noimageindex, unavailable_after) as search engines became more sophisticated.
+
+2019: Google introduced granular robots directives (max-snippet, max-image-preview, max-video-preview) to give publishers more control over how content appears in search results.
+
+2019-2020: Google began treating nofollow as a "hint" rather than a directive for ranking purposes, though crawlers still respect page-level nofollow for crawling.
+
+Present: Robots meta tags are a fundamental SEO tool. They're used extensively for managing duplicate content, controlling indexing, and optimizing search appearance. Search Console provides reports on blocked pages and indexing issues related to robots directives.
+
+BROWSER SUPPORT
+The robots meta tag is for search engine crawlers, not browsers:
+
+- Browsers parse but don't act on robots meta tags
+- Search engine crawlers (Googlebot, Bingbot, etc.) respect robots directives
+- All major search engines support robots meta tags
+- No browser-specific features required
+
+INDUSTRY STANDARDS
+This metric aligns with search engine guidelines:
+
+Search engine specifications:
+- Google: Comprehensive robots meta tag documentation
+- Bing: Supports same directives as Google
+- Originally part of Robots Exclusion Protocol
+- Extended by individual search engines
+
+SEO guidelines:
+- Google Search Central: Detailed robots documentation
+- Robots Exclusion Protocol: Original specification
+- Common SEO practice for indexing control
+
+Tools that check robots meta tags:
+- Google Search Console: Shows indexing status and robots issues
+- Screaming Frog: Analyzes robots directives site-wide
+- Sitebulb: Detailed robots directive analysis
+- Lighthouse: Checks for common robots issues
+- SEMrush, Ahrefs: Audit robots meta tags
+
+Common CMS implementations:
+- WordPress (Yoast, Rank Math): Easy robots meta tag management
+- Shopify: Built-in robots directives for duplicate content
+- Most CMSs provide robots meta tag control
+
+RELATED METRICS
+Robots Meta Tag is part of comprehensive SEO measurement. Related metrics include:
+
+- CNU (Canonical URL): Often used together for duplicate content
+- DTL (Document Title): Core SEO element
+- MD (Meta Description): Core SEO element
+- Don't use noindex with canonical (conflicting signals)
+- HSE (HTTPS): Affects crawler behavior
+- All SEO metrics work together for search optimization
+
+MEASUREMENT LIMITATIONS
+Robots meta tag measurement limitations:
+
+1. Can't judge appropriateness: Tools can't determine if robots directives are correct for the page
+2. Context needed: Requires understanding page purpose and SEO strategy
+3. Can't detect contradictions: Need site-wide analysis to find conflicts with robots.txt
+4. Search engine behavior: Can't predict exact search engine interpretation
+5. Dynamic content: JavaScript may inject robots tags after initial load
+6. Can't measure impact: Need Search Console data to see indexing effects
+7. Bot-specific variations: Multiple meta tags for different bots complicate analysis
+
+Manual review needed for:
+- Verifying robots directives match SEO strategy
+- Checking for conflicts with robots.txt
+- Ensuring important pages aren't blocked
+- Monitoring Search Console for indexing issues
+- Testing crawler access
+- Auditing site-wide robots directive usage
+
+
+SOURCES
+- Google Search Central Robots Meta Tag: https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag
+- Robots Exclusion Protocol: https://www.robotstxt.org/
+- MDN robots meta tag: https://developer.mozilla.org/en-US/docs/Glossary/Robots.txt
+- Bing Webmaster Robots: https://www.bing.com/webmasters/help/robots-meta-tag-4f83fec0
+- Google X-Robots-Tag: https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag#xrobotstag
+- Moz Robots Meta Directives: https://moz.com/learn/seo/robots-meta-directives
+

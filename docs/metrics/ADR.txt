@@ -1,0 +1,123 @@
+ADR - ARIA Deprecated Roles
+===========================
+
+OVERVIEW
+--------
+Rule ID: aria-deprecated-role
+Impact: Moderate
+Category: Accessibility (ARIA Validation)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Detects elements using deprecated ARIA roles that should be replaced with modern alternatives. Deprecated roles may lose browser and assistive technology support in the future.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Avoiding deprecated roles:
+- Ensures future compatibility
+- Follows current ARIA specification
+- Prevents unexpected behavior changes
+- Maintains long-term accessibility
+
+
+DEPRECATED ROLES
+----------------
+Current deprecated roles:
+- directory (deprecated in ARIA 1.2)
+
+Use alternatives:
+- directory → list
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all elements with role attribute
+2. Checks against deprecated roles list
+3. Reports usage of deprecated roles
+4. Suggests modern replacements
+
+
+HOW TO FIX
+----------
+1. Replace deprecated role with recommended alternative
+2. Update ARIA attributes as needed for new role
+3. Test with assistive technologies
+4. Verify expected behavior maintained
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<div role="directory">
+    <div>Item 1</div>
+    <div>Item 2</div>
+</div>
+
+Good:
+<ul role="list">
+    <li>Item 1</li>
+    <li>Item 2</li>
+</ul>
+
+<!-- Or use semantic HTML -->
+<ul>
+    <li>Item 1</li>
+    <li>Item 2</li>
+</ul>
+
+
+MIGRATION FROM DIRECTORY ROLE
+------------------------------
+Before (Deprecated):
+<div role="directory">
+    <span role="listitem">File 1.txt</span>
+    <span role="listitem">File 2.pdf</span>
+</div>
+
+After (Current):
+<div role="list">
+    <span role="listitem">File 1.txt</span>
+    <span role="listitem">File 2.pdf</span>
+</div>
+
+Best (Semantic HTML):
+<ul>
+    <li>File 1.txt</li>
+    <li>File 2.pdf</li>
+</ul>
+
+
+HISTORICALLY DEPRECATED
+-----------------------
+Roles deprecated in earlier ARIA versions:
+- presentation (use "none" instead, though both still work)
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Deprecated roles still work but may be removed
+- Firefox: Deprecated roles still work but may be removed
+- Safari: Deprecated roles still work but may be removed
+- Screen Readers: Support varies and may diminish over time
+
+
+RELATED RULES
+-------------
+- ARV (ARIA Roles Valid)
+- ARC (ARIA Required Children)
+- ARP (ARIA Required Parent)
+
+
+SOURCES
+-------
+- W3C ARIA 1.2: https://www.w3.org/TR/wai-aria-1.2/#deprecated
+- MDN ARIA Roles: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#aria-deprecated-role
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

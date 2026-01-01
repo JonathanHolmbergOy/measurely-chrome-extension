@@ -1,0 +1,248 @@
+LIL - Lazy Loading Implementation
+
+WHAT IT MEASURES
+Percentage of below-the-fold images using lazy loading (either the `loading='lazy'` attribute or Intersection Observer implementation). Lazy loading defers loading of images that are not immediately visible, reducing initial page weight and improving performance.
+
+Lazy loading methods:
+- Native lazy loading: `loading='lazy'` attribute (browser-native)
+- Intersection Observer: JavaScript-based lazy loading
+- Custom implementation: Framework or library-based lazy loading
+
+The metric calculates:
+- Lazy-loaded images: Images with lazy loading implemented
+- Total below-fold images: All images below the viewport
+- Implementation rate: (Lazy-loaded / Total below-fold) × 100
+
+Benefits:
+- Reduces initial page weight
+- Improves First Contentful Paint (FCP)
+- Better Largest Contentful Paint (LCP)
+- Faster Time to Interactive (TTI)
+- Lower bandwidth usage
+
+HOW IT'S MEASURED
+DOM analysis checking img elements below viewport for loading='lazy' attribute or Intersection Observer implementation. The measurement process:
+
+1. Identifies below-fold images:
+   - Finds all `<img>` elements
+   - Determines which are below viewport
+   - Calculates viewport position
+
+2. Checks lazy loading:
+   - Verifies `loading='lazy'` attribute
+   - Checks for Intersection Observer usage
+   - Identifies custom lazy loading implementations
+
+3. Calculates implementation rate:
+   - Counts lazy-loaded images
+   - Counts total below-fold images
+   - Calculates percentage
+
+WHY IT'S IMPORTANT
+Lazy loading defers non-critical images, reducing initial page weight and improving LCP and overall page load performance.
+
+Performance impact:
+- Reduces initial page weight
+- Faster initial page load
+- Better Core Web Vitals
+- Lower bandwidth usage
+- Improved mobile performance
+
+User experience:
+- Faster perceived page load
+- Lower data usage
+- Better mobile experience
+- Improved engagement
+
+THRESHOLDS
+- Good: ≥ 80% (Most below-fold images lazy loaded)
+- Needs Improvement: 50-79% (Some lazy loading, room for improvement)
+- Poor: ≤ 50% (Few images lazy loaded, significant optimization needed)
+
+Note: Above-the-fold images should NOT be lazy loaded as they affect LCP.
+
+COMMON PITFALLS
+1. Missing lazy loading: Below-fold images loaded immediately
+2. Loading all images immediately: No lazy loading implementation
+3. No viewport-based loading: Images not loaded based on viewport position
+4. Lazy loading above-fold: Critical images incorrectly lazy loaded
+5. Missing loading attribute: Not using native lazy loading
+6. No Intersection Observer: Missing JavaScript-based lazy loading
+
+OPTIMIZATION STRATEGIES
+1. Add loading='lazy' to below-fold images: Use native browser lazy loading
+2. Use Intersection Observer for custom lazy loading: Implement JavaScript-based lazy loading
+3. Implement progressive loading: Load images as user scrolls
+4. Don't lazy load above-fold: Keep critical images loading immediately
+5. Test lazy loading: Verify lazy loading works correctly
+6. Monitor lazy loading: Track implementation rate over time
+7. Use framework lazy loading: Leverage framework lazy loading features
+8. Optimize lazy loading: Ensure smooth loading experience
+
+
+HISTORY
+Lazy loading evolved from a technique for handling large content to a standard browser feature:
+
+2005-2010: As web pages grew richer with images and media, loading everything upfront became problematic. Pages with 100+ images would load all of them immediately, even images far below the fold that users might never see. This wasted bandwidth and slowed initial page load.
+
+Manual lazy loading emerged:
+- JavaScript detected when elements entered viewport (scroll event listeners)
+- Images initially had no `src` attribute
+- When image entered viewport, JavaScript set the `src` to trigger loading
+- Libraries like LazyLoad.js, jQuery Lazy, Unveil.js handled implementation
+
+Challenges:
+- Required JavaScript (didn't work without it)
+- Scroll event listeners hurt performance (fired constantly)
+- Complicated accessibility (screen readers couldn't see images without src)
+- Increased development complexity
+
+2010-2015: Lazy loading became more sophisticated:
+- Intersection Observer API (2016) made viewport detection efficient
+- "Placeholder → thumbnail → full image" progressive loading patterns
+- Lazy loading for iframes (YouTube embeds, etc.)
+- Lazy loading for components in Single Page Applications
+
+Benefits were clear:
+- 40-70% reduction in initial page weight
+- Faster initial page load (FCP, LCP for above-fold content)
+- Bandwidth savings (users only load what they view)
+- Mobile performance improved dramatically
+
+2016: **Intersection Observer API** was standardized (W3C). This provided native, efficient viewport detection without scroll listeners. Lazy loading libraries switched to IntersectionObserver, improving performance.
+
+```javascript
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.src = entry.target.dataset.src;
+    }
+  });
+});
+```
+
+2017-2019: Major platforms adopted lazy loading:
+- Medium lazy loaded images
+- Pinterest lazy loaded pins
+- Facebook/Instagram lazy loaded feed content
+- E-commerce sites lazy loaded product images
+
+However, every site implemented it differently. There was no standard approach. Users needed JavaScript, and implementations varied in quality.
+
+2019: **Native lazy loading** was proposed for HTML. A simple attribute would enable browser-native lazy loading without JavaScript:
+
+```html
+<img src="image.jpg" loading="lazy" />
+<iframe src="video.html" loading="lazy"></iframe>
+```
+
+August 2019: Chrome 76 shipped native lazy loading support. This was revolutionary:
+- No JavaScript required
+- Browser handled viewport detection efficiently
+- Worked even with JavaScript disabled
+- Consistent behavior across sites
+
+The `loading` attribute values:
+- **lazy**: Load when near viewport (browser decides threshold)
+- **eager**: Load immediately (default)
+- **auto**: Browser decides (rarely used)
+
+2020: Native lazy loading gained adoption:
+- Firefox 75+ (April 2020)
+- Chrome/Edge: Full support
+- Safari 15.4+ (March 2022)
+
+As Largest Contentful Paint (LCP) became a Core Web Vital, lazy loading required careful consideration:
+- ✅ Lazy load below-fold images (improves initial load)
+- ❌ Don't lazy load above-fold images (delays LCP)
+- ✅ Lazy load iframes (YouTube embeds, etc.)
+
+2020-Present: Lazy loading is now standard web development:
+
+Best practices:
+1. **Use native lazy loading** for images/iframes when supported
+2. **Don't lazy load above-fold content** (hurts LCP)
+3. **Use JavaScript fallback** for older browsers
+4. **Provide dimensions** to prevent layout shift (CLS)
+5. **Consider loading threshold** (browsers typically load 1-2 viewports ahead)
+
+```html
+<!-- Good: Lazy load below-fold image with dimensions -->
+<img src="product.jpg" loading="lazy" width="400" height="300" alt="Product">
+
+<!-- Bad: Lazy load hero image (delays LCP) -->
+<img src="hero.jpg" loading="lazy" alt="Hero"> <!-- Should be loading="eager" -->
+```
+
+Framework support:
+- **Next.js**: Automatic lazy loading for images (next/image)
+- **Gatsby**: Lazy loading in gatsby-image plugin
+- **React**: Native support via loading attribute
+- **Vue/Angular**: Native support via loading attribute
+
+2021-Present: Advanced lazy loading patterns:
+
+1. **Progressive loading**: Blur placeholder → full image
+2. **Responsive lazy loading**: Load appropriate size for viewport
+3. **Priority hints**: `loading="eager" fetchpriority="high"` for critical images
+4. **Lazy hydration**: Lazy load JavaScript for interactive components
+
+Trade-offs:
+- ✅ Reduces initial page weight (faster FCP)
+- ✅ Saves bandwidth (better for users)
+- ✅ Reduces server load
+- ❌ Can delay content if user scrolls fast
+- ❌ Hurts LCP if applied to above-fold content
+- ❌ Requires careful implementation to avoid CLS
+
+Performance impact:
+- 30-60% reduction in initial page weight (typical)
+- 20-40% faster FCP (First Contentful Paint)
+- Improved TTI (Time to Interactive) - less initial resource loading
+- Reduced data usage (critical for mobile users on metered connections)
+
+Use cases:
+- **Image galleries**: Only load visible images
+- **Long articles**: Load images as user scrolls
+- **Product listings**: Load product images on demand
+- **Social feeds**: Load posts as user scrolls
+- **Embedded content**: YouTube videos, tweets, maps
+
+Modern challenges:
+- **SEO**: Ensure lazy-loaded content is crawlable
+- **LCP optimization**: Don't lazy load LCP element
+- **CLS prevention**: Reserve space for lazy-loaded content
+- **Accessibility**: Ensure lazy loading doesn't break screen readers
+
+Browser support (2024):
+- Chrome 76+: Full support
+- Edge 79+: Full support
+- Firefox 75+: Full support
+- Safari 15.4+: Full support
+- Older browsers: Require JavaScript fallback
+
+The evolution: custom JavaScript implementations → IntersectionObserver → native browser support. What was once a complex optimization requiring libraries is now a simple HTML attribute. Native lazy loading represents web platform maturity: taking common patterns and making them native, performant, and accessible to all developers.
+
+Lazy loading is now considered essential for:
+- Modern performance optimization
+- Mobile-first development
+- Bandwidth-conscious design
+- Sustainable web development (reducing energy/resource usage)
+
+The technique that was once optional is now expected. Not lazy loading below-fold images is considered a performance anti-pattern.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

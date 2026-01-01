@@ -1,0 +1,109 @@
+AVA - ARIA Valid Attributes
+============================
+
+OVERVIEW
+--------
+Rule ID: aria-valid-attr
+Impact: Critical
+Category: Accessibility (ARIA Validation)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Ensures all ARIA attributes used on elements have valid names according to the ARIA specification. Invalid ARIA attribute names (typos, deprecated attributes) are ignored by assistive technologies.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Valid ARIA attributes ensure:
+- Assistive technologies recognize attributes
+- Screen readers announce element states correctly
+- WCAG 4.1.2 compliance
+- Predictable behavior across browsers
+
+
+COMMON INVALID ATTRIBUTES
+--------------------------
+- aria-labelled (should be aria-labelledby)
+- aria-describe (should be aria-describedby)
+- aria-role (should be role)
+- aria-labeledby (should be aria-labelledby - note the double 'l')
+- aria-activedecendant (typo: should be aria-activedescendant)
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all elements with aria-* attributes
+2. Validates against ARIA specification attribute list
+3. Reports invalid attribute names
+4. Suggests correct alternatives
+
+
+HOW TO FIX
+----------
+1. Check ARIA specification for correct attribute name
+2. Fix typos in attribute names
+3. Remove invalid/deprecated ARIA attributes
+4. Use correct attribute spelling
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<div aria-labelled="description">Content</div>
+<button aria-role="button">Click</button>
+<input aria-describe="help-text">
+<div aria-labeledby="title">Content</div>
+
+Good:
+<div aria-labelledby="description">Content</div>
+<button role="button">Click</button>
+<input aria-describedby="help-text">
+<div aria-labelledby="title">Content</div>
+
+
+COMPLETE VALID ARIA ATTRIBUTES LIST
+------------------------------------
+State/Property Attributes:
+- aria-atomic, aria-busy, aria-controls, aria-current, aria-describedby, aria-details
+- aria-disabled, aria-dropeffect, aria-errormessage, aria-flowto, aria-grabbed
+- aria-haspopup, aria-hidden, aria-invalid, aria-keyshortcuts, aria-label
+- aria-labelledby, aria-live, aria-owns, aria-relevant, aria-roledescription
+
+Widget Attributes:
+- aria-autocomplete, aria-checked, aria-expanded, aria-level, aria-modal
+- aria-multiline, aria-multiselectable, aria-orientation, aria-placeholder
+- aria-pressed, aria-readonly, aria-required, aria-selected, aria-sort
+- aria-valuemax, aria-valuemin, aria-valuenow, aria-valuetext
+
+Relationship Attributes:
+- aria-activedescendant, aria-colcount, aria-colindex, aria-colspan
+- aria-posinset, aria-rowcount, aria-rowindex, aria-rowspan, aria-setsize
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Invalid attributes ignored
+- Firefox: Invalid attributes ignored
+- Safari: Invalid attributes ignored
+- Screen Readers: Invalid attributes not recognized
+
+
+RELATED RULES
+-------------
+- AVV (ARIA Valid Attribute Values)
+- AAA (ARIA Allowed Attributes)
+- ARV (ARIA Roles Valid)
+
+
+SOURCES
+-------
+- W3C ARIA Attributes: https://www.w3.org/TR/wai-aria-1.2/#state_prop_def
+- MDN ARIA: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#aria-valid-attr
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

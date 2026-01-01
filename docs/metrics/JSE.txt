@@ -1,0 +1,157 @@
+JSE - JavaScript Execution Time
+
+WHAT IT MEASURES
+Total time spent executing JavaScript code during page load, measured in milliseconds. This metric quantifies script performance and its impact on page responsiveness by tracking how long JavaScript takes to parse, compile, and execute.
+
+JavaScript execution includes:
+- Parsing JavaScript code
+- Compiling JavaScript to bytecode
+- Executing JavaScript code
+- Running event handlers
+- Processing DOM manipulation
+
+The metric measures:
+- Total execution time during page load
+- Impact on Time to Interactive (TTI)
+- Main thread blocking time
+- Script performance bottlenecks
+
+HOW IT'S MEASURED
+PerformanceNavigationTiming API, calculating domContentLoadedEventEnd - domContentLoadedEventStart, plus analysis of script execution timing. The measurement process:
+
+1. Uses Navigation Timing API:
+   - Calculates domContentLoadedEventEnd - domContentLoadedEventStart
+   - Measures time between DOMContentLoaded events
+   - Tracks script execution during this period
+
+2. Analyzes script timing:
+   - Uses PerformanceResourceTiming for script resources
+   - Tracks script load and execution times
+   - Measures total JavaScript execution time
+
+3. May use PerformanceObserver:
+   - Observes script execution
+   - Tracks long tasks from JavaScript
+   - Measures main thread blocking
+
+4. Returns execution time:
+   - Total JavaScript execution time in milliseconds
+   - May break down by script file
+   - Identifies slow scripts
+
+WHY IT'S IMPORTANT
+High JavaScript execution time blocks rendering and delays interactivity. Directly impacts TTI and user experience by preventing the page from becoming interactive quickly.
+
+Performance impact:
+- Blocks main thread during execution
+- Delays Time to Interactive (TTI)
+- Prevents user interactions
+- Affects First Input Delay (FID) and INP
+- Slows down page responsiveness
+
+User experience:
+- Longer wait before interactivity
+- Unresponsive page during execution
+- Poor perceived performance
+- Increased bounce rates
+
+THRESHOLDS
+- Good: ≤ 2000ms (Reasonable execution time)
+- Needs Improvement: 2000-5000ms (Long execution, noticeable delay)
+- Poor: ≥ 5000ms (Very long execution, significant delay)
+
+Note: Execution time varies by page complexity. Simple pages should be much faster.
+
+COMMON PITFALLS
+1. Large JavaScript bundles: Big files taking long to parse/execute
+2. Inefficient code: Poorly optimized algorithms and logic
+3. Synchronous execution: Blocking operations preventing interactivity
+4. Heavy computations: Expensive operations on main thread
+5. Unoptimized frameworks: Framework overhead and inefficiencies
+6. No code splitting: All JavaScript executed upfront
+7. Missing minification: Unminified code taking longer to parse
+8. Excessive DOM manipulation: Heavy DOM work during execution
+
+OPTIMIZATION STRATEGIES
+1. Code splitting: Split JavaScript into smaller chunks
+2. Tree shaking: Remove unused code from bundles
+3. Minification: Minify JavaScript to reduce parse time
+4. Deferring non-critical scripts: Load non-critical code later
+5. Optimizing algorithms: Improve code efficiency
+6. Reducing bundle size: Minimize JavaScript payload
+7. Use web workers: Move heavy computation off main thread
+8. Lazy load scripts: Load scripts when needed
+9. Optimize frameworks: Use framework optimizations
+10. Profile and measure: Use DevTools to identify slow code
+
+
+HISTORY
+JavaScript Execution Time measurement has evolved alongside the growth of JavaScript as a dominant web technology:
+
+1995-2005: JavaScript was initially designed for simple client-side scripting. Execution time was rarely a concern because scripts were small and simple. Performance issues were more about network speed and server response than JavaScript processing.
+
+2006-2008: The rise of AJAX and Web 2.0 applications increased JavaScript usage dramatically. Google Maps, Gmail, and other applications pushed the boundaries of what JavaScript could do. However, JavaScript engines were still relatively slow (interpreted, not compiled).
+
+2008: Google released Chrome with the V8 JavaScript engine, which used Just-In-Time (JIT) compilation to dramatically improve JavaScript performance. This sparked competition among browsers to optimize JavaScript execution. Firefox introduced TraceMonkey, Safari improved JavaScriptCore, and Internet Explorer developed Chakra.
+
+2009-2012: JavaScript frameworks like jQuery, Backbone, and AngularJS became popular. Single Page Applications (SPAs) emerged, running significant application logic in the browser. JavaScript execution time became a performance concern as applications grew more complex.
+
+2012: W3C's Performance Timeline specification provided APIs for measuring page performance, but JavaScript-specific execution time wasn't directly exposed. Developers used indirect measurements or profiling tools.
+
+2013-2015: The rise of React, Angular 2+, and other modern frameworks further increased JavaScript payload and execution time. Mobile browsing growth highlighted performance issues, as mobile devices had less processing power than desktops. A script that executed quickly on desktop could block mobile devices for seconds.
+
+2015: The User Timing API (W3C) allowed developers to manually mark and measure JavaScript execution using `performance.mark()` and `performance.measure()`. This made custom JavaScript timing measurement more standardized.
+
+2016: The concept of "long tasks" (JavaScript execution > 50ms) became central to performance measurement. Chrome introduced the Long Tasks API, which fires entries when tasks exceed 50ms. This made it possible to automatically detect JavaScript performance problems without manual instrumentation.
+
+2017-2020: As JavaScript bundles grew larger (often exceeding 1MB), execution time became a critical performance bottleneck. Studies showed:
+- JavaScript parsing and compilation can take longer than execution
+- Mobile devices can take 5-10x longer to process JavaScript than desktop
+- JavaScript execution is the primary cause of main thread blocking
+
+Performance tools began reporting JavaScript execution time:
+- Chrome DevTools Performance panel showed detailed JavaScript timelines
+- Lighthouse reported Total Blocking Time (TBT), much of which is JavaScript
+- WebPageTest showed CPU time breakdowns including JavaScript
+
+2020-Present: JavaScript execution time is now tracked as a key performance metric. Modern optimization strategies include:
+- Code splitting to reduce initial JavaScript payload
+- Tree shaking to eliminate unused code
+- Lazy loading for non-critical JavaScript
+- Using web workers for heavy computation
+- Minimizing third-party JavaScript
+- Differential serving (modern ES6+ to modern browsers, legacy bundles to old browsers)
+
+Framework improvements have also helped:
+- React 18's concurrent rendering reduces blocking
+- Svelte compiles away the framework at build time
+- Partial hydration techniques reduce JavaScript needed for interactivity
+
+Current measurement approaches:
+- Long Tasks API for detecting JavaScript blocking main thread (> 50ms)
+- User Timing API for manual measurement of specific functions
+- Chrome DevTools for detailed profiling
+- Real User Monitoring (RUM) for production JavaScript performance
+
+JavaScript execution time directly impacts Core Web Vitals:
+- Long JavaScript execution delays FCP and LCP
+- JavaScript blocking the main thread causes poor FID/INP scores
+- JavaScript-triggered layout changes cause CLS
+
+Performance budgets now commonly include JavaScript execution time thresholds (e.g., < 500ms total execution during page load).
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

@@ -1,0 +1,118 @@
+SEN - Select Element Names
+==========================
+
+OVERVIEW
+--------
+Rule ID: select-name
+Impact: Critical
+Category: Accessibility (Form Elements)
+WCAG: 2.0 Level A (4.1.2 Name, Role, Value)
+
+Description:
+Ensures select dropdown elements have accessible names via label elements, aria-label, or aria-labelledby. Select elements without labels are inaccessible to screen reader users who can't determine what the dropdown is for.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 3 violations
+
+
+WHY IT MATTERS
+--------------
+Accessible select names:
+- Tell users what option they're choosing
+- Enable proper form completion
+- Allow voice control activation
+- Meet WCAG 4.1.2 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all <select> elements
+2. Checks for label[for], aria-label, aria-labelledby, or wrapping label
+3. Reports selects without accessible names
+4. Provides ID for creating labels
+
+
+HOW TO FIX
+----------
+1. Add label element with for attribute (preferred)
+2. Wrap select in label element
+3. Use aria-label for inline labeling
+4. Use aria-labelledby to reference existing text
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<select>
+    <option>Option 1</option>
+    <option>Option 2</option>
+</select>
+
+<select id="country">
+    <option>USA</option>
+    <option>Canada</option>
+</select>
+
+Good:
+<label for="country-select">Country:</label>
+<select id="country-select">
+    <option>USA</option>
+    <option>Canada</option>
+</select>
+
+<label>
+    Country:
+    <select>
+        <option>USA</option>
+        <option>Canada</option>
+    </select>
+</label>
+
+<select aria-label="Select your country">
+    <option>USA</option>
+    <option>Canada</option>
+</select>
+
+
+FORM BEST PRACTICES
+--------------------
+Always associate labels with form controls:
+
+<form>
+    <label for="name">Name:</label>
+    <input type="text" id="name">
+    
+    <label for="country">Country:</label>
+    <select id="country">
+        <option value="">Choose...</option>
+        <option value="us">United States</option>
+    </select>
+    
+    <button type="submit">Submit</button>
+</form>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: Essential for form usability
+
+
+RELATED RULES
+-------------
+- FLI (Form Label Issues)
+- BTN (Button Names)
+- IBN (Input Button Names)
+
+
+SOURCES
+-------
+- MDN Select: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
+- MDN Label: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#select-name
+- WCAG 4.1.2: https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html
+

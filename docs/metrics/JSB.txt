@@ -1,0 +1,100 @@
+JSB - JavaScript Budget
+
+WHAT IT MEASURES
+Total JavaScript size compared to recommended performance budget (typically 200-300KB for mobile, 300-500KB for desktop). JavaScript budgets help maintain performance by limiting total JavaScript payload size to ensure fast page loads and good user experience.
+
+The metric calculates:
+- Total JavaScript size: Sum of all JavaScript resource sizes (uncompressed)
+- Budget comparison: Compares total size to recommended budget
+- Budget threshold: Typically 200-300KB for mobile, 300-500KB for desktop
+
+JavaScript size impact:
+- Large JavaScript delays parsing and execution
+- Increases Time to Interactive (TTI)
+- Blocks main thread longer
+- Affects mobile performance significantly
+- Wastes bandwidth
+
+HOW IT'S MEASURED
+PerformanceResourceTiming analysis summing all JavaScript resource sizes and comparing to budget. The measurement process:
+
+1. Identifies JavaScript resources:
+   - Uses PerformanceResourceTiming API
+   - Filters resources by type (application/javascript, text/javascript)
+   - Identifies <script> tags and dynamic imports
+
+2. Calculates total JavaScript size:
+   - Sums decodedBodySize (uncompressed) for all JS files
+   - May also consider transferSize (compressed) for network impact
+   - Accounts for all JavaScript on the page
+
+3. Compares to budget:
+   - Compares total size to recommended budget
+   - Calculates percentage over/under budget
+   - Flags if exceeds threshold
+
+4. Returns size value:
+   - Total JavaScript size in bytes or kilobytes
+   - Comparison to budget threshold
+
+WHY IT'S IMPORTANT
+JavaScript budgets help maintain performance. Exceeding budgets delays page load and impacts user experience, especially on mobile devices and slower connections.
+
+Performance impact:
+- Large JavaScript delays parsing
+- Increases execution time
+- Delays Time to Interactive
+- Blocks main thread longer
+- Affects mobile performance significantly
+
+User experience:
+- Slower page loads
+- Delayed interactivity
+- Poor mobile experience
+- Increased data usage
+
+THRESHOLDS
+- Good: ≤ 300KB (Reasonable JavaScript size, good performance)
+- Needs Improvement: 300-500KB (Large but manageable)
+- Poor: ≥ 500KB (Excessive JavaScript, performance issues)
+
+Note: Budgets are typically lower for mobile (200-300KB) and higher for desktop (300-500KB).
+
+COMMON PITFALLS
+1. Exceeding JavaScript budget: Total size over recommended limits
+2. Large bundles: Single large JavaScript file instead of splitting
+3. No budget enforcement: Missing budget checks in CI/CD
+4. Growing JavaScript size: JavaScript size increasing over time
+5. Framework bloat: Including entire frameworks when only parts needed
+6. Duplicate dependencies: Same libraries bundled multiple times
+7. No tree shaking: Dead code not eliminated
+8. Missing minification: Unminified JavaScript increasing size
+
+OPTIMIZATION STRATEGIES
+1. Set JavaScript budgets: Establish and enforce size limits
+2. Enforce budgets in CI/CD: Add budget checks to build process
+3. Reduce bundle sizes: Minimize JavaScript payload
+4. Code splitting: Split JavaScript into smaller chunks
+5. Remove unused code: Use tree shaking to eliminate dead code
+6. Minimize JavaScript: Minify and compress JavaScript
+7. Use modern bundlers: Leverage bundler optimizations
+8. Monitor JavaScript size: Track size over time
+9. Set size budgets: Enforce maximum bundle sizes
+10. Test with throttling: Verify performance on slow connections
+
+
+HISTORY
+Resource optimization metrics became critical as web pages grew in complexity. Image optimization techniques evolved from simple compression to modern formats like WebP (2010) and AVIF (2019). Code splitting and tree shaking emerged with modern JavaScript bundlers in the 2010s. Performance budgets became a standard practice as mobile web usage highlighted the importance of resource efficiency.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

@@ -1,0 +1,75 @@
+SHP - Security Headers Present
+
+WHAT IT MEASURES
+Number of security headers configured on the site. Security headers like HSTS, CSP, X-Frame-Options, and others protect against common web attacks and enhance overall site security.
+
+Common security headers:
+- Strict-Transport-Security (HSTS): Forces HTTPS
+- Content-Security-Policy (CSP): Prevents XSS attacks
+- X-Frame-Options: Prevents clickjacking
+- X-Content-Type-Options: Prevents MIME sniffing
+- Referrer-Policy: Controls referrer information
+- Permissions-Policy: Restricts browser features
+- Cross-Origin-Embedder-Policy (COEP): Security isolation
+- Cross-Origin-Opener-Policy (COOP): Window isolation
+- Cross-Origin-Resource-Policy (CORP): Resource isolation
+
+HOW IT'S MEASURED
+HTTP header analysis via fetch API or response headers, checking for security headers like HSTS, CSP, X-Frame-Options, etc. The measurement process:
+
+1. Checks HTTP headers:
+   - Uses fetch API or response headers
+   - Examines response headers
+   - Identifies security headers
+
+2. Counts security headers:
+   - Counts number of security headers present
+   - May categorize by header type
+   - Returns total count
+
+WHY IT'S IMPORTANT
+Security headers protect against common attacks like XSS, clickjacking, and MIME sniffing. More headers indicate better security posture and protection against various attack vectors.
+
+Security benefits:
+- Protects against XSS attacks (CSP)
+- Prevents clickjacking (X-Frame-Options)
+- Prevents MIME sniffing (X-Content-Type-Options)
+- Forces secure connections (HSTS)
+- Controls referrer information (Referrer-Policy)
+- Reduces attack surface
+
+THRESHOLDS
+- Good: ≥ 4 (Multiple security headers, good security)
+- Needs Improvement: 2-3 (Some headers, room for improvement)
+- Poor: ≤ 2 (Few headers, security gaps)
+
+COMMON PITFALLS
+1. Missing security headers: No security headers configured
+2. Incomplete header configuration: Headers not fully configured
+3. Outdated header values: Headers using outdated values
+4. Missing critical headers: Important headers not present
+5. Incorrect header syntax: Malformed header values
+
+OPTIMIZATION STRATEGIES
+1. Implement HSTS: Add Strict-Transport-Security header
+2. Implement CSP: Add Content-Security-Policy header
+3. Add X-Frame-Options: Prevent clickjacking
+4. Add X-Content-Type-Options: Prevent MIME sniffing
+5. Configure Referrer-Policy: Control referrer information
+6. Configure headers properly: Ensure correct header values
+7. Use security header testing tools: Test header configuration
+8. Review security headers: Regularly review and update headers
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

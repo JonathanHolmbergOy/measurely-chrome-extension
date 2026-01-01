@@ -1,0 +1,196 @@
+EHS - Early Hints Support
+
+WHAT IT MEASURES
+Whether the server supports HTTP 103 Early Hints, a performance optimization that allows servers to send hints about resources the page will need before sending the full response. Early Hints enable browsers to start loading critical resources (CSS, JavaScript, fonts) earlier, reducing perceived load time and improving performance.
+
+Early Hints benefits:
+- Browser can start loading resources before HTML is fully received
+- Reduces time to First Contentful Paint (FCP)
+- Improves Largest Contentful Paint (LCP)
+- Better resource prioritization
+- Faster overall page load
+
+HTTP 103 status code:
+- Informational response sent before final response
+- Contains Link headers with resource hints
+- Allows browser to preconnect, prefetch, or preload resources
+- Doesn't replace the final response
+
+HOW IT'S MEASURED
+Checking for 103 Early Hints response or Link headers in initial response. Requires server support. The measurement process:
+
+1. Monitors HTTP responses:
+   - Checks for HTTP 103 status code
+   - Looks for Link headers in 103 response
+   - Verifies Early Hints are being sent
+
+2. Validates Early Hints:
+   - Checks for preconnect, prefetch, or preload hints
+   - Verifies Link header format
+   - Confirms server is sending hints
+
+3. Returns boolean result:
+   - true: Server supports and sends Early Hints
+   - false: Server does not support Early Hints
+
+Measurement considerations:
+- Requires server-side support
+- May not be detectable from client-side only
+- CDN or proxy may add Early Hints
+- Browser support varies
+
+WHY IT'S IMPORTANT
+Early Hints allow browsers to start loading resources before full response, reducing perceived load time and improving user experience.
+
+Performance benefits:
+- Faster resource loading
+- Reduced Time to First Byte (TTFB) impact
+- Better resource prioritization
+- Improved Core Web Vitals
+- Faster perceived page load
+
+User experience:
+- Faster visual feedback
+- Reduced waiting time
+- Better mobile experience
+- Improved engagement
+
+THRESHOLDS
+- Good: true (Server supports Early Hints)
+- Poor: false (Server does not support Early Hints)
+
+Note: Early Hints require server support and are not available on all servers or CDNs.
+
+COMMON PITFALLS
+1. Server does not support HTTP 103: Server not configured for Early Hints
+2. No Early Hints implementation: Feature not implemented on server
+3. CDN limitations: CDN may not support or forward Early Hints
+4. Browser support: Not all browsers support Early Hints
+5. Proxy interference: Proxies may strip or not forward Early Hints
+6. Configuration issues: Server configured incorrectly
+7. Missing Link headers: Early Hints sent but no useful hints included
+
+OPTIMIZATION STRATEGIES
+1. Implement HTTP 103 Early Hints on server: Configure server to send Early Hints
+2. Configure Link headers: Include preconnect, prefetch, or preload hints
+3. Use CDN with Early Hints support: Choose CDN that supports Early Hints
+4. Prioritize critical resources: Hint at most important resources first
+5. Test Early Hints: Verify hints are being sent and received
+6. Monitor performance: Track performance improvements from Early Hints
+7. Update server software: Ensure server version supports Early Hints
+8. Configure correctly: Follow server documentation for Early Hints setup
+9. Use preconnect for domains: Hint at third-party domains early
+10. Use preload for critical resources: Preload critical CSS, JS, fonts
+
+
+HISTORY
+Early Hints (HTTP 103 status code) is one of the newest web performance optimizations:
+
+2010s: Web performance optimization increasingly focused on reducing latency for critical resources. The problem: browsers couldn't start loading resources until the server finished generating the HTML response. For dynamic pages (database queries, API calls, etc.), this meant the browser waited idle while the server worked.
+
+Time to First Byte (TTFB) became a key metric, but optimizing it required server-side work (faster databases, caching, etc.). What if the browser could start loading resources BEFORE the full response was ready?
+
+2016-2017: The concept of "Early Hints" emerged from the W3C HTTP Working Group. The idea: servers could send a 103 Early Hints response with resource hints (preload, preconnect) BEFORE sending the final 200 OK response.
+
+Workflow:
+1. Browser requests page (GET /page)
+2. Server immediately sends 103 Early Hints with preload headers
+3. Browser starts loading critical resources
+4. Server finishes generating page, sends 200 OK with HTML
+5. Browser already has critical resources loaded
+
+This allowed browsers to start downloading fonts, CSS, and JavaScript while the server generated the HTML.
+
+2017: RFC 8297 standardized HTTP 103 (Early Hints). The status code was specifically designed for sending preliminary response headers, particularly for resource hints.
+
+Example:
+```
+HTTP/1.1 103 Early Hints
+Link: </style.css>; rel=preload; as=style
+Link: </script.js>; rel=preload; as=script
+
+HTTP/1.1 200 OK
+Content-Type: text/html
+...
+```
+
+2018-2020: Early Hints implementation began:
+- Fastly CDN added Early Hints support (2018)
+- Cloudflare added Early Hints support (2021)
+- Chrome 103+ added client support (2022)
+
+However, adoption was slow due to requirements:
+- Server or CDN support for 103 responses
+- Requires determining critical resources to preload
+- Most web servers (Apache, Nginx) didn't support it natively
+- Edge infrastructure (CDNs, proxies) needed upgrades
+
+2021: Cloudflare's implementation made Early Hints more accessible. Cloudflare automatically detected likely critical resources and sent Early Hints, making it zero-configuration for many sites.
+
+2022: Chrome 103 added full Early Hints support. Studies showed measurable improvements:
+- LCP improved by 20-30% for pages with server-side rendering
+- Particularly effective for dynamic pages with high TTFB
+- Benefits largest on slower server processing (e.g., database-heavy pages)
+
+Use cases:
+- Server-side rendered pages (Next.js, Rails, Django)
+- E-commerce product pages (database queries)
+- Personalized content (user-specific data fetching)
+- Search results (query processing)
+
+2023-Present: Early Hints adoption is growing but still limited:
+- Cloudflare and Fastly support it
+- Chrome, Edge support it (Chromium-based)
+- Firefox added support in Firefox 103+ (experimental)
+- Safari doesn't yet support Early Hints (as of 2024)
+
+Implementation approaches:
+1. **Server-side**: Generate 103 responses from application code
+2. **CDN/Edge**: Cloudflare/Fastly automatically add Early Hints
+3. **Proxy**: Reverse proxy (Nginx with modules) can add Early Hints
+
+Configuration example (Cloudflare):
+```
+Link: </critical.css>; rel=preload; as=style
+Link: </critical.js>; rel=preload; as=script
+Link: </font.woff2>; rel=preload; as=font; crossorigin
+```
+
+Benefits:
+- Reduces effective TTFB (resources load during server processing)
+- Improves LCP (images, fonts load earlier)
+- Most effective when TTFB > 200ms
+- Zero latency overhead (hints sent immediately)
+
+Limitations:
+- Server/CDN support required
+- Must identify correct resources to preload (wrong choices waste bandwidth)
+- Browser support still incomplete (Safari)
+- Complex implementation without CDN
+- Not all proxies forward 103 responses
+
+Modern usage (2024):
+- Primarily used via CDNs (Cloudflare, Fastly)
+- Most effective for server-side rendered applications
+- Complements other optimizations (doesn't replace caching, CDN, etc.)
+- Measurable LCP improvement of 100-500ms for high-TTFB pages
+
+Early Hints represent a paradigm shift: instead of waiting for the server to finish, the browser can start working on resources in parallel with server processing. This "parallelization" of server and client work is particularly valuable as pages become more dynamic and personalized, where server processing time is unavoidable.
+
+While adoption is still early (hence "Early Hints"), it represents the future of performance optimization: smarter coordination between server and client to minimize idle time.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

@@ -1,0 +1,134 @@
+SRF - Scrollable Region Focusable
+==================================
+
+OVERVIEW
+--------
+Rule ID: scrollable-region-focusable
+Impact: Serious
+Category: Accessibility (Keyboard Navigation)
+WCAG: 2.0 Level A (2.1.1 Keyboard)
+
+Description:
+Ensures scrollable regions (overflow: auto/scroll) are keyboard accessible via tabindex. Without keyboard focus, users relying solely on keyboards cannot scroll or access content within these regions.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Keyboard-accessible scrollable regions:
+- Enable keyboard users to scroll content
+- Support screen reader users navigating overflow content
+- Meet WCAG 2.1.1 keyboard accessibility requirement
+- Provide equal access to all interactive content
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds elements with overflow: auto/scroll CSS
+2. Checks if element or child has interactive content
+3. Verifies element has tabindex="0" or is focusable
+4. Reports non-focusable scrollable regions
+
+
+HOW TO FIX
+----------
+1. Add tabindex="0" to scrollable container
+2. Add role="region" and aria-label for context
+3. Ensure keyboard users can reach scrollable area
+4. Test with Tab key and arrow keys
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<div style="overflow: auto; height: 300px;">
+    <p>Long scrollable content...</p>
+</div>
+
+<div class="scrollable-list" style="overflow-y: scroll;">
+    <ul>
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <!-- many items -->
+    </ul>
+</div>
+
+Good:
+<div tabindex="0" role="region" aria-label="Scrollable content" 
+     style="overflow: auto; height: 300px;">
+    <p>Long scrollable content...</p>
+</div>
+
+<div class="scrollable-list" tabindex="0" role="region" 
+     aria-label="Product list" style="overflow-y: scroll;">
+    <ul>
+        <li>Item 1</li>
+        <li>Item 2</li>
+    </ul>
+</div>
+
+
+SCROLLABLE SIDEBAR
+------------------
+<aside tabindex="0" role="region" aria-label="Table of contents"
+       style="overflow-y: auto; max-height: 80vh;">
+    <nav>
+        <h2>Contents</h2>
+        <ul>
+            <li><a href="#section1">Section 1</a></li>
+            <li><a href="#section2">Section 2</a></li>
+        </ul>
+    </nav>
+</aside>
+
+
+SCROLLABLE MODAL CONTENT
+-------------------------
+<div role="dialog" aria-labelledby="dialog-title">
+    <h2 id="dialog-title">Terms and Conditions</h2>
+    <div tabindex="0" role="region" aria-label="Terms content"
+         style="overflow-y: auto; max-height: 400px;">
+        <p>Long terms text...</p>
+    </div>
+    <button>Accept</button>
+</div>
+
+
+CSS FOR FOCUS INDICATOR
+------------------------
+[tabindex="0"]:focus {
+    outline: 2px solid #005fcc;
+    outline-offset: 2px;
+}
+
+.scrollable-region:focus {
+    box-shadow: 0 0 0 3px rgba(0, 95, 204, 0.4);
+}
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: Announces region and allows scrolling
+
+
+RELATED RULES
+-------------
+- FEC (Focusable Elements)
+- KNS (Keyboard Navigation Score)
+- BYP (Bypass Blocks)
+
+
+SOURCES
+-------
+- WCAG 2.1.1: https://www.w3.org/WAI/WCAG21/Understanding/keyboard.html
+- MDN tabindex: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#scrollable-region-focusable
+- ARIA Practices: https://www.w3.org/WAI/ARIA/apg/patterns/
+

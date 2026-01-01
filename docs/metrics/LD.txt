@@ -1,0 +1,149 @@
+LD - Link Discernibility
+
+WHAT IT MEASURES
+Count of links with non-descriptive text, empty text, or duplicate text pointing to different destinations. Link discernibility ensures that link text provides clear, unique information about the link destination, allowing all users (especially screen reader users) to understand where links will take them before activating them.
+
+Link issues detected:
+- Empty links: Links with no text content, aria-label, or title
+- Generic link text: "click here", "here", "read more", "more", "learn more", "click", "link", "go", "continue", "next", "previous"
+- Duplicate link text: Same text used 3+ times pointing to different URLs
+
+The metric evaluates:
+- Link text content
+- ARIA label attributes  
+- Title attributes
+- Link destinations (href values)
+- Frequency of link text usage
+
+HOW IT'S MEASURED
+DOM analysis of all anchor elements with href attributes. The measurement process:
+
+1. Retrieves all links via document.querySelectorAll('a[href]')
+2. For each link, determines effective text:
+   - aria-label (highest priority)
+   - textContent (visible text)
+   - title attribute (fallback)
+3. Checks for empty links (no text at all)
+4. Checks against generic text list (case-insensitive)
+5. Tracks link text frequency and destination URLs
+6. Identifies duplicate text with different destinations
+
+Duplicate detection:
+- Link text used 3+ times qualifies for evaluation
+- Must point to multiple different URLs (not just anchors)
+- Calculates unique destination count
+- Reports issues only for genuinely ambiguous links
+
+WHY IT'S IMPORTANT
+Link discernibility is critical for accessibility and usability. Screen reader users navigate websites by tabbing through links or viewing a list of all links on the page. When link text is generic ("click here") or duplicated across different destinations, users cannot determine where links lead without additional context.
+
+Accessibility impact:
+- Screen reader users depend on descriptive link text
+- Link lists (extracted by assistive technology) become meaningless
+- Users cannot efficiently scan for desired links
+- WCAG 2.4.4 (Link Purpose - In Context) requires clear link text
+- WCAG 2.4.9 (Link Purpose - Link Only) at AAA level requires completely self-descriptive links
+
+User experience:
+- All users benefit from clear, descriptive links
+- Improves scannability for visual users
+- Reduces cognitive load
+- Better mobile experience (where hover is unavailable)
+- Clearer information architecture
+
+SEO impact:
+- Search engines use link text (anchor text) as ranking signals
+- Generic text provides no keyword value
+- Descriptive links improve content indexing
+- Internal linking structure becomes more meaningful
+
+THRESHOLDS
+- Good: 0 link issues
+- Needs Improvement: 1-2 link issues
+- Poor: ≥ 3 link issues
+
+Best practice is to eliminate all non-descriptive and ambiguous link text.
+
+COMMON PITFALLS
+1. "Click here" links: Most common generic text issue
+2. "Read more" without context: Doesn't describe destination
+3. Empty icon links: Icon-only links without aria-label
+4. Social media icons: No text or labels on icon links
+5. Repeated "Learn more": Same text for different articles
+6. Navigation arrows: "Previous" / "Next" without context
+7. "Download" links: Doesn't specify what is being downloaded
+8. Repeated product names: Same name linking to different products
+9. Logo links: Image links without alt text
+10. Button-styled links: Styled as buttons but lacking descriptive text
+
+OPTIMIZATION STRATEGIES
+1. Use descriptive text: Replace "click here" with destination description
+   - Bad: "Click here for our privacy policy"
+   - Good: "Read our privacy policy"
+
+2. Add context to generic text: Make "read more" specific
+   - Bad: "Read more"
+   - Good: "Read more about accessibility testing"
+
+3. Use aria-label for icon links: Add hidden text for screen readers
+   - <a href="..." aria-label="Follow us on Twitter"><svg>...</svg></a>
+
+4. Make duplicate text unique: Add distinguishing information
+   - Bad: Multiple "View product" links
+   - Good: "View Blue Widget details", "View Red Widget details"
+
+5. Combine visible and hidden text: Use aria-labelledby
+   - <h3 id="article1">How to Test Accessibility</h3>
+   - <a href="..." aria-labelledby="article1">Read more</a>
+
+6. Avoid empty links: Always provide text or aria-label
+7. Use aria-describedby for additional context: Link longer descriptions
+8. Write self-descriptive text: Link text should make sense out of context
+9. Include keywords: Use meaningful words that describe destination
+10. Test with screen reader: Navigate by links to verify clarity
+
+TECHNICAL DETAILS
+The metric performs comprehensive link analysis by examining all anchor elements and their accessible names. The effective text is determined using the ARIA naming hierarchy:
+
+Naming priority:
+1. aria-label (explicit label)
+2. aria-labelledby (reference to label element)
+3. textContent (visible text)
+4. title attribute (tooltip text)
+
+Generic text detection uses a predefined list of common non-descriptive phrases. The list is checked case-insensitively to catch variations.
+
+Duplicate detection algorithm:
+1. Build map of link text → {count, hrefs[]}
+2. Filter for text used 3+ times
+3. Check if hrefs array contains multiple unique URLs
+4. Report only truly ambiguous cases
+
+The threshold of 3+ uses prevents false positives for pairs of forward/back navigation links.
+
+WCAG Criteria:
+- 2.4.4 Link Purpose (In Context) - Level A
+- 2.4.9 Link Purpose (Link Only) - Level AAA
+- 4.1.2 Name, Role, Value - Level A
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+- AMC (Alt Text Missing): Images without alternative text
+- FLI (Form Label Issues): Form inputs without labels
+- BTN (Button Names): Buttons without accessible names
+- AAT (Area Alt Text): Image map areas without alt text
+- IBN (Input Button Names): Input buttons without names
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- WCAG 2.4.4: https://www.w3.org/WAI/WCAG21/Understanding/link-purpose-in-context
+- WCAG 2.4.9: https://www.w3.org/WAI/WCAG21/Understanding/link-purpose-link-only
+- WebAIM: https://webaim.org/techniques/hypertext/link_text

@@ -1,0 +1,92 @@
+PPC - Permissions Policy Coverage
+
+WHAT IT MEASURES
+Number of browser permissions properly restricted via the Permissions-Policy header (formerly Feature-Policy). This header limits access to browser features and APIs, reducing attack surface and preventing unauthorized feature access.
+
+Permissions that can be restricted:
+- camera: Camera access
+- microphone: Microphone access
+- geolocation: Location access
+- payment: Payment Request API
+- usb: USB device access
+- bluetooth: Bluetooth access
+- magnetometer: Magnetometer sensor
+- gyroscope: Gyroscope sensor
+- accelerometer: Accelerometer sensor
+- And many more browser features
+
+Restriction syntax:
+- `feature=()`: Deny feature for all origins
+- `feature=(self)`: Allow only same-origin
+- `feature=(self "https://example.com")`: Allow specific origins
+
+HOW IT'S MEASURED
+HTTP header analysis checking Permissions-Policy header for restricted features. The measurement process:
+
+1. Checks for header:
+   - Looks for Permissions-Policy header
+   - Verifies header is present
+   - Parses header value
+
+2. Counts restrictions:
+   - Identifies restricted features
+   - Counts number of features restricted
+   - Validates restriction syntax
+
+3. Returns count:
+   - Number of permissions restricted
+   - May identify which features are restricted
+
+WHY IT'S IMPORTANT
+Permissions Policy limits access to browser features, reducing attack surface and preventing unauthorized feature access. This enhances security by preventing malicious scripts from accessing sensitive features.
+
+Security benefits:
+- Reduces attack surface
+- Prevents unauthorized feature access
+- Limits third-party script capabilities
+- Enhances overall site security
+- Protects user privacy
+
+Privacy impact:
+- Prevents unauthorized access to sensitive features
+- Protects user data
+- Limits tracking capabilities
+- Enhances privacy
+
+THRESHOLDS
+- Good: ≥ 5 (Multiple permissions restricted, good security)
+- Needs Improvement: 2-4 (Some restrictions, room for improvement)
+- Poor: ≤ 2 (Few restrictions, security gaps)
+
+Note: More restrictions generally mean better security, but only restrict features not needed.
+
+COMMON PITFALLS
+1. Missing Permissions-Policy header: No permissions restrictions
+2. Unrestricted feature access: Features not restricted
+3. Insufficient restrictions: Too few features restricted
+4. Incorrect syntax: Malformed header syntax
+5. Over-restriction: Restricting features that are needed
+
+OPTIMIZATION STRATEGIES
+1. Implement Permissions-Policy header: Add header to server response
+2. Restrict camera, microphone, geolocation: Restrict sensitive features
+3. Restrict payment and other features: Limit access to payment APIs
+4. Use '()' to deny all: Deny features not needed
+5. Allow only when needed: Use (self) for same-origin access
+6. Test restrictions: Verify restrictions work correctly
+7. Document restrictions: Ensure team understands policy
+8. Review regularly: Update restrictions as needed
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

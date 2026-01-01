@@ -1,0 +1,256 @@
+ASC - Accessibility Score (composite)
+
+WHAT IT MEASURES
+Composite accessibility score (0-100) that aggregates multiple accessibility metrics into a single value representing overall WCAG compliance. This score combines various accessibility checks including ARIA implementation, color contrast, alternative text, form labels, keyboard navigation, focus management, and other WCAG success criteria.
+
+The composite score provides a holistic view of accessibility by:
+- Aggregating individual accessibility metric scores
+- Weighting metrics based on severity and impact
+- Calculating an overall percentage representing accessibility compliance
+- Identifying sites with multiple accessibility barriers that need attention
+
+Common components included in accessibility composite scores:
+- ARIA errors and invalid combinations
+- Color contrast ratios (text and non-text)
+- Missing alternative text for images
+- Form label issues
+- Keyboard navigation problems
+- Focus management issues
+- Heading hierarchy violations
+- Missing landmarks and semantic structure
+- Target size violations
+- Language attribute issues
+
+HOW IT'S MEASURED
+Weighted calculation combining multiple accessibility metrics. The measurement process typically:
+
+1. Collects individual accessibility metric scores (e.g., AEC, CIC, AMC, FLI, etc.)
+2. Applies severity weights to each metric:
+   - Critical violations (Level A failures) may have higher weights
+   - Moderate violations (Level AA failures) have medium weights
+   - Minor issues have lower weights
+3. Calculates weighted average or sum of violations
+4. Converts to a 0-100 scale where:
+   - 100 = No accessibility issues found
+   - Lower scores = More or more severe accessibility issues
+5. May use different calculation methods:
+   - Deduction-based: Start at 100, subtract points for each violation
+   - Percentage-based: Calculate percentage of passed checks
+   - Weighted average: Combine metrics with different weights
+
+Different tools use different calculation methods:
+- Lighthouse: Uses audit-based scoring with pass/fail for each check
+- WAVE: Provides error count and contrast ratio analysis
+- axe-core: Returns violation counts by severity level
+- Pa11y: Aggregates multiple accessibility check results
+
+WHY IT'S IMPORTANT
+Provides overall accessibility assessment that helps:
+- Quickly identify sites with multiple accessibility barriers
+- Prioritize accessibility improvements based on overall impact
+- Track accessibility improvements over time
+- Communicate accessibility status to stakeholders
+- Compare accessibility across different pages or sites
+- Meet legal compliance requirements (WCAG 2.1/2.2)
+
+Impact on users:
+- Low scores indicate significant barriers for users with disabilities
+- Multiple violations compound to create unusable experiences
+- High scores indicate better accessibility but don't guarantee perfect compliance
+- Composite scores help prioritize which issues to fix first
+
+Business impact:
+- Legal compliance: Many jurisdictions require WCAG compliance
+- User base: Accessible sites serve more users
+- SEO: Some accessibility features improve SEO
+- Brand reputation: Accessibility reflects company values
+- Risk mitigation: Reduces legal risk from accessibility lawsuits
+
+THRESHOLDS
+- Good: ≥ 90 (Minimal accessibility issues, high compliance)
+- Needs Improvement: 70-89 (Some accessibility barriers present)
+- Poor: ≤ 70 (Significant accessibility issues, low compliance)
+
+Note: A score of 90+ doesn't guarantee full WCAG compliance, as composite scores may not cover all success criteria. Manual testing and user testing are still recommended for comprehensive accessibility validation.
+
+COMMON PITFALLS
+1. Multiple accessibility issues: Sites with many different types of violations score lower
+2. Missing ARIA labels: ARIA roles without accessible names reduce scores
+3. Contrast problems: Text and non-text elements failing contrast ratios
+4. Missing alt text: Images without alternative text descriptions
+5. Unlabeled forms: Form controls missing proper labels
+6. Keyboard navigation issues: Elements not keyboard accessible
+7. Focus management problems: Missing or poor focus indicators
+8. Heading hierarchy violations: Skipped heading levels or improper structure
+9. Missing landmarks: Lack of semantic HTML5 landmarks
+10. Target size violations: Interactive elements too small for touch
+11. Language attribute issues: Missing or incorrect lang attributes
+12. Duplicate IDs: Multiple elements sharing the same ID
+13. Broken ARIA relationships: Invalid aria-labelledby or aria-describedby references
+
+OPTIMIZATION STRATEGIES
+1. Address all accessibility issues systematically: Fix violations starting with highest severity
+2. Implement ARIA properly: Use ARIA roles, states, and properties correctly
+3. Ensure contrast compliance: Meet WCAG 2.1 contrast ratio requirements (4.5:1 for text, 3:1 for non-text)
+4. Add alt text: Provide descriptive alt text for all informative images
+5. Label all forms: Associate labels with form controls using <label> or aria-labelledby
+6. Enable keyboard navigation: Ensure all interactive elements are keyboard accessible
+7. Improve focus management: Provide visible, high-contrast focus indicators
+8. Fix heading hierarchy: Use proper heading levels (h1-h6) in sequential order
+9. Add semantic landmarks: Use HTML5 semantic elements (header, nav, main, aside, footer)
+10. Increase target sizes: Ensure touch targets are at least 24×24 CSS pixels
+11. Set language attributes: Add lang attribute to html element and nested elements when needed
+12. Fix duplicate IDs: Ensure all IDs are unique
+13. Validate ARIA relationships: Ensure all aria-labelledby and aria-describedby references are valid
+14. Test with screen readers: Verify accessibility with actual assistive technologies
+15. Use automated testing tools: Regularly run accessibility audits to catch issues early
+
+
+TECHNICAL DETAILS
+Composite accessibility scores are calculated by aggregating individual accessibility check results. Different tools use different methodologies:
+
+Lighthouse accessibility score:
+- Runs multiple accessibility audits
+- Each audit passes or fails
+- Score calculated as: (passed audits / total audits) × 100
+- Weighted by severity (some audits may count more than others)
+
+WAVE scoring:
+- Counts errors, alerts, and features
+- Provides error count and contrast ratio analysis
+- Doesn't provide a single composite score but aggregates multiple metrics
+
+axe-core scoring:
+- Returns violations grouped by severity (critical, serious, moderate, minor)
+- Can calculate score based on violation counts and severity
+- Provides detailed violation information
+
+Calculation considerations:
+- Not all WCAG success criteria can be automatically tested
+- Some issues require human judgment
+- Dynamic content may not be fully tested
+- Context-dependent issues may be missed
+- False positives and false negatives are possible
+
+HISTORY
+Composite accessibility scoring emerged as accessibility testing tools evolved:
+
+1999: WCAG 1.0 published, establishing accessibility guidelines but no automated scoring.
+
+2000s: Early accessibility testing tools (e.g., Bobby, Cynthia Says) provided pass/fail results but no composite scores.
+
+2008: WCAG 2.0 published with more testable success criteria, enabling better automated testing.
+
+2010s: Tools like WAVE and axe-core emerged, providing detailed accessibility analysis. Google Lighthouse (2016) introduced accessibility scoring as part of its audit suite.
+
+2018: WCAG 2.1 added new success criteria, expanding what could be tested. Accessibility scoring became more sophisticated with severity weighting.
+
+2020s: Accessibility scoring became standard in web development workflows. Tools integrated accessibility scores into CI/CD pipelines. Legal requirements drove adoption of accessibility metrics.
+
+2023: WCAG 2.2 added new success criteria. Composite scoring methods continued to evolve to reflect best practices.
+
+The concept of composite accessibility scores gained prominence as:
+- Organizations needed quick ways to assess overall accessibility
+- Legal requirements increased demand for accessibility metrics
+- Development workflows integrated accessibility testing
+- Stakeholders needed accessible ways to understand accessibility status
+
+INDUSTRY STANDARDS
+This metric aligns with W3C WCAG 2.1/2.2 accessibility guidelines and is implemented in major accessibility testing tools including:
+
+- Google Lighthouse: Provides accessibility score (0-100) as part of automated audits
+- WAVE (Web Accessibility Evaluation Tool): Aggregates multiple accessibility metrics
+- axe-core: Returns violation counts by severity that can be converted to scores
+- Pa11y: Command-line tool that aggregates accessibility check results
+- Siteimprove: Provides accessibility score based on WCAG compliance
+- Accessibility Insights: Microsoft's tool with composite accessibility metrics
+
+Legal requirements:
+- Section 508 (United States): Requires WCAG 2.0 Level AA compliance
+- EN 301 549 (European Union): Requires WCAG 2.1 Level AA compliance
+- AODA (Ontario, Canada): Requires WCAG 2.0 Level AA compliance
+- Many other jurisdictions have similar requirements
+
+Industry guidelines:
+- WCAG 2.1/2.2 provide the foundation for what should be tested
+- W3C WAI provides guidance on accessibility evaluation
+- WebAIM provides best practices for accessibility testing
+
+Thresholds are based on:
+- WCAG compliance requirements
+- Industry best practices
+- Tool-specific scoring methodologies
+- Practical experience with accessibility audits
+
+Note: Different tools may produce different scores for the same page due to different testing methodologies, check coverage, and scoring algorithms.
+
+RELATED METRICS
+Accessibility Score is a composite metric that aggregates results from multiple individual accessibility metrics. Related metrics that contribute to the composite score include:
+
+- AEC (ARIA Errors): Missing accessible names for ARIA roles
+- AIV (ARIA Invalid Combinations): Incorrect role-attribute pairings
+- ARS (ARIA Relationship Errors): Broken ARIA relationship references
+- CIC (Contrast Issues): Text contrast ratio violations
+- NTC (Non-Text Contrast Issues): Non-text element contrast problems
+- AMC (Alt Text Missing): Images without alternative text
+- FLI (Form Label Issues): Form controls missing proper labels
+- HHI (Heading Hierarchy Issues): Improper heading structure
+- FNO (Focus Not Obscured): Focus indicators hidden or obscured
+- TSM (Target Size Minimum): Interactive elements too small
+- CHM (Consistent Help): Help mechanisms not consistently available
+- FCI (Focus Contrast Issues): Focus indicators with insufficient contrast
+- FEA (Form Error Associations): Form errors not properly associated
+- RFI (Required Field Indicators): Required fields not properly indicated
+- KNS (Keyboard Navigation Score): Composite keyboard accessibility metric
+
+The Accessibility Score provides a high-level view, while individual metrics provide detailed insights into specific accessibility issues. Together, they provide both overview and detailed accessibility assessment.
+
+MEASUREMENT LIMITATIONS
+Composite accessibility scoring has several limitations:
+
+1. Not comprehensive: Automated tools cannot test all WCAG success criteria. Some require human judgment or user testing.
+
+2. Tool differences: Different tools use different methodologies, check different criteria, and calculate scores differently, leading to inconsistent results.
+
+3. False positives/negatives: Automated tools may flag non-issues or miss real problems.
+
+4. Context-dependent: Some accessibility issues depend on context that automated tools cannot fully understand.
+
+5. Dynamic content: Content added after page load may not be fully tested.
+
+6. Severity weighting: Different tools weight violations differently, affecting composite scores.
+
+7. Coverage gaps: Some accessibility issues (e.g., cognitive accessibility, content quality) cannot be automatically tested.
+
+8. Browser differences: Different browsers may handle accessibility features differently, affecting test results.
+
+9. Timing issues: Tests run at specific times may miss issues that appear later.
+
+10. User experience: A high score doesn't guarantee a good user experience for people with disabilities.
+
+Automated testing should be supplemented with:
+- Manual accessibility reviews by experts
+- User testing with people who have disabilities
+- Screen reader testing
+- Keyboard-only navigation testing
+- Content quality review
+- Cognitive accessibility assessment
+
+Measurements are most accurate when:
+- Multiple tools are used to cross-validate results
+- Automated testing is combined with manual review
+- Real users with disabilities test the site
+- Testing is performed at different stages of development
+- Dynamic content is fully loaded and interactive
+
+A composite accessibility score is a useful indicator but should not be the only measure of accessibility. It provides a starting point for accessibility improvement but comprehensive accessibility requires ongoing testing and user feedback.
+
+
+SOURCES
+- Google Lighthouse Accessibility Scoring: https://developer.chrome.com/docs/lighthouse/accessibility/scoring
+- WAVE Web Accessibility Evaluation Tool: https://wave.webaim.org/
+- axe-core Accessibility Testing: https://www.deque.com/axe/
+- WCAG 2.1 Guidelines: https://www.w3.org/WAI/WCAG21/quickref/
+- WebAIM Accessibility Evaluation: https://webaim.org/articles/evaluation/
+- W3C WAI Evaluation Tools: https://www.w3.org/WAI/test-evaluate/
+- See metrics.txt for additional sources

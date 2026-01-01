@@ -1,0 +1,109 @@
+FEC - Focusable Elements
+
+WHAT IT MEASURES
+Total count of interactive elements that can receive keyboard focus. This metric measures keyboard navigability and accessibility of interactive components by counting all elements that can be focused using the Tab key or other keyboard navigation methods.
+
+Focusable elements include:
+- Native interactive elements: `<a>`, `<button>`, `<input>`, `<select>`, `<textarea>`, `<details>`, `<summary>`
+- Elements with tabIndex: Elements with `tabindex="0"` or positive tabindex values
+- Custom interactive elements: Elements made interactive with JavaScript that should have tabindex
+
+Non-focusable (but should be checked):
+- Elements with `tabindex="-1"`: Programmatically focusable but not in tab order
+- Disabled elements: Focusable but disabled
+- Hidden elements: Elements that are hidden from view
+
+The metric helps identify:
+- Whether interactive elements are keyboard accessible
+- If custom components are properly made focusable
+- If tab order is logical and complete
+- Missing focusable elements that should be interactive
+
+HOW IT'S MEASURED
+DOM analysis identifying elements with tabIndex or native focusable elements (a, button, input, etc.). The measurement process:
+
+1. Identifies native focusable elements:
+   - `<a>` elements with href attribute
+   - `<button>` elements
+   - `<input>` elements (all types)
+   - `<select>` elements
+   - `<textarea>` elements
+   - `<details>` and `<summary>` elements
+   - Other native interactive elements
+
+2. Checks for tabIndex:
+   - Elements with `tabindex="0"` (in tab order)
+   - Elements with positive tabindex (custom tab order)
+   - Elements with `tabindex="-1"` (programmatically focusable)
+
+3. Filters out non-focusable:
+   - Disabled elements
+   - Hidden elements (display: none, visibility: hidden)
+   - Elements with tabindex="-1" (depending on measurement goal)
+
+4. Counts total focusable elements:
+   - Returns count of all focusable elements
+   - May categorize by element type
+   - May identify missing focusable elements
+
+WHY IT'S IMPORTANT
+Keyboard navigation is essential for users who cannot use a mouse. All interactive elements must be keyboard accessible to ensure the site is usable for people with motor disabilities, visual impairments, or those who prefer keyboard navigation.
+
+Accessibility impact:
+- Keyboard users must be able to access all interactive elements
+- Missing focusable elements create barriers
+- Violates WCAG 2.1 Success Criterion 2.1.1 (Keyboard) - Level A
+- Excludes users who cannot use pointing devices
+- Legal compliance issues in jurisdictions requiring WCAG
+
+User experience:
+- Keyboard users can navigate and interact with all features
+- Tab order should be logical and intuitive
+- All functionality available via keyboard
+- Better accessibility for all users
+
+THRESHOLDS
+- Good: ≥ 5 (Multiple interactive elements, good navigability)
+- Needs Improvement: 1-4 (Few interactive elements, may indicate missing functionality)
+- Poor: 0 (No focusable elements, site not keyboard accessible)
+
+Note: The threshold depends on page type. A simple page may have fewer focusable elements, while complex applications should have many.
+
+COMMON PITFALLS
+1. Missing focusable elements: Interactive elements not made keyboard accessible
+2. Elements with tabIndex=-1 incorrectly: Elements that should be in tab order marked as -1
+3. No keyboard navigation support: Custom components not made focusable
+4. Disabled elements in tab order: Disabled elements still focusable
+5. Hidden elements focusable: Hidden elements still in tab order
+6. Missing tabindex on custom components: Custom buttons/links not made focusable
+7. Incorrect tab order: Positive tabindex values creating confusing order
+8. Focusable non-interactive elements: Elements made focusable but not interactive
+
+OPTIMIZATION STRATEGIES
+1. Ensure all interactive elements are focusable: Make all buttons, links, and controls keyboard accessible
+2. Test keyboard navigation: Use Tab key to navigate through all interactive elements
+3. Use proper tab order: Maintain logical tab order (avoid positive tabindex when possible)
+4. Avoid tabIndex=-1 unless necessary: Only use for programmatic focus, not to remove from tab order
+5. Make custom components focusable: Add tabindex="0" to custom interactive elements
+6. Remove focus from disabled elements: Ensure disabled elements are not focusable
+7. Hide focusable elements properly: Use display: none or remove from DOM, not just visibility: hidden
+8. Test with keyboard only: Navigate entire site using only keyboard
+9. Provide visible focus indicators: Ensure focus is visible (see FCI metric)
+10. Maintain logical tab order: Tab should flow in reading order
+
+
+HISTORY
+Web accessibility standards began with WCAG 1.0 in 1999, evolving to WCAG 2.0 (2008), WCAG 2.1 (2018), and WCAG 2.2 (2023). ARIA (Accessible Rich Internet Applications) was first published by W3C in 2014 to address accessibility gaps in dynamic web content. The Web Content Accessibility Guidelines have become legal requirements in many jurisdictions, driving adoption of accessibility metrics and testing tools.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

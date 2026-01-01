@@ -1,0 +1,500 @@
+Rec. 2020 (BT.2020)
+===================
+
+OVERVIEW
+--------
+Rec. 2020 (ITU-R Recommendation BT.2020), also known as Ultra HD Television (UHDTV), is a wide-gamut color space defined for 4K and 8K ultra-high-definition television. It encompasses approximately 75% of the visible CIE 1931 color space, making it one of the widest color gamuts intended for actual display devices.
+
+DESCRIPTION
+-----------
+Rec. 2020 was designed as the color standard for the next generation of television and video content. It covers a significantly wider range of colors than the previous HD standard (Rec. 709/sRGB), allowing for more vibrant and lifelike color reproduction, particularly in greens, cyans, and reds.
+
+The standard defines not just the color primaries, but also transfer functions for both SDR (Standard Dynamic Range) and HDR (High Dynamic Range) content.
+
+TECHNICAL SPECIFICATIONS
+-------------------------
+- Gamut: Covers ~75% of visible colors (CIE 1931)
+- White Point: D65 (daylight, 6500K)
+- Gamma: Same as Rec. 709/sRGB for SDR (complex piecewise)
+- HDR: Uses PQ (ST.2084) or HLG transfer functions
+- Primaries (CIE xy chromaticity):
+  * Red: x=0.708, y=0.292
+  * Green: x=0.170, y=0.797
+  * Blue: x=0.131, y=0.046
+- Bit depth: 10-bit or 12-bit (required for wide gamut)
+
+HISTORY
+-------
+2012: ITU-R publishes Recommendation BT.2020
+2013: Adopted as standard for 4K/8K UHDTV
+2014: First consumer TVs with partial Rec. 2020 support
+2015: HDR standards (PQ/HLG) integrated with Rec. 2020
+2016-2020: Growing adoption in streaming and broadcast
+2021: Added to CSS Color Module Level 4 as 'rec2020'
+2023: Browser support achieved
+
+WHY REC. 2020 WAS CREATED
+--------------------------
+Problems with Rec. 709 (HD standard):
+- Limited to ~35% of visible colors (same as sRGB)
+- Can't reproduce vibrant natural colors (sunsets, flowers, etc.)
+- Doesn't match human visual capabilities
+- Insufficient for future display technologies
+
+Rec. 2020 goals:
+✓ Future-proof standard for decades
+✓ Cover most colors in nature
+✓ Enable lifelike HDR content
+✓ Standard for 4K, 8K, and beyond
+✓ Sufficient "headroom" for next-gen displays
+
+CSS SYNTAX
+----------
+Using color() function:
+  color: color(rec2020 1 0 0);               /* Bright red */
+  color: color(rec2020 0 0.9 0.5);           /* Cyan-green */
+  color: color(rec2020 0.5 0.5 0.5 / 0.8);   /* Gray with alpha */
+
+Component ranges:
+  Red: 0-1
+  Green: 0-1
+  Blue: 0-1
+  Alpha: 0-1 or 0%-100%
+
+BROWSER SUPPORT
+---------------
+color(rec2020 ...) syntax:
+- Safari 15.0+ (September 2021) ✓
+- Chrome 111+ (March 2023) ✓
+- Edge 111+ (March 2023) ✓
+- Firefox 113+ (May 2023) ✓
+- Opera 97+ (March 2023) ✓
+
+Not supported:
+- Internet Explorer (all versions)
+- Safari < 15.0
+- Chrome < 111
+- Firefox < 113
+
+ADVANTAGES
+----------
+✓ Extremely wide gamut (~75% of visible colors)
+✓ Future-proof TV/video standard
+✓ Covers nearly all natural colors
+✓ Designed for HDR content
+✓ Enables lifelike color reproduction
+✓ Industry standard for UHDTV
+✓ Better than Display P3 in greens
+✓ Supports both SDR and HDR
+
+LIMITATIONS
+-----------
+✗ Very few displays can show full Rec. 2020 gamut
+✗ Requires 10-bit or 12-bit color depth
+✗ Mostly theoretical for current hardware
+✗ Overkill for web content
+✗ Not optimized for print workflows
+✗ Requires careful color management
+✗ Large file sizes
+✗ Primarily for video, not still images
+
+USE CASES
+---------
+Ideal for:
+- 4K/8K UHDTV content production
+- HDR video workflows
+- Streaming service masters (Netflix, etc.)
+- Professional video color grading
+- Future-proofing video content
+- Cinema digital intermediate (DCI)
+- Next-generation gaming
+- Virtual reality content
+
+Not necessary for:
+- Web design (Display P3 more practical)
+- Still photography (Adobe RGB sufficient)
+- Standard HD content (use Rec. 709)
+- Print workflows (use Adobe RGB or ProPhoto)
+- Social media content
+
+COMPARISON WITH OTHER SPACES
+-----------------------------
+vs Rec. 709 (HD standard):
+  Rec. 2020: 2.5x wider gamut
+  Rec. 709: Same as sRGB, universal compatibility
+
+vs sRGB:
+  Rec. 2020: ~70% more colors, especially greens
+  sRGB: Universal web standard, narrower
+
+vs Display P3:
+  Rec. 2020: Wider in greens, similar in reds
+  Display P3: Practical for current displays
+
+vs Adobe RGB:
+  Rec. 2020: Significantly wider, video-oriented
+  Adobe RGB: Print-oriented, more practical
+
+vs DCI-P3:
+  Rec. 2020: Wider gamut, D65 white point
+  DCI-P3: Cinema standard, D63 white point
+
+DISPLAY SUPPORT
+--------------
+**Current Reality (2024):**
+- Best consumer TVs: ~70-80% of Rec. 2020
+- Professional monitors: ~80-85% of Rec. 2020
+- Standard displays: ~35-45% of Rec. 2020 (sRGB/Rec. 709)
+- Mobile devices: ~45-50% of Rec. 2020 (Display P3)
+
+**No displays fully support Rec. 2020 yet!**
+
+Displays that come close:
+- Samsung QLED TVs: ~95% Rec. 2020 (claimed)
+- LG OLED: ~70-75% Rec. 2020
+- Professional HDR monitors: ~80-85% Rec. 2020
+- Laser projectors: ~90-95% Rec. 2020
+
+CONVERSION FORMULAS
+-------------------
+Rec. 2020 to Linear (remove gamma - SDR):
+```javascript
+function rec2020ToLinear(rec2020) {
+  // Same piecewise function as sRGB/Rec. 709
+  const a = 1.09929682680944;
+  const b = 0.018053968510807;
+  
+  if (rec2020 < 4.5 * b) {
+    return rec2020 / 4.5;
+  } else {
+    return Math.pow((rec2020 + (a - 1)) / a, 1/0.45);
+  }
+}
+```
+
+Linear to Rec. 2020:
+```javascript
+function linearToRec2020(linear) {
+  const a = 1.09929682680944;
+  const b = 0.018053968510807;
+  
+  if (linear < b) {
+    return linear * 4.5;
+  } else {
+    return a * Math.pow(linear, 0.45) - (a - 1);
+  }
+}
+```
+
+Rec. 2020 Linear to sRGB Linear (matrix transformation):
+```javascript
+const r_srgb = r_2020 * 1.6604910 + g_2020 * -0.5876411 + b_2020 * -0.0728499;
+const g_srgb = r_2020 * -0.1245505 + g_2020 * 1.1328999 + b_2020 * -0.0083494;
+const b_srgb = r_2020 * -0.0181508 + g_2020 * -0.1005789 + b_2020 * 1.1187297;
+```
+
+Then apply sRGB gamma for display.
+
+PRACTICAL EXAMPLES
+------------------
+// Vibrant green (outside sRGB/P3)
+color: color(rec2020 0 1 0);
+
+// HDR-ready cyan
+color: color(rec2020 0 0.9 0.9);
+
+// Always provide fallback
+.video-accent {
+  background: rgb(0, 255, 100);            /* sRGB fallback */
+  background: color(rec2020 0 1 0.4);      /* Wide gamut */
+}
+
+// Detect and use progressively
+@media (color-gamut: rec2020) {
+  .brand-color {
+    color: color(rec2020 0.2 0.9 0.3);
+  }
+}
+
+@media (color-gamut: p3) {
+  .brand-color {
+    color: color(display-p3 0.2 0.9 0.3);
+  }
+}
+
+HDR TRANSFER FUNCTIONS
+----------------------
+Rec. 2020 supports multiple transfer functions:
+
+**SDR (Standard Dynamic Range):**
+- Same gamma as Rec. 709/sRGB
+- 100 nits peak brightness
+- Contrast ratio ~1000:1
+
+**HDR10 (PQ - Perceptual Quantizer, ST.2084):**
+- 10-bit color depth
+- Up to 10,000 nits peak brightness
+- Absolute luminance encoding
+- Fixed parameters
+
+**HLG (Hybrid Log-Gamma, BT.2100):**
+- Compatible with SDR displays
+- Up to 1,000 nits typical
+- Relative luminance encoding
+- Backwards compatible
+
+**Dolby Vision:**
+- 12-bit color depth
+- Dynamic metadata
+- Up to 10,000 nits
+- Proprietary standard
+
+BIT DEPTH REQUIREMENTS
+----------------------
+Rec. 2020's wide gamut requires higher bit depth:
+
+**8-bit (256 levels):**
+❌ Insufficient - visible banding
+❌ Color posterization in gradients
+❌ Not recommended for Rec. 2020
+
+**10-bit (1024 levels):**
+✓ Minimum for Rec. 2020 SDR
+✓ Standard for HDR10
+✓ Smooth gradients
+✓ Good color reproduction
+
+**12-bit (4096 levels):**
+✓ Optimal for Rec. 2020
+✓ Used in Dolby Vision
+✓ Professional grading
+✓ Excellent gradient smoothness
+
+VIDEO WORKFLOW
+--------------
+Professional Rec. 2020 workflow:
+
+**Capture:**
+1. Shoot in camera's widest gamut (usually S-Gamut3.cine, V-Gamut, etc.)
+2. Record in Log format for maximum dynamic range
+3. Use 10-bit or 12-bit recording
+
+**Post-Production:**
+1. Work in Rec. 2020 color space
+2. Grade using HDR-capable monitor
+3. Master in HDR (PQ or HLG)
+4. Create SDR downconvert version
+
+**Delivery:**
+1. HDR Master: Rec. 2020 with PQ/HLG
+2. SDR Master: Rec. 709/sRGB conversion
+3. Streaming: Multiple versions for different devices
+4. Disc: UHD Blu-ray (Rec. 2020 HDR10)
+
+STREAMING STANDARDS
+-------------------
+Major streaming services and Rec. 2020:
+
+**Netflix:**
+- HDR: Rec. 2020, Dolby Vision or HDR10
+- SDR: Rec. 709
+- Requires Rec. 2020 for 4K HDR content
+
+**Amazon Prime Video:**
+- HDR: Rec. 2020 HDR10+
+- SDR: Rec. 709
+
+**Disney+:**
+- HDR: Rec. 2020 Dolby Vision
+- SDR: Rec. 709
+
+**YouTube:**
+- HDR: Rec. 2020 HLG or PQ
+- SDR: Rec. 709 or sRGB
+
+**Apple TV+:**
+- HDR: Rec. 2020 Dolby Vision
+- SDR: Display P3 or Rec. 709
+
+GAMUT MAPPING
+-------------
+Most displays can't show full Rec. 2020:
+
+**Gamut mapping strategies:**
+1. **Clip**: Out-of-gamut colors map to edge (can shift hues)
+2. **Compress**: Scale entire gamut proportionally
+3. **Perceptual**: Maintain relationships, subtle compression
+4. **Saturation**: Preserve saturation at expense of hue
+
+Modern TVs use sophisticated gamut mapping to display Rec. 2020 content on narrower-gamut panels.
+
+GAMING SUPPORT
+--------------
+Next-gen gaming and Rec. 2020:
+
+**PlayStation 5:**
+- Supports Rec. 2020 output
+- HDR gaming in Rec. 2020
+- Auto-converts for display
+
+**Xbox Series X/S:**
+- Full Rec. 2020 support
+- HDR gaming standard
+- Auto HDR for older games
+
+**PC Gaming:**
+- DirectX 12/Vulkan support Rec. 2020
+- HDR monitors increasing
+- Nvidia/AMD HDR support
+
+**Game Engines:**
+- Unreal Engine 5: Full Rec. 2020 workflow
+- Unity: HDR and wide-gamut support
+- Most modern engines support Rec. 2020
+
+COMMON MISTAKES
+---------------
+1. **No fallback**: Content invisible on older devices
+2. **Using 8-bit**: Severe banding artifacts
+3. **Ignoring gamut mapping**: Colors look wrong on most displays
+4. **Not testing on target displays**: What you see isn't what others see
+5. **Assuming displays support it**: Very few do fully
+6. **Using for photography**: Better options exist (Adobe RGB, ProPhoto)
+7. **Not considering SDR downconvert**: Most viewers still see SDR
+
+TESTING REC. 2020 CONTENT
+-------------------------
+How to test Rec. 2020 content:
+
+**Monitor:**
+- Professional HDR reference monitor (expensive!)
+- Consumer HDR TV (70-80% coverage)
+- Compare with SDR downconvert
+- Use color-accurate mode (Cinema/Filmmaker mode)
+
+**Software:**
+- DaVinci Resolve: Industry standard for HDR grading
+- Adobe Premiere Pro: Rec. 2020 support
+- Final Cut Pro X: Wide gamut workflows
+- HDR preview tools
+
+**Validation:**
+- Check scopes (waveform, vectorscope)
+- Verify no out-of-legal-range values
+- Test on multiple displays
+- Compare HDR and SDR versions
+
+CAMERA SUPPORT
+--------------
+Cameras with Rec. 2020 or wider gamuts:
+
+**Cinema Cameras:**
+✓ ARRI Alexa (ALEXA Wide Gamut)
+✓ RED (REDWideGamutRGB)
+✓ Sony Venice (S-Gamut3)
+✓ Canon C700 (Cinema Gamut)
+
+**Consumer/Prosumer:**
+✓ Sony A7S III (S-Gamut3.cine)
+✓ Panasonic GH6 (V-Gamut)
+✓ Canon R5 (Cinema Gamut)
+✓ Blackmagic cameras
+
+Most capture wider than Rec. 2020, downconvert in post.
+
+BROADCAST STANDARDS
+-------------------
+Rec. 2020 in broadcasting:
+
+**Japan (NHK):**
+- 8K broadcasts use Rec. 2020
+- HLG for HDR
+
+**Europe:**
+- Adopting Rec. 2020 for UHD broadcasts
+- HLG standard
+
+**United States:**
+- ATSC 3.0 supports Rec. 2020
+- Slow rollout
+
+**Streaming:**
+- Rec. 2020 standard for 4K HDR
+- Wide adoption by major platforms
+
+FUTURE OUTLOOK
+--------------
+**Near future (2025-2027):**
+- More displays approaching 90% Rec. 2020 coverage
+- Standard for all premium TVs
+- Growing gaming adoption
+- More streaming content
+
+**Long term (2030+):**
+- Displays may reach 95%+ Rec. 2020
+- Potential new, even wider standard
+- HDR becomes default
+- Rec. 709 legacy standard
+
+ALTERNATIVES TO CONSIDER
+------------------------
+For most use cases, narrower spaces are more practical:
+
+**Display P3:**
+- Matches current wide-gamut displays
+- More practical for still images
+- Good for web content
+
+**Adobe RGB:**
+- Better for print workflows
+- Practical gamut for photography
+
+**DCI-P3:**
+- Cinema projection standard
+- Similar gamut to Display P3
+
+BEST PRACTICES
+--------------
+1. **Use 10-bit minimum** (12-bit for mastering)
+2. **Always create SDR version** for compatibility
+3. **Test on multiple displays** (HDR and SDR)
+4. **Use proper gamut mapping** for downconversion
+5. **Embed color profiles** in files
+6. **Monitor scopes** for legal ranges
+7. **Master for target display** capabilities
+8. **Provide fallbacks** for older devices
+
+TOOLS AND SOFTWARE
+------------------
+Full Rec. 2020 support:
+✓ DaVinci Resolve
+✓ Adobe Premiere Pro
+✓ Final Cut Pro X
+✓ Avid Media Composer
+✓ Baselight
+✓ Nuke
+
+Monitoring:
+✓ Sony BVM-X300 (reference)
+✓ Canon DP-V2420
+✓ LG OLED (consumer)
+✓ HDR scopes and meters
+
+RELATED COLOR SPACES
+--------------------
+- Rec. 709: HD television standard (same as sRGB)
+- DCI-P3: Digital cinema standard
+- Display P3: Consumer display version of DCI-P3
+- Adobe RGB: Photography standard
+- ProPhoto RGB: Extremely wide photography space
+- ACEScg: Film/TV working space
+
+FURTHER READING
+---------------
+- ITU-R BT.2020 specification
+- CSS Color Module Level 4: https://www.w3.org/TR/css-color-4/
+- "Understanding HDR and Rec. 2020" (Dolby)
+- SMPTE standards for HDR (ST.2084, ST.2086)
+- ITU-R BT.2100 (HDR television)
+- Can I Use: https://caniuse.com/mdn-css_types_color_color
+

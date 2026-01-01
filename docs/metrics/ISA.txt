@@ -1,0 +1,162 @@
+ISA - Image Sizing Accuracy
+
+WHAT IT MEASURES
+Count of images with significantly oversized dimensions compared to their display size. Image sizing accuracy detects images where the natural (intrinsic) dimensions are much larger than the rendered display dimensions, indicating wasted bandwidth and unnecessarily large file downloads.
+
+Oversized image detection:
+- Natural dimensions > 1.5x display dimensions (width or height)
+- Calculates waste percentage: (naturalPixels - displayPixels) / naturalPixels × 100
+- Estimates wasted kilobytes based on file size and waste ratio
+- Excludes data: URIs and images with zero dimensions
+
+The metric tracks:
+- Image source URL
+- Natural dimensions (width × height)
+- Display dimensions (width × height)
+- Oversizing ratio (e.g., 2.5x)
+- Waste percentage
+- Estimated wasted KB
+
+HOW IT'S MEASURED
+DOM analysis of all img elements comparing natural dimensions to rendered dimensions. The measurement process:
+
+1. Queries all img elements: document.querySelectorAll('img')
+2. Skips data: URIs and images with zero dimensions
+3. Compares naturalWidth/naturalHeight to clientWidth/clientHeight
+4. Calculates width and height ratios
+5. Flags images where either ratio > 1.5x
+6. Calculates pixel waste: natural pixels - display pixels
+7. Estimates file size waste based on ratio
+
+Waste calculation:
+- naturalPixels = naturalWidth × naturalHeight
+- displayPixels = displayWidth × displayHeight
+- wastePercent = ((naturalPixels - displayPixels) / naturalPixels) × 100
+- estimatedWaste = fileSize × (wastePercent / 100)
+
+WHY IT'S IMPORTANT
+Oversized images waste bandwidth, slow page loads, increase data costs for users, and harm performance—especially on mobile devices and slower connections. Serving appropriately sized images is one of the easiest and most impactful performance optimizations.
+
+Performance impact:
+- Wasted bandwidth downloading unused pixels
+- Longer image load times
+- Increased LCP (Largest Contentful Paint)
+- Slower page rendering
+- Higher data usage
+
+User experience:
+- Mobile users on metered connections pay for wasted data
+- Slower loading on 3G/4G connections
+- Poor experience in low-bandwidth situations
+- Unnecessary battery drain (decoding large images)
+- Memory overhead from large image buffers
+
+Environmental impact:
+- Wasted electricity transmitting unnecessary data
+- Increased carbon footprint from data centers
+- Unnecessary energy consumption on user devices
+
+Cost impact:
+- Higher CDN egress costs
+- Increased storage costs
+- More server bandwidth usage
+- Higher cloud service bills
+
+THRESHOLDS
+- Good: 0 oversized images
+- Needs Improvement: 1-2 oversized images  
+- Poor: ≥ 3 oversized images
+
+Best practice is to serve images at their display dimensions (or use responsive images).
+
+COMMON PITFALLS
+1. Desktop images on mobile: Serving full-size images to mobile devices
+2. No responsive images: Single image size for all viewports
+3. CMS defaults: Content management systems uploading full resolution
+4. Copy-paste from sources: Using original high-res images without resizing
+5. Thumbnail displays: Displaying large images as small thumbnails
+6. Hero images: Massive hero images displayed smaller than uploaded
+7. Product images: High-resolution product photos not optimized
+8. Profile pictures: Full-size photos displayed as small avatars
+9. Gallery thumbnails: Full images loaded for thumbnail grids
+10. Background images: Large backgrounds scaled down with CSS
+
+OPTIMIZATION STRATEGIES
+1. Resize images to display dimensions: Use image editing tools or CDN resizing
+   - If displayed at 400×300, serve 400×300 (or 800×600 for 2x displays)
+
+2. Use srcset for responsive images: Serve different sizes for different viewports
+   ```html
+   <img src="image-400.jpg" 
+        srcset="image-400.jpg 400w, 
+                image-800.jpg 800w, 
+                image-1200.jpg 1200w"
+        sizes="(max-width: 600px) 100vw, 50vw"
+        alt="Description">
+   ```
+
+3. Use picture element for art direction: Different crops for different viewports
+   ```html
+   <picture>
+     <source media="(min-width: 800px)" srcset="wide.jpg">
+     <source media="(min-width: 400px)" srcset="medium.jpg">
+     <img src="narrow.jpg" alt="Description">
+   </picture>
+   ```
+
+4. Implement image CDN with automatic resizing: Services like Cloudinary, Imgix
+5. Generate multiple sizes during upload: CMS plugins for responsive images
+6. Use CSS object-fit: Control how images fit within dimensions
+7. Lazy load images: Defer loading until needed
+8. Serve 2x for retina: Provide 2× dimensions for high-DPI displays
+9. Test across viewports: Check image sizes on mobile, tablet, desktop
+10. Audit with DevTools: Network panel shows actual vs display dimensions
+11. Use WebP/AVIF: Modern formats provide better compression
+12. Implement width/height attributes: Prevent layout shifts
+
+TECHNICAL DETAILS
+The metric uses DOM properties to access image dimensions:
+
+Natural dimensions (original file):
+- img.naturalWidth: Intrinsic width of image file
+- img.naturalHeight: Intrinsic height of image file
+
+Display dimensions (rendered size):
+- img.clientWidth: Rendered width in CSS pixels
+- img.clientHeight: Rendered height in CSS pixels
+
+The 1.5x threshold accounts for:
+- Retina/high-DPI displays requiring 2x images
+- Rounding errors in responsive layouts
+- Minor acceptable overages
+
+Images below 1.5x ratio are considered acceptable. Images above 1.5x represent significant waste.
+
+Calculation example:
+- Natural: 1200×800 (960,000 pixels)
+- Display: 400×267 (106,800 pixels)
+- Ratio: 3.0x
+- Waste: ((960000 - 106800) / 960000) × 100 = 88.9%
+- If file is 150KB, wasted bandwidth ≈ 133KB
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+- IMB (Image Budget): Total image size budget
+- IOR (Image Optimization Rate): Modern format usage
+- ACR (Average Compression Ratio): Resource compression
+- LCP (Largest Contentful Paint): Loading performance
+- TPW (Total Page Weight): Overall page size
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- Web.dev: https://web.dev/uses-responsive-images/
+- MDN: https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images
+- WebPageTest: https://www.webpagetest.org/

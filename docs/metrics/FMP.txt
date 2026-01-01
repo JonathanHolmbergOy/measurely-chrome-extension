@@ -1,0 +1,153 @@
+FMP - First Meaningful Paint
+
+WHAT IT MEASURES
+Time when primary content becomes visible to users, indicating when the main content of the page (not just any content) is rendered. FMP measures perceived performance by identifying when users can see the meaningful content they came to the page for, rather than just the first visual element.
+
+FMP identifies:
+- When above-the-fold primary content is visible
+- When main content area is rendered
+- When users can see what they're looking for
+- Perceived content availability
+
+Difference from FCP:
+- FCP: First content (could be just background or header)
+- FMP: Meaningful content (main content users care about)
+- FMP is more user-centric than FCP
+
+HOW IT'S MEASURED
+Heuristic-based calculation identifying when above-the-fold content is rendered, typically using PerformancePaintTiming and DOM analysis. The measurement process:
+
+1. Analyzes page structure:
+   - Identifies main content areas
+   - Determines above-the-fold content
+   - Analyzes DOM structure for content hierarchy
+
+2. Monitors paint events:
+   - Uses PerformancePaintTiming API
+   - Tracks when content elements are painted
+   - Correlates paint events with content importance
+
+3. Calculates FMP:
+   - Identifies when primary content is painted
+   - Uses heuristics to determine "meaningful" content
+   - Returns timestamp of first meaningful paint
+
+4. Heuristic considerations:
+   - Main content area visibility
+   - Text content rendering
+   - Image content loading
+   - Layout completeness
+
+Note: FMP is heuristic-based and may vary between tools. It's been largely replaced by LCP (Largest Contentful Paint) as a more reliable metric.
+
+WHY IT'S IMPORTANT
+Indicates when users see meaningful content rather than just first paint. Better indicator of perceived performance than FCP alone because it focuses on content users actually care about.
+
+User experience:
+- Users see what they came for
+- Better perceived performance
+- Reduced perceived wait time
+- Improved user satisfaction
+
+Performance insight:
+- Indicates when primary content is available
+- Better than FCP for content-heavy pages
+- Helps identify content delivery issues
+- Measures actual usefulness of first paint
+
+THRESHOLDS
+- Good: ≤ 2000ms (Meaningful content visible quickly)
+- Needs Improvement: 2000-4000ms (Some delay in meaningful content)
+- Poor: ≥ 4000ms (Long delay before meaningful content)
+
+Note: FMP has been largely superseded by LCP, which is more reliable and standardized.
+
+COMMON PITFALLS
+1. Render-blocking resources: CSS/JS blocking primary content rendering
+2. Slow content delivery: Server or network delays
+3. Unoptimized critical path: Critical resources not prioritized
+4. Large initial HTML: Large HTML documents delaying parsing
+5. Above-the-fold content delayed: Main content not prioritized
+6. Inefficient CSS: Complex CSS delaying rendering
+7. Synchronous JavaScript: JS blocking content rendering
+8. Missing resource hints: No preload/preconnect for critical resources
+
+OPTIMIZATION STRATEGIES
+1. Optimize critical rendering path: Minimize steps to render primary content
+2. Inline critical CSS: Reduce render-blocking CSS requests
+3. Reduce render-blocking resources: Defer non-critical CSS/JS
+4. Optimize server response: Reduce TTFB for faster content delivery
+5. Prioritize above-the-fold content: Load main content first
+6. Use resource hints: Preload/preconnect critical resources
+7. Minimize initial HTML: Reduce HTML size for faster parsing
+8. Optimize images: Ensure above-the-fold images load quickly
+9. Defer non-critical JavaScript: Load JS after content is visible
+10. Test with throttling: Verify performance on slow connections
+
+
+HISTORY
+First Meaningful Paint (FMP) was an ambitious attempt to measure when "meaningful" content appears, but ultimately proved too complex:
+
+2014-2015: Google's Web Performance team researched metrics to better capture user perception of loading speed. First Paint (FP) and First Contentful Paint (FCP) measured when anything appeared, but didn't distinguish between trivial content (a header) and meaningful content (the article, product, or main purpose of the page).
+
+The question arose: Can we automatically detect when the "meaningful" content appears?
+
+2016: Chrome introduced First Meaningful Paint (FMP) as an experimental metric. FMP attempted to identify the paint where the "primary content" of the page becomes visible. The algorithm was based on the "layout object" count - tracking when the most significant layout changes occurred.
+
+FMP heuristic:
+- Monitor layout changes during page load
+- Identify the largest spike in layout objects being added
+- Mark that paint time as "meaningful"
+- The assumption: major content additions correlate with meaningful content
+
+2016-2018: FMP was available in Chrome DevTools, Lighthouse, and WebPageTest. However, implementation challenges emerged:
+- The definition of "meaningful" varied dramatically by page type
+- Home pages, articles, product pages, and SPAs all had different patterns
+- FMP was often inconsistent between test runs
+- The metric was difficult for developers to understand and optimize
+- There was no clear W3C path to standardization
+
+2017: The Hero Element Timing API was proposed as an alternative. Instead of automatically detecting meaningful content, developers would explicitly mark important elements using the `elementtiming` attribute. This approach gave developers control but required manual instrumentation.
+
+2019: Google began reconsidering FMP. Research showed that:
+- FMP was too variable and hard to explain to developers
+- The heuristic didn't work well across different site types
+- Developers couldn't easily optimize FMP because the definition was algorithmic
+- FMP wasn't suitable as a Web Vital metric due to these limitations
+
+2020: Google announced Largest Contentful Paint (LCP) as a replacement for FMP. LCP was simpler and more reliable:
+- Instead of trying to detect "meaningful" content algorithmically, LCP measures the largest content element
+- LCP is easier to understand (developers can see what element is measured)
+- LCP is more consistent between test runs
+- LCP better correlates with user perception of loading
+
+May 2020: Lighthouse v6 deprecated FMP in favor of LCP. FMP was removed from the performance score calculation. This marked the end of FMP as an active metric.
+
+Present: FMP is no longer recommended or widely used. It's been replaced by:
+- LCP: For measuring when main content appears
+- Element Timing API: For measuring custom developer-defined hero elements
+- FCP: For measuring first content appearance
+
+FMP's legacy:
+- It demonstrated the challenge of automatically defining "meaningful"
+- It showed that simpler metrics (like LCP) are often better than complex heuristics
+- It influenced the development of LCP and Element Timing API
+- It taught the industry that developer-understandable metrics are crucial
+
+Some older tools still report FMP for historical comparison, but new development should focus on LCP and Element Timing instead. FMP serves as a cautionary tale: sophisticated algorithms don't always beat simple, understandable metrics.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

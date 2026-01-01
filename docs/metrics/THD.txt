@@ -1,0 +1,170 @@
+THD - TH Has Data Cells
+=======================
+
+OVERVIEW
+--------
+Rule ID: th-has-data-cells
+Impact: Serious
+Category: Accessibility (Tables)
+WCAG: 2.0 Level A (1.3.1 Info and Relationships)
+
+Description:
+Ensures table header (th) elements have associated data cells in the table. Headers without data cells serve no purpose and can confuse screen reader users navigating tables.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Headers with data cells:
+- Provide meaningful structure to tables
+- Enable screen readers to relate data to headers
+- Avoid confusing empty header announcements
+- Meet WCAG 1.3.1 requirements
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all th elements with IDs
+2. Checks if any cells reference the header via headers attribute
+3. Verifies header has data cells in same row/column
+4. Reports headers without associated data
+
+
+HOW TO FIX
+----------
+1. Remove unused header elements
+2. Add data cells to header's row or column
+3. Ensure header serves a purpose
+4. Restructure table if needed
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<table>
+    <tr>
+        <th id="empty"></th>
+        <th id="name">Name</th>
+    </tr>
+    <tr>
+        <!-- No cells reference "empty" -->
+        <td headers="name">John</td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th id="orphan">Orphaned Header</th>
+    </tr>
+    <!-- No data rows -->
+</table>
+
+Good:
+<table>
+    <tr>
+        <th id="name">Name</th>
+        <th id="age">Age</th>
+    </tr>
+    <tr>
+        <td headers="name">John</td>
+        <td headers="age">25</td>
+    </tr>
+</table>
+
+
+SIMPLE TABLE WITH SCOPE
+-----------------------
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Widget</td>
+            <td>$10</td>
+            <td>5</td>
+        </tr>
+    </tbody>
+</table>
+
+
+DATA TABLE PATTERN
+-------------------
+<table>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Department</th>
+    </tr>
+    <tr>
+        <th scope="row">Alice</th>
+        <td>Engineering</td>
+    </tr>
+    <tr>
+        <th scope="row">Bob</th>
+        <td>Marketing</td>
+    </tr>
+</table>
+
+
+EMPTY CORNER CELL
+-----------------
+For layout, use empty td instead of th:
+
+Bad:
+<table>
+    <tr>
+        <th></th>  <!-- Empty header serves no purpose -->
+        <th scope="col">Mon</th>
+        <th scope="col">Tue</th>
+    </tr>
+    <tr>
+        <th scope="row">Week 1</th>
+        <td>Data</td>
+        <td>Data</td>
+    </tr>
+</table>
+
+Good:
+<table>
+    <tr>
+        <td></td>  <!-- Empty cell, not header -->
+        <th scope="col">Mon</th>
+        <th scope="col">Tue</th>
+    </tr>
+    <tr>
+        <th scope="row">Week 1</th>
+        <td>Data</td>
+        <td>Data</td>
+    </tr>
+</table>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full table support
+- Firefox: Full table support
+- Safari: Full table support
+- Screen Readers: Headers essential for navigation
+
+
+RELATED RULES
+-------------
+- THA (Table Headers Attribute)
+- TSC (Table Scope Valid)
+
+
+SOURCES
+-------
+- MDN th: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th
+- WCAG Tables: https://www.w3.org/WAI/tutorials/tables/
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#th-has-data-cells
+- WCAG 1.3.1: https://www.w3.org/WAI/WCAG21/Understanding/info-and-relationships.html
+

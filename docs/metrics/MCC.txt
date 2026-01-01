@@ -1,0 +1,89 @@
+MCC - Mixed Content Count
+
+WHAT IT MEASURES
+Number of HTTP (insecure) resources loaded on HTTPS (secure) pages. Mixed content occurs when an HTTPS page loads resources over HTTP, creating security vulnerabilities and triggering browser warnings.
+
+Types of mixed content:
+- Mixed active content: Scripts, stylesheets, iframes loaded over HTTP (blocked by browsers)
+- Mixed passive content: Images, audio, video loaded over HTTP (warned but may load)
+
+Security risks:
+- Man-in-the-middle attacks
+- Data interception
+- Content tampering
+- Browser security warnings
+- User trust issues
+
+HOW IT'S MEASURED
+DOM and PerformanceResourceTiming analysis checking for HTTP resources on HTTPS pages. The measurement process:
+
+1. Checks page protocol:
+   - Verifies page is loaded over HTTPS
+   - Identifies if mixed content is possible
+
+2. Analyzes resources:
+   - Uses PerformanceResourceTiming API
+   - Checks resource URLs for HTTP protocol
+   - Identifies HTTP resources on HTTPS page
+
+3. Counts mixed content:
+   - Counts HTTP resources
+   - May categorize by type (active vs passive)
+   - Returns total count
+
+WHY IT'S IMPORTANT
+Mixed content creates security vulnerabilities, triggers browser warnings, and can expose users to man-in-the-middle attacks. Modern browsers block mixed active content and warn about mixed passive content.
+
+Security impact:
+- Vulnerable to man-in-the-middle attacks
+- Data can be intercepted
+- Content can be tampered with
+- Browser security warnings
+- Reduced user trust
+
+User experience:
+- Browser warnings confuse users
+- Some content may not load
+- Security indicators show warnings
+- Reduced trust in site
+
+THRESHOLDS
+- Good: 0 errors (No mixed content, secure)
+- Poor: ≥ 1 error (Mixed content present, security risk)
+
+Even a single HTTP resource on an HTTPS page creates a security vulnerability.
+
+COMMON PITFALLS
+1. HTTP resources on HTTPS pages: Resources using HTTP instead of HTTPS
+2. Insecure third-party resources: Third-party scripts/styles using HTTP
+3. Mixed content in iframes: Iframes loading HTTP content
+4. Protocol-relative URLs: URLs without protocol (//example.com) defaulting to HTTP
+5. Hardcoded HTTP URLs: URLs hardcoded with http://
+6. CDN resources: CDN resources not using HTTPS
+7. Legacy resources: Old resources not migrated to HTTPS
+
+OPTIMIZATION STRATEGIES
+1. Convert all HTTP resources to HTTPS: Update all resource URLs to HTTPS
+2. Use protocol-relative URLs: Use //example.com (prefer HTTPS)
+3. Ensure third-party resources use HTTPS: Verify external resources use HTTPS
+4. Implement Content Security Policy: Use CSP to block mixed content
+5. Update hardcoded URLs: Replace http:// with https://
+6. Migrate legacy resources: Update old resources to HTTPS
+7. Test for mixed content: Regularly check for HTTP resources
+8. Use browser DevTools: Check for mixed content warnings
+9. Monitor resources: Track resource protocols
+10. Document HTTPS requirements: Ensure team understands HTTPS requirements
+
+
+HISTORY
+Web security headers and policies have evolved over decades. HTTP security headers like HSTS were introduced in 2012 (RFC 6797), while Content Security Policy (CSP) was first proposed in 2012 and standardized in W3C CSP Level 3. Cross-origin policies (COEP, COOP, CORP) were developed in response to security vulnerabilities like Spectre and Meltdown discovered in 2018. These security measures became industry standards as web applications grew more complex and security threats increased.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

@@ -1,0 +1,432 @@
+ProPhoto RGB (ROMM RGB)
+=======================
+
+OVERVIEW
+--------
+ProPhoto RGB, also known as ROMM RGB (Reference Output Medium Metric), is an extremely wide-gamut RGB color space developed by Kodak. It encompasses over 90% of possible surface colors in the CIE L*a*b* color space, making it one of the widest RGB color spaces available. It's designed for high-end photography and editing workflows where maximum color preservation is critical.
+
+DESCRIPTION
+-----------
+ProPhoto RGB uses primaries that are largely theoretical - they represent colors that don't exist in nature and can't be displayed on any current screen technology. This "over-wide" gamut ensures that no color information is lost during editing, even for future display technologies. However, it also means most colors in ProPhoto RGB are imaginary and unprintable.
+
+The space is particularly useful as a working space for RAW photo editing where you want to preserve all possible color information from the camera sensor.
+
+TECHNICAL SPECIFICATIONS
+-------------------------
+- Gamut: Covers ~90-100% of possible surface colors (massive!)
+- White Point: D50 (horizon daylight, 5000K)
+- Gamma: 1.8 (simpler than sRGB, optimized for editing)
+- Primaries (CIE xy chromaticity):
+  * Red: x=0.7347, y=0.2653
+  * Green: x=0.1596, y=0.8404
+  * Blue: x=0.0366, y=0.0001
+- Transfer Function: V = I^(1/1.8) with small linear segment
+
+HISTORY
+-------
+1998: Developed by Kodak as ROMM RGB
+1999: Proposed as part of ISO 22028-2 standard
+2000s: Adopted by professional photographers
+2001: Integrated into Adobe applications as "ProPhoto RGB"
+2010s: Becomes standard for high-end RAW workflows
+2021: Added to CSS Color Module Level 4 as 'prophoto-rgb'
+2023: Browser support achieved
+
+WHY PROPHOTO RGB EXISTS
+-----------------------
+Problem: Camera sensors can capture colors outside Adobe RGB and even human vision in some wavelengths.
+
+Solution needed:
+- Working space that doesn't clip any sensor data
+- Future-proof for next-generation displays
+- Lossless color transformations during editing
+- Maximum color preservation from capture to output
+
+ProPhoto RGB provides this by encompassing:
+✓ All current camera sensor colors
+✓ All possible print colors
+✓ All Display P3 and Adobe RGB colors
+✓ Many theoretical colors beyond human vision
+
+CSS SYNTAX
+----------
+Using color() function with 'prophoto-rgb' identifier:
+  color: color(prophoto-rgb 1 0 0);               /* Bright red */
+  color: color(prophoto-rgb 0 0.9 0.5);           /* Cyan-green */
+  color: color(prophoto-rgb 0.5 0.5 0.5 / 0.8);   /* Gray with alpha */
+
+Component ranges:
+  Red: 0-1
+  Green: 0-1
+  Blue: 0-1
+  Alpha: 0-1 or 0%-100%
+
+BROWSER SUPPORT
+---------------
+color(prophoto-rgb ...) syntax:
+- Safari 15.0+ (September 2021) ✓
+- Chrome 111+ (March 2023) ✓
+- Edge 111+ (March 2023) ✓
+- Firefox 113+ (May 2023) ✓
+- Opera 97+ (March 2023) ✓
+
+Not supported:
+- Internet Explorer (all versions)
+- Safari < 15.0
+- Chrome < 111
+- Firefox < 113
+
+ADVANTAGES
+----------
+✓ Widest practical RGB color space
+✓ Future-proof for emerging technologies
+✓ Preserves all camera sensor data
+✓ Lossless color transformations
+✓ Encompasses all other RGB spaces
+✓ Ideal for archival master files
+✓ No clipping during aggressive editing
+✓ Standard in high-end photo workflows
+
+LIMITATIONS
+-----------
+✗ Vast majority of colors are unprintable/undisplayable
+✗ Requires 16-bit color depth (8-bit shows banding)
+✗ Easy to create impossible colors by accident
+✗ Poor for direct color picking
+✗ Large file sizes
+✗ Can hide clipping issues until final conversion
+✗ Overkill for most workflows
+✗ D50 white point unusual for displays
+
+USE CASES
+---------
+Perfect for:
+- RAW photo editing and processing
+- High-end photography workflows
+- Archival master file storage
+- Extreme color grading
+- Future-proofing color data
+- Working with wide-gamut camera sensors
+- Professional color correction
+
+Not suitable for:
+- Web design and development (way too wide)
+- Direct screen display (95%+ out of gamut)
+- 8-bit image editing (causes banding)
+- Print preparation (convert to smaller space first)
+- General purpose photography (Adobe RGB sufficient)
+
+COMPARISON WITH OTHER SPACES
+-----------------------------
+vs Adobe RGB:
+  ProPhoto: 2x wider gamut, many imaginary colors
+  Adobe RGB: Practical gamut, matches print/display
+
+vs sRGB:
+  ProPhoto: 4-5x wider gamut
+  sRGB: Matches actual displays, universal
+
+vs Display P3:
+  ProPhoto: Encompasses all of P3 + much more
+  Display P3: Matches modern wide-gamut displays
+
+vs Rec. 2020:
+  ProPhoto: Slightly wider, different primaries
+  Rec. 2020: Video-oriented, HDR workflows
+
+GAMUT COVERAGE
+--------------
+ProPhoto RGB contains:
+- 100% of sRGB
+- 100% of Adobe RGB
+- 100% of Display P3
+- 100% of Rec. 2020
+- ~90% of all visible colors
+- ~100% of all printable colors
+- Many colors outside human vision
+
+CONVERSION FORMULAS
+-------------------
+ProPhoto RGB to Linear (remove gamma 1.8):
+```javascript
+function prophotoToLinear(prophoto) {
+  // ProPhoto uses gamma 1.8 with small linear segment
+  const Et = 1/512;  // Threshold
+  
+  if (prophoto < 16 * Et) {
+    return prophoto / 16;
+  } else {
+    return Math.pow(prophoto, 1.8);
+  }
+}
+```
+
+Linear to ProPhoto RGB:
+```javascript
+function linearToProphoto(linear) {
+  const Et = 1/512;
+  
+  if (linear < Et) {
+    return linear * 16;
+  } else {
+    return Math.pow(linear, 1/1.8);
+  }
+}
+```
+
+ProPhoto Linear to sRGB Linear (matrix transformation):
+```javascript
+const r_srgb = r_pro * 1.3459433 + g_pro * -0.2556075 + b_pro * -0.0511118;
+const g_srgb = r_pro * -0.5445989 + g_pro * 1.5081673 + b_pro * 0.0205351;
+const b_srgb = r_pro * 0.0000000 + g_pro * 0.0000000 + b_pro * 1.2118128;
+```
+
+Then apply sRGB gamma for display.
+
+PRACTICAL EXAMPLES
+------------------
+// These colors are mostly unprintable/undisplayable!
+
+// Theoretical "super red"
+color: color(prophoto-rgb 1 0 0);
+
+// Extreme cyan (outside all display gamuts)
+color: color(prophoto-rgb 0 1 0.8);
+
+// Fallback absolutely required
+.photo-edit {
+  background: rgb(0, 200, 150);              /* sRGB fallback */
+  background: color(prophoto-rgb 0 0.9 0.7); /* Master color */
+}
+
+WORKFLOW RECOMMENDATIONS
+------------------------
+**Professional Photography Workflow:**
+
+1. **Capture**: RAW format (12-16 bit)
+2. **Import**: Convert to ProPhoto RGB working space
+3. **Edit**: All adjustments in ProPhoto RGB
+4. **Archive**: Save master as 16-bit ProPhoto TIFF
+5. **Export**: 
+   - Web: Convert to sRGB
+   - Display: Convert to Display P3 or Adobe RGB
+   - Print: Convert to Adobe RGB or CMYK
+   - HDR Video: Convert to Rec. 2020
+
+**Critical rules:**
+- ALWAYS use 16-bit color depth
+- NEVER edit 8-bit in ProPhoto (banding!)
+- ALWAYS convert to smaller space for output
+- Monitor gamut-mapping during conversion
+
+BIT DEPTH REQUIREMENTS
+----------------------
+ProPhoto RGB **requires** 16-bit:
+
+**8-bit (256 levels):**
+- Span from 0-1 is too wide
+- Visible banding in gradients
+- Posterization in smooth tones
+- Loss of shadow detail
+
+**16-bit (65536 levels):**
+- Sufficient levels per channel
+- Smooth gradients
+- Proper tone reproduction
+- Industry standard
+
+**Why:** ProPhoto's wide gamut spreads 256 levels too thin. What would be 1 step in sRGB becomes 4-5 steps in ProPhoto, creating visible bands.
+
+COMMON MISTAKES
+---------------
+1. **Using 8-bit depth**: CRITICAL ERROR - causes banding
+2. **Direct display without conversion**: Looks desaturated/wrong
+3. **Editing for display in ProPhoto**: Most adjustments out of gamut
+4. **Not converting for output**: Colors won't display correctly
+5. **Using for web-only work**: Massive overkill
+6. **Assuming monitor shows it**: No displays support full ProPhoto
+
+GAMUT MAPPING ISSUES
+--------------------
+Most colors in ProPhoto are out-of-gamut for display/print:
+
+**sRGB coverage**: ~35-40% of ProPhoto RGB
+**Adobe RGB coverage**: ~50-55% of ProPhoto RGB
+**Display P3 coverage**: ~45-50% of ProPhoto RGB
+**CMYK coverage**: ~30-35% of ProPhoto RGB
+
+This means 60-70% of ProPhoto colors can't be displayed or printed!
+
+**Solutions:**
+1. Use perceptual rendering intent
+2. Soft-proof before conversion
+3. Adjust colors while monitoring gamut
+4. Use relative colorimetric with black point compensation
+
+WHEN TO USE PROPHOTO RGB
+-------------------------
+**Use it if:**
+✓ Editing high-bit-depth RAW files
+✓ Working with wide-gamut camera sensors
+✓ Creating archival masters
+✓ Need maximum color preservation
+✓ Working with future display tech in mind
+✓ Professional color grading workflows
+
+**DON'T use it if:**
+❌ Working with 8-bit images
+❌ Web-only content
+❌ Display-only workflow
+❌ Printing directly without conversion
+❌ Don't have calibrated wide-gamut monitor
+❌ Don't understand color management
+
+D50 WHITE POINT
+---------------
+ProPhoto uses D50 (5000K) instead of D65 (6500K):
+
+**D50**: Warmer, yellowish cast
+- Matches print viewing conditions
+- Standard in graphic arts industry
+- ICC profile connection space
+
+**D65**: Cooler, bluish cast
+- Matches displays and daylight
+- Standard for sRGB, Adobe RGB, Display P3
+
+Conversion between D50 and D65 requires chromatic adaptation (Bradford method).
+
+CAMERA SENSOR GAMUT
+-------------------
+Modern cameras can capture colors outside sRGB/Adobe RGB:
+
+- Consumer cameras: ~70-80% of Adobe RGB
+- Professional DSLRs: ~85-95% of Adobe RGB
+- Medium format: ~100% of Adobe RGB, spills into ProPhoto
+- Specialized sensors: Can exceed Adobe RGB in certain wavelengths
+
+ProPhoto ensures no sensor data is clipped.
+
+ARCHIVAL STRATEGY
+-----------------
+ProPhoto RGB is ideal for archival masters:
+
+**File format**: 16-bit TIFF with embedded ProPhoto RGB profile
+**Storage**: Uncompressed or lossless (ZIP, LZW)
+**Metadata**: Full EXIF, IPTC, and edit history
+**Redundancy**: Multiple backups (3-2-1 rule)
+
+**Why ProPhoto for archives:**
+- Future displays may show more colors
+- Print technologies improving
+- Preserves all original sensor data
+- Lossless conversion to any smaller space
+
+PRINT WORKFLOWS
+---------------
+While ProPhoto encompasses all printable colors, convert before printing:
+
+**Steps:**
+1. Edit in ProPhoto RGB (16-bit)
+2. Soft-proof using printer profile
+3. Make ProPhoto adjustments to fit gamut
+4. Convert to printer space (Adobe RGB or CMYK)
+5. Print with embedded profile
+
+**Don't:** Send ProPhoto files directly to printer (results unpredictable)
+
+SOFTWARE SUPPORT
+----------------
+Full support:
+✓ Adobe Lightroom (default working space for RAW)
+✓ Adobe Photoshop (optional working space)
+✓ Capture One Pro
+✓ DxO PhotoLab
+✓ Affinity Photo
+✓ Phase One
+
+Limited/No support:
+✗ GIMP (can import, can't edit natively)
+✗ Most consumer photo editors
+✗ Web browsers (can display via conversion)
+
+MONITOR REQUIREMENTS
+--------------------
+To work effectively with ProPhoto RGB:
+
+**Minimum:**
+- Wide-gamut monitor (100% Adobe RGB or P3)
+- Hardware calibration support
+- 10-bit panel (reduces banding)
+- Calibrated to D50 or D65
+
+**Reality:**
+- No monitors show full ProPhoto RGB
+- Best monitors show ~90% of Adobe RGB
+- Soft-proofing required for accurate preview
+- Most ProPhoto colors invisible on screen
+
+REAL-WORLD ADOPTION
+-------------------
+Professional Photography (RAW): ~60%
+High-end Retouching: ~70%
+Archival/Museum Work: ~80%
+Commercial Photography: ~40%
+Web Development: <1%
+Consumer Photography: ~5%
+
+ALTERNATIVES TO CONSIDER
+------------------------
+For most users, narrower spaces are more practical:
+
+**Adobe RGB**: 
+- Good balance of gamut and practicality
+- Covers most print colors
+- Supported by more displays
+
+**Display P3**:
+- Matches modern screens
+- No imaginary colors
+- Better for display-only work
+
+**Rec. 2020**:
+- Standard for HDR video
+- Wide but not as extreme as ProPhoto
+
+BEST PRACTICES
+--------------
+1. **Always use 16-bit** (48-bit RGB)
+2. **Convert before output** (never output ProPhoto directly)
+3. **Soft-proof conversions** on calibrated monitor
+4. **Use for editing only**, not final delivery
+5. **Embed color profiles** in all files
+6. **Monitor histogram** for clipping
+7. **Archive masters** in ProPhoto for future-proofing
+8. **Export derivatives** in appropriate smaller spaces
+
+PERFORMANCE CONSIDERATIONS
+---------------------------
+- 16-bit files are 2x size of 8-bit
+- Color conversions more computationally expensive
+- Requires more RAM for editing
+- Slower rendering in some applications
+- Worth the cost for professional workflows
+
+RELATED COLOR SPACES
+--------------------
+- Adobe RGB: More practical wide gamut
+- sRGB: Standard narrow gamut
+- Display P3: Modern display gamut
+- Rec. 2020: Wide video gamut
+- ACEScg: Even wider color space for film/TV
+- ACES: Full spectral color encoding
+
+FURTHER READING
+---------------
+- ISO 22028-2:2013 ProPhoto RGB specification
+- CSS Color Module Level 4: https://www.w3.org/TR/css-color-4/
+- "Understanding ProPhoto RGB" (Cambridge in Colour)
+- Kodak ROMM RGB white paper
+- Color management best practices
+- Can I Use: https://caniuse.com/mdn-css_types_color_color
+

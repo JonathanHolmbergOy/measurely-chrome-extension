@@ -1,0 +1,109 @@
+ARC - ARIA Required Children
+=============================
+
+OVERVIEW
+--------
+Rule ID: aria-required-children
+Impact: Critical
+Category: Accessibility (ARIA Validation)
+WCAG: 2.0 Level A (1.3.1 Info and Relationships)
+
+Description:
+Ensures elements with ARIA roles that require specific child roles actually contain them. Proper parent-child relationships are essential for screen readers to understand document structure and navigate correctly.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Required child roles maintain:
+- Proper semantic structure for assistive technologies
+- Correct navigation patterns for screen readers
+- Expected behavior for interactive widgets
+- WCAG 1.3.1 compliance
+
+
+REQUIRED CHILDREN BY ROLE
+--------------------------
+- list → listitem
+- listbox → option
+- menu → menuitem/menuitemcheckbox/menuitemradio
+- menubar → menuitem/menuitemcheckbox/menuitemradio
+- radiogroup → radio
+- tablist → tab
+- tree → treeitem
+- row → cell/gridcell/columnheader/rowheader
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds elements with container roles
+2. Checks for required child role presence
+3. Validates at least one required child exists
+4. Reports violations with parent role and missing children
+
+
+HOW TO FIX
+----------
+1. Add child elements with appropriate roles
+2. Ensure at least one required child role present
+3. Use semantic HTML when possible (ul>li, ol>li)
+4. Validate structure after dynamic updates
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<div role="list">
+    <div>Item 1</div>
+    <div>Item 2</div>
+</div>
+
+<div role="menu">
+    <button>Action 1</button>
+    <button>Action 2</button>
+</div>
+
+Good:
+<div role="list">
+    <div role="listitem">Item 1</div>
+    <div role="listitem">Item 2</div>
+</div>
+
+<div role="menu">
+    <div role="menuitem">Action 1</div>
+    <div role="menuitem">Action 2</div>
+</div>
+
+Best (Semantic HTML):
+<ul>
+    <li>Item 1</li>
+    <li>Item 2</li>
+</ul>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full support
+- Firefox: Full support
+- Safari: Full support
+- Screen Readers: Essential for proper navigation
+
+
+RELATED RULES
+-------------
+- ARP (ARIA Required Parent)
+- LST (List Structure)
+- ARV (ARIA Roles Valid)
+
+
+SOURCES
+-------
+- W3C ARIA Roles: https://www.w3.org/TR/wai-aria-1.2/#role_definitions
+- MDN ARIA Roles: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#aria-required-children
+- WCAG 1.3.1: https://www.w3.org/WAI/WCAG21/Understanding/info-and-relationships.html
+

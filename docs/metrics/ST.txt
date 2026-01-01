@@ -1,0 +1,166 @@
+ST - Server Timing
+
+WHAT IT MEASURES
+Server-side timing metrics from Server-Timing HTTP headers. This metric provides insights into server processing time, database query times, cache performance, and other server-side operations that affect page load performance.
+
+Server-Timing header format:
+```
+Server-Timing: db;dur=53, cache;dur=12, render;dur=45
+```
+
+Server timing can include:
+- Database query time: Time spent on database operations
+- Cache hit/miss: Cache performance metrics
+- Processing time: Server-side processing duration
+- External API calls: Time for third-party API requests
+- Template rendering: Time to render templates
+
+HOW IT'S MEASURED
+PerformanceServerTiming API, reading Server-Timing HTTP headers from response. Requires server to send headers. The measurement process:
+
+1. Checks for Server-Timing headers:
+   - Uses PerformanceServerTiming API
+   - Reads Server-Timing headers from response
+   - Parses timing information
+
+2. Extracts timing metrics:
+   - Parses server timing entries
+   - Extracts duration values
+   - Identifies timing categories
+
+3. Returns timing data:
+   - Server timing metrics
+   - May aggregate or return individual metrics
+   - null if headers not present
+
+WHY IT'S IMPORTANT
+Provides visibility into server-side performance bottlenecks. Helps identify database query times, cache hits, and processing delays that affect overall page performance.
+
+Performance insight:
+- Identifies server-side bottlenecks
+- Reveals database performance issues
+- Shows cache effectiveness
+- Highlights processing delays
+- Helps optimize server performance
+
+Optimization benefits:
+- Pinpoint slow database queries
+- Identify cache issues
+- Optimize server processing
+- Improve overall performance
+- Better server-side visibility
+
+THRESHOLDS
+- Good: ≤ 100ms (Fast server processing)
+- Needs Improvement: 100-500ms (Moderate server processing)
+- Poor: ≥ 500ms (Slow server processing, bottlenecks)
+
+Note: Thresholds depend on what's being measured (database, cache, etc.).
+
+COMMON PITFALLS
+1. Server does not send Server-Timing headers: Headers not implemented
+2. Server-side performance issues: Slow server processing
+3. Database query delays: Slow database queries
+4. Cache misses: Inefficient caching
+5. No server timing visibility: Missing performance insights
+
+OPTIMIZATION STRATEGIES
+1. Implement Server-Timing headers on server: Add headers to server responses
+2. Optimize database queries: Improve slow database queries
+3. Improve server-side caching: Optimize cache performance
+4. Optimize server processing: Improve server-side code performance
+5. Monitor server timing: Track server timing metrics
+6. Identify bottlenecks: Use timing data to find issues
+7. Test server performance: Measure and optimize server operations
+8. Document server timing: Ensure team understands server timing
+
+
+HISTORY
+Server Timing emerged from the need to expose server-side performance data to the client:
+
+2000s-2012: Performance measurement focused primarily on client-side metrics (page load time, resource loading, rendering). What happened on the server was a "black box" - developers could measure Time to First Byte (TTFB), but couldn't see what the server was doing during that time. Was it slow database queries? External API calls? Complex calculations?
+
+Without server visibility, optimizing TTFB was guesswork. Developers would profile server-side code locally, but production performance often differed due to real-world conditions (database load, caching, network latency to dependencies).
+
+2013-2015: Application Performance Monitoring (APM) tools like New Relic, Datadog, and AppDynamics emerged, providing server-side profiling. However, these required server-side instrumentation and dashboard access. Connecting server-side performance to client-side metrics was manual and cumbersome.
+
+The question arose: Could server-side timing data be sent to the client in a standardized way?
+
+2017: The Server Timing API was proposed to W3C. The idea was simple but powerful: servers could send timing information in HTTP response headers, and browsers would expose this data through the Performance API.
+
+Server-Timing header format:
+```
+Server-Timing: db;dur=53.5, api;dur=123.4, cache;desc="Cache Miss";dur=5.2
+```
+
+This header could include:
+- metric name: Identifier for the operation (db, api, cache, etc.)
+- duration: Time in milliseconds
+- description: Human-readable context
+
+2018: The Server Timing API was implemented in Chrome 65+ and added to the W3C specification. This made server-side performance visible in:
+- Chrome DevTools (Timing tab in Network panel)
+- Performance API (PerformanceResourceTiming entries)
+- Real User Monitoring tools
+
+Use cases:
+- Database query time
+- Cache hit/miss information
+- External API call durations
+- Server-side rendering time
+- Authentication/authorization time
+- CDN edge processing time
+
+2019-2020: Adoption grew slowly. Implementing Server-Timing required:
+- Server-side instrumentation to measure operations
+- Adding HTTP headers (manual or via middleware)
+- Privacy considerations (not exposing sensitive information)
+
+CDNs like Cloudflare and Fastly began adding automatic Server-Timing headers for edge processing time. Framework support gradually improved (Next.js, Rails, etc.).
+
+2020-Present: Server Timing remains useful but not widely adopted. Challenges include:
+- Requires server-side changes (can't be implemented purely in frontend)
+- Privacy concerns (timing data could reveal infrastructure details)
+- Not included in Core Web Vitals (less urgency to implement)
+- APM tools provide more comprehensive server-side profiling
+
+However, Server Timing is valuable when used because it:
+- Connects server and client performance in one place
+- Makes server bottlenecks visible to frontend developers
+- Can be seen in production by Real User Monitoring
+- Appears in browser DevTools for easy debugging
+- Requires minimal overhead (just adding headers)
+
+Modern use cases:
+- Debugging slow TTFB by showing server breakdown
+- Identifying specific slow operations (database, API, etc.)
+- Measuring CDN edge processing
+- Tracking server-side rendering performance
+- Monitoring cache effectiveness
+
+The Server Timing API exemplifies a powerful but underutilized standard. It bridges the gap between server-side and client-side performance, but adoption requires buy-in from backend teams and privacy-conscious implementation.
+
+Best practices:
+- Only send timing for critical operations
+- Use generic names (avoid exposing infrastructure details)
+- Aggregate similar operations
+- Consider performance overhead of measurement
+- Use for debugging and optimization, not monitoring every request
+
+While not a Core Web Vital, Server Timing provides valuable context for understanding TTFB and optimizing server-side performance that directly impacts user experience.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

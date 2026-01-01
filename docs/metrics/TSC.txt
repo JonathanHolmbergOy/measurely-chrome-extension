@@ -1,0 +1,169 @@
+TSC - Table Scope Valid
+=======================
+
+OVERVIEW
+--------
+Rule ID: scope-attr-valid
+Impact: Moderate
+Category: Accessibility (Tables)
+WCAG: 2.0 Level A (1.3.1 Info and Relationships)
+
+Description:
+Ensures scope attribute on table cells uses valid values (row, col, rowgroup, colgroup) and is only used on th elements. Invalid scope values or misuse breaks screen reader table navigation.
+
+Thresholds:
+- Good: 0 violations
+- Poor: ≥ 1 violation
+
+
+WHY IT MATTERS
+--------------
+Valid scope attributes:
+- Enable proper screen reader announcements
+- Define header-data relationships
+- Support table navigation
+- Meet WCAG 1.3.1 requirements
+
+
+VALID SCOPE VALUES
+------------------
+- row: Header for a table row
+- col: Header for a table column
+- rowgroup: Header for a group of rows
+- colgroup: Header for a group of columns
+
+
+DETECTION METHOD
+----------------
+Client-side validation that:
+1. Finds all elements with scope attribute
+2. Validates scope value is row/col/rowgroup/colgroup
+3. Checks scope is only on th elements
+4. Reports invalid scope usage
+
+
+HOW TO FIX
+----------
+1. Use only valid scope values
+2. Apply scope only to th elements
+3. Remove scope from td elements
+4. Use appropriate scope for header type
+
+
+EXAMPLE ISSUES
+--------------
+Bad:
+<table>
+    <tr>
+        <th scope="invalid">Header</th>
+        <td scope="col">Data</td>  <!-- scope on td -->
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th scope="column">Name</th>  <!-- "column" invalid, use "col" -->
+        <th scope="rows">Age</th>  <!-- "rows" invalid, use "row" -->
+    </tr>
+</table>
+
+Good:
+<table>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Age</th>
+    </tr>
+    <tr>
+        <th scope="row">John</th>
+        <td>25</td>
+    </tr>
+</table>
+
+
+SIMPLE TABLE
+------------
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Price</th>
+            <th scope="col">Stock</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">Widget</th>
+            <td>$10.00</td>
+            <td>150</td>
+        </tr>
+    </tbody>
+</table>
+
+
+COMPLEX TABLE WITH GROUPS
+--------------------------
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="colgroup" colspan="2">Contact</th>
+        </tr>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">John Doe</th>
+            <td>john@example.com</td>
+            <td>555-0100</td>
+        </tr>
+    </tbody>
+</table>
+
+
+ROW GROUP EXAMPLE
+-----------------
+<table>
+    <tbody>
+        <tr>
+            <th scope="rowgroup" rowspan="3">Q1</th>
+            <th scope="row">January</th>
+            <td>$100</td>
+        </tr>
+        <tr>
+            <th scope="row">February</th>
+            <td>$150</td>
+        </tr>
+        <tr>
+            <th scope="row">March</th>
+            <td>$200</td>
+        </tr>
+    </tbody>
+</table>
+
+
+BROWSER SUPPORT
+---------------
+- Chrome/Edge: Full scope support
+- Firefox: Full scope support
+- Safari: Full scope support
+- Screen Readers: Essential for table navigation
+
+
+RELATED RULES
+-------------
+- THA (Table Headers Attribute)
+- THD (TH Has Data Cells)
+
+
+SOURCES
+-------
+- MDN scope: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th#attr-scope
+- HTML Spec: https://html.spec.whatwg.org/multipage/tables.html#attr-th-scope
+- WCAG H63: https://www.w3.org/WAI/WCAG21/Techniques/html/H63
+- axe-core Rule: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md#scope-attr-valid
+- WCAG 1.3.1: https://www.w3.org/WAI/WCAG21/Understanding/info-and-relationships.html
+

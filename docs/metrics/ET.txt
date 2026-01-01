@@ -1,0 +1,178 @@
+ET - Element Timing
+
+WHAT IT MEASURES
+Custom element render times for critical page elements marked with the `elementtiming` attribute. This metric measures when specific elements become visible, allowing developers to track the render time of important page elements like hero images, key content blocks, or critical UI components.
+
+Element Timing API:
+- Uses `elementtiming` attribute on elements
+- PerformanceObserver with 'element' entry type
+- Measures render time for marked elements
+- Provides custom timing for specific elements
+
+Use cases:
+- Hero image render time
+- Key content block visibility
+- Critical UI component rendering
+- Important element visibility
+- Custom performance tracking
+
+HOW IT'S MEASURED
+PerformanceObserver API with 'element' entry type, or workaround using elementtiming attribute on elements and observing those entries. The measurement process:
+
+1. Marks elements:
+   - Adds `elementtiming` attribute to critical elements
+   - Identifies elements to track
+   - Sets up element timing
+
+2. Observes element timing:
+   - Uses PerformanceObserver with 'element' entry type
+   - Tracks render times for marked elements
+   - Records timing data
+
+3. Returns timing:
+   - Render time for each marked element
+   - May return average or specific element times
+   - null if no elements marked or API unavailable
+
+WHY IT'S IMPORTANT
+Allows tracking specific critical elements. Useful for measuring when hero images, key content, or important UI elements render, providing insights into specific element performance.
+
+Performance insight:
+- Tracks specific element render times
+- Identifies slow critical elements
+- Provides custom performance metrics
+- Helps optimize key elements
+- Better performance visibility
+
+User experience:
+- Ensures critical elements load quickly
+- Better perceived performance
+- Improved user experience
+- Faster key content visibility
+
+THRESHOLDS
+- Good: ≤ 1000ms (Fast element rendering)
+- Needs Improvement: 1000-2500ms (Moderate render time)
+- Poor: ≥ 2500ms (Slow element rendering, performance issues)
+
+Note: Thresholds depend on element importance and page context.
+
+COMMON PITFALLS
+1. No elementtiming attributes: Elements not marked for timing
+2. PerformanceObserver unavailable: API not supported
+3. No suitable elements to measure: Missing critical elements to track
+4. Elements not marked: Important elements not marked with elementtiming
+5. API limitations: Element Timing API not widely supported
+
+OPTIMIZATION STRATEGIES
+1. Add elementtiming attributes to critical elements: Mark important elements
+2. Use PerformanceObserver: Implement element timing observation
+3. Identify key elements for measurement: Determine which elements to track
+4. Test element timing: Verify timing works correctly
+5. Monitor element render times: Track element performance over time
+6. Optimize slow elements: Improve render times for tracked elements
+7. Document element timing: Ensure team understands element timing
+8. Use workarounds if needed: Implement fallbacks for unsupported browsers
+
+
+HISTORY
+Element Timing API was developed to measure performance of specific developer-defined elements:
+
+2016-2018: As performance metrics evolved (FCP, FMP, LCP), a gap emerged: these metrics either measured the first content (FCP) or tried to automatically detect important content (FMP, LCP). But what if developers wanted to measure specific elements that were important to their particular application?
+
+Examples:
+- E-commerce site: Time until product image appears
+- News site: Time until headline loads
+- Social media: Time until feed content renders
+- Dashboard: Time until critical chart renders
+
+First Meaningful Paint (FMP) tried to automatically detect important content but was unreliable and eventually deprecated. LCP measured the largest element, but that might not be the most important element for user experience.
+
+The question: How can developers mark specific elements as performance-critical and measure when they render?
+
+2018: Google proposed the Element Timing API to W3C. The concept was simple: developers could add an `elementtiming` attribute to elements they wanted to measure, and the browser would emit timing events when those elements rendered.
+
+Usage:
+```html
+<img src="hero.jpg" elementtiming="hero-image" />
+<h1 elementtiming="main-heading">Welcome</h1>
+```
+
+The browser would then emit PerformanceElementTiming entries that developers could observe:
+
+```javascript
+new PerformanceObserver((list) => {
+  for (const entry of list.getEntries()) {
+    console.log(`${entry.identifier} rendered at ${entry.startTime}ms`);
+  }
+}).observe({entryTypes: ['element']});
+```
+
+2019: Chrome 77+ implemented the Element Timing API. The API provided:
+- renderTime: When the element was painted (null if not yet rendered)
+- loadTime: When the element's resources loaded (for images)
+- identifier: Value of the elementtiming attribute
+- element: Reference to the DOM element
+- naturalWidth/naturalHeight: For images, the intrinsic dimensions
+- id, url: Additional context
+
+This gave developers fine-grained control over what to measure, complementing automatic metrics like LCP.
+
+2020-Present: Element Timing remains a niche but valuable API. Adoption challenges:
+- Requires manual instrumentation (adding elementtiming attributes)
+- Works best when combined with Real User Monitoring infrastructure
+- Not included in Core Web Vitals (less urgency to implement)
+- Developer awareness is limited
+- Must be set up before the page loads (can't be added dynamically)
+
+However, Element Timing is useful for:
+- Measuring custom "hero elements" specific to each page type
+- Tracking loading of business-critical content (product images, video thumbnails, etc.)
+- Comparing performance of different elements
+- Setting performance budgets for specific UI components
+- A/B testing load performance of design variations
+
+Use cases:
+- E-commerce: Measure when product images load
+- Media sites: Track when featured images/videos render
+- SaaS apps: Monitor when critical UI components appear
+- Landing pages: Measure hero section render time
+
+Element Timing vs. LCP:
+- LCP is automatic but measures the largest element (might not be most important)
+- Element Timing requires instrumentation but measures exactly what you care about
+- Both can be tracked simultaneously
+- Element Timing can measure multiple elements, LCP only tracks one
+
+The API has limitations:
+- Only works for elements with elementtiming attribute
+- Must be set before parsing (can't add dynamically after)
+- Limited browser support (Chrome, Edge; not yet in Firefox, Safari as of 2024)
+- Requires infrastructure to collect and analyze timing data
+
+Modern frameworks have limited support for Element Timing. Most performance monitoring focuses on automatic metrics (LCP, FCP) rather than custom element timing. However, for performance-critical applications where specific elements are crucial to user experience, Element Timing provides valuable measurement.
+
+Best practices:
+- Use sparingly (mark only truly critical elements)
+- Combine with LCP to get both automatic and custom measurements
+- Track in Real User Monitoring to see production performance
+- Use meaningful identifiers (product-image, hero-video, etc.)
+- Set performance budgets and alerts for critical elements
+
+Element Timing represents a philosophy: give developers control over what to measure when automatic metrics aren't sufficient. While not widely adopted, it remains a powerful tool for custom performance measurement.
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources

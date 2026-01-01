@@ -1,0 +1,172 @@
+RTT - Resource Timing Details
+
+WHAT IT MEASURES
+Round-trip time (RTT) for network requests, representing the time it takes for a packet to travel from client to server and back. This metric helps identify network-level performance bottlenecks by measuring the latency of network connections.
+
+RTT includes:
+- Network latency: Time for data to travel
+- Connection overhead: TCP/SSL handshake time
+- Server processing: Server response time
+- Overall network performance
+
+The metric measures:
+- Average RTT across all resources
+- Network connection efficiency
+- Latency impact on performance
+
+HOW IT'S MEASURED
+PerformanceResourceTiming API, extracting domainLookupEnd - domainLookupStart (DNS), connectEnd - connectStart (TCP), and secureConnectionStart timing. The measurement process:
+
+1. Gets resource timing:
+   - Uses PerformanceResourceTiming API
+   - Extracts timing information for resources
+   - Calculates network timing phases
+
+2. Calculates RTT:
+   - Measures round-trip time for requests
+   - May use responseStart - requestStart
+   - Averages across all resources
+
+3. Returns RTT value:
+   - Average round-trip time in milliseconds
+   - May include breakdown by phase
+
+WHY IT'S IMPORTANT
+Helps identify specific network issues: DNS problems, slow TCP connections, or SSL handshake delays. High RTT indicates network latency issues affecting performance.
+
+Performance impact:
+- High RTT delays all requests
+- Affects Time to First Byte (TTFB)
+- Delays resource loading
+- Impacts overall page load time
+- Affects mobile performance significantly
+
+User experience:
+- Slower page loads
+- Delayed content visibility
+- Poor mobile experience
+- Increased perceived wait time
+
+THRESHOLDS
+- Good: ≤ 100ms (Low latency, good network)
+- Needs Improvement: 100-300ms (Moderate latency)
+- Poor: ≥ 300ms (High latency, network issues)
+
+COMMON PITFALLS
+1. Slow DNS resolution: DNS lookup taking too long
+2. Network latency: High network latency
+3. SSL/TLS handshake delays: Slow secure connection establishment
+4. Connection establishment issues: TCP connection problems
+5. Geographic distance: Server far from users
+6. Network congestion: Network congestion affecting RTT
+
+OPTIMIZATION STRATEGIES
+1. Use DNS prefetching: Pre-resolve DNS with dns-prefetch
+2. Optimize DNS configuration: Use fast DNS servers
+3. Use HTTP/2 or HTTP/3: Leverage modern protocols for better performance
+4. Optimize SSL/TLS configuration: Use efficient TLS settings
+5. Use CDN: Serve content from CDN closer to users
+6. Optimize server location: Place servers closer to users
+7. Monitor network performance: Track RTT over time
+8. Test from multiple locations: Verify performance from different regions
+
+
+HISTORY
+Resource Timing Details tracking has evolved with the broader Resource Timing API:
+
+2008-2011: Browser DevTools added Network panels showing resource loading in waterfall visualizations. Developers could see timing details for individual resources (DNS, connection, waiting, downloading), but only through manual inspection. There was no programmatic access to this detailed timing data.
+
+The lack of automated resource timing measurement made it difficult to:
+- Monitor resource performance in production
+- Identify slow-loading resources automatically
+- Track performance regressions
+- Correlate resource timing with user experience metrics
+
+2012: W3C standardized the Resource Timing API as part of the Performance Timeline specification. This was revolutionary - for the first time, developers could programmatically access detailed timing for every resource loaded by the page.
+
+The API exposed timing details for each resource:
+- DNS lookup time (domainLookupEnd - domainLookupStart)
+- TCP connection time (connectEnd - connectStart)
+- TLS negotiation time (requestStart - secureConnectionStart for HTTPS)
+- Request/response time (responseStart - requestStart)
+- Download time (responseEnd - responseStart)
+- Total duration (responseEnd - startTime)
+
+Additionally, size information:
+- transferSize: Bytes actually transferred (accounting for compression, cache)
+- encodedBodySize: Compressed size
+- decodedBodySize: Uncompressed size
+
+2013-2015: Resource Timing enabled new performance insights:
+- Identifying which resources were slow
+- Detecting connection establishment delays
+- Measuring compression effectiveness
+- Tracking cache hit rates
+- Analyzing third-party resource performance
+
+Performance monitoring tools (New Relic, Datadog, SpeedCurve) built features around Resource Timing, allowing automated tracking of resource performance in production.
+
+2015: HTTP/2 standardization (RFC 7540) changed resource loading patterns. The Resource Timing API was updated to reflect HTTP/2 specifics:
+- nextHopProtocol property indicating HTTP version (h2, http/1.1, etc.)
+- Connection reuse information (many resources sharing one connection)
+- Push resources vs. requested resources
+
+2016-2018: As pages grew more resource-heavy, Resource Timing became essential for:
+- Debugging slow page loads
+- Identifying render-blocking resources
+- Optimizing third-party scripts
+- Measuring CDN effectiveness
+- Tracking progressive web app performance
+
+The API added more context:
+- initiatorType: How resource was initiated (img, script, css, xmlhttprequest, etc.)
+- serverTiming: Server-side timing information (if Server-Timing header present)
+- workerStart: Service worker timing
+
+2020: Core Web Vitals emphasized user-centric metrics, but Resource Timing remained foundational. Slow resources directly impact:
+- LCP: Images, videos, or web fonts delaying largest paint
+- FID/INP: JavaScript blocking interactivity
+- CLS: Late-loading resources causing shifts
+
+Resource Timing enabled developers to identify exactly which resources were causing Core Web Vitals issues.
+
+2021-Present: Resource Timing Details are now standard in performance analysis:
+- All major monitoring tools track resource timing
+- Performance budgets include resource timing thresholds
+- CI/CD pipelines can fail builds for slow resources
+- A/B tests measure resource loading differences
+
+Modern use cases:
+1. Third-party monitoring: Track performance of analytics, ads, social widgets
+2. CDN analysis: Compare resource timing across different CDNs
+3. Image optimization: Measure impact of format changes (WebP, AVIF)
+4. Cache effectiveness: Track cache hits via transferSize
+5. Connection optimization: Identify DNS/connection bottlenecks
+6. Compression validation: Verify gzip/Brotli effectiveness
+
+Resource Timing complements high-level metrics (LCP, FCP) by showing exactly which resources are slow and why. While users care about when content appears (LCP), developers need to know which specific resources are causing delays.
+
+Best practices:
+- Monitor timing for critical resources (hero images, main JavaScript bundles)
+- Track third-party resource performance (can be outside your control)
+- Set alerts for resource timing regressions
+- Use Resource Timing to validate optimization efforts
+- Combine with user-centric metrics for complete picture
+
+The Resource Timing API represents the diagnostic layer of performance monitoring - while Core Web Vitals show symptoms (slow LCP), Resource Timing reveals causes (specific slow resources).
+
+BROWSER SUPPORT
+Modern browsers (Chrome, Firefox, Safari, Edge) support performance measurement through the Performance API. The PerformanceObserver API, required for many measurements, is supported in all major browsers released after 2016. Some metrics may have limited support in older browsers or require polyfills. Browser DevTools provide built-in performance measurement capabilities.
+
+INDUSTRY STANDARDS
+This metric aligns with W3C web standards and is used by major performance monitoring tools including Google PageSpeed Insights, Lighthouse, WebPageTest, and Real User Monitoring (RUM) solutions. Thresholds are based on research into user perception of performance, industry best practices, and data from the Chrome User Experience Report (CrUX).
+
+RELATED METRICS
+This metric is part of a comprehensive performance measurement framework. Related metrics provide complementary insights: timing metrics measure speed, resource metrics measure efficiency, and user experience metrics measure perceived quality. Together, these metrics provide a holistic view of web performance.
+
+MEASUREMENT LIMITATIONS
+Client-side measurement may be affected by device capabilities, network conditions, browser implementation differences, and user environment. Some measurements require specific browser APIs that may not be available in all environments. Automated testing may produce different results than real user experiences. Measurements are most accurate when performed in production environments with real user data.
+
+
+SOURCES
+- See metrics.txt for detailed sources
