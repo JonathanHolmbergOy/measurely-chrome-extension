@@ -202,7 +202,7 @@
     }
 
     function displaySummary(results) {
-        const scores = calculateCategoryScores(results);
+        const scoresData = window.__MEASURELY_SCORING__.calculateCategoryScores(results);
         const issuesCounts = calculateCategoryIssues(results);
 
         const categories = [
@@ -218,7 +218,8 @@
             const button = elements.categoriesNav.querySelector(`[data-category="${cat.key}"]`);
             if (!button) return;
 
-            const score = scores[cat.key];
+            const scoreData = scoresData[cat.key];
+            const score = scoreData ? scoreData.score : 0;
             const issues = issuesCounts[cat.key];
             const strokeColor = getScoreColor(score);
             const strokeDashoffset = 176 - (176 * score / 100);
@@ -707,53 +708,14 @@
     }
 
     function calculateCategoryScores(results) {
-        const categories = {
-            'Performance': 'performance',
-            'Security': 'security',
-            'Accessibility': 'accessibility',
-            'User Experience': 'ux',
-            'Resource Optimization': 'optimization',
-            'SEO': 'seo'
-        };
-
-        const scores = {};
+        const scores = window.__MEASURELY_SCORING__.calculateCategoryScores(results);
         
-        Object.entries(categories).forEach(([categoryName, categoryKey]) => {
-            const categoryResults = results.filter(r => {
-                const testCategory = r.Test.split(' (')[0];
-                return testCategory === categoryName;
-            });
-
-            if (categoryResults.length === 0) {
-                scores[categoryKey] = 0;
-                return;
-            }
-
-            const categoryScores = categoryResults
-                .filter(r => r.Status !== 'no-data')
-                .map(r => calculateMetricScore(r));
-
-            scores[categoryKey] = categoryScores.length > 0
-                ? Math.round(categoryScores.reduce((sum, s) => sum + s, 0) / categoryScores.length)
-                : 0;
+        const numericScores = {};
+        Object.entries(scores).forEach(([key, value]) => {
+            numericScores[key] = value.score !== null ? value.score : 0;
         });
-
-        return scores;
-    }
-
-    function calculateMetricScore(metric) {
-        switch (metric.Status) {
-            case 'good':
-                return 100;
-            case 'needs-improvement':
-                return 60;
-            case 'poor':
-                return 20;
-            case 'no-data':
-            case 'not-measurable':
-            default:
-                return 0;
-        }
+        
+        return numericScores;
     }
 
     function getScoreClass(score) {

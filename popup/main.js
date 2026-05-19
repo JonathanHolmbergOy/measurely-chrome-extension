@@ -297,69 +297,7 @@
     }
 
     function calculateCategoryScores(results) {
-        const categories = {
-            Performance: 'performance',
-            Security: 'security',
-            Accessibility: 'accessibility',
-            'User Experience': 'ux',
-            'Resource Optimization': 'optimization',
-            SEO: 'seo'
-        };
-
-        const scores = {};
-
-        Object.entries(categories).forEach(([categoryName, categoryKey]) => {
-            const categoryResults = results.filter(r => {
-                const testCategory = r.Test.split(' (')[0];
-                return testCategory === categoryName;
-            });
-            
-            if (categoryResults.length === 0) {
-                scores[categoryKey] = { score: null, issues: 0, disabled: true };
-                return;
-            }
-
-            let totalScore = 0;
-            let totalIssues = 0;
-            let goodCount = 0;
-            let needsImprovementCount = 0;
-            let poorCount = 0;
-
-            categoryResults.forEach(result => {
-                totalIssues += result.Issues || 0;
-
-                switch (result.Status) {
-                    case 'good':
-                        goodCount++;
-                        break;
-                    case 'needs-improvement':
-                        needsImprovementCount++;
-                        break;
-                    case 'poor':
-                        poorCount++;
-                        break;
-                }
-            });
-
-            const totalTests = categoryResults.length;
-            const goodWeight = 100;
-            const needsImprovementWeight = 50;
-            const poorWeight = 0;
-
-            totalScore = (
-                (goodCount * goodWeight) +
-                (needsImprovementCount * needsImprovementWeight) +
-                (poorCount * poorWeight)
-            ) / totalTests;
-
-            scores[categoryKey] = {
-                score: Math.round(totalScore),
-                issues: totalIssues,
-                disabled: false
-            };
-        });
-
-        return scores;
+        return window.__MEASURELY_SCORING__.calculateCategoryScores(results);
     }
 
     function handleCopyClick() {
